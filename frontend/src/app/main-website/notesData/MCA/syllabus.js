@@ -4,6 +4,7 @@ export default {
   name: "MCA",
   description: "Master of Computer Applications",
   university: "Vinoba Bhave University, Hazaribag",
+  universityLogo: "/illustrations/vbu-logo-64.webp",
   session: "2026–28",
   version: "CBCS, introduced for session 2020–22",
   versionNote:

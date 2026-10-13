@@ -50,6 +50,18 @@ for (const file of pages) {
       }
     }
   }
+  for (const picture of document.querySelectorAll('picture')) {
+    const img = picture.querySelector('img')
+    assert.ok(Number(img.getAttribute('width')) > 0 && Number(img.getAttribute('height')) > 0, `${file}: illustration dimensions reserve layout space`)
+    assert.notEqual(img.getAttribute('alt'), null, `${file}: image accessibility`)
+    for (const element of picture.querySelectorAll('[srcset]')) {
+      assert.ok(element.getAttribute('sizes'), `${file}: responsive image sizing`)
+      for (const candidate of element.getAttribute('srcset').split(',')) {
+        const source = candidate.trim().split(/\s+/)[0]
+        await access(join('dist', source.slice(1)))
+      }
+    }
+  }
   const image = new URL(document.querySelector('meta[property="og:image"]').getAttribute('content'))
   assert.equal(image.origin, url.origin)
   await access(join('dist', image.pathname.slice(1)))

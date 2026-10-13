@@ -1,0 +1,110 @@
+{
+  "study-desk": {
+    "width": 1448,
+    "height": 1086,
+    "widths": [
+      320,
+      640,
+      960
+    ]
+  },
+  "learning-shelf": {
+    "width": 1448,
+    "height": 1086,
+    "widths": [
+      320,
+      640,
+      960
+    ]
+  },
+  "contact-message": {
+    "width": 1254,
+    "height": 1254,
+    "widths": [
+      160,
+      320,
+      480
+    ]
+  },
+  "mca-sem1-paper1": {
+    "width": 1254,
+    "height": 1254,
+    "widths": [
+      160,
+      320,
+      640
+    ]
+  },
+  "mca-sem1-paper2": {
+    "width": 1254,
+    "height": 1254,
+    "widths": [
+      160,
+      320,
+      640
+    ]
+  },
+  "mca-sem1-paper3": {
+    "width": 1254,
+    "height": 1254,
+    "widths": [
+      160,
+      320,
+      640
+    ]
+  },
+  "mca-sem1-paper4": {
+    "width": 1254,
+    "height": 1254,
+    "widths": [
+      160,
+      320,
+      640
+    ]
+  },
+  "mca-sem1-paper5": {
+    "width": 1254,
+    "height": 1254,
+    "widths": [
+      160,
+      320,
+      640
+    ]
+  },
+  "mca-sem1-paper6": {
+    "width": 1254,
+    "height": 1254,
+    "widths": [
+      160,
+      320,
+      640
+    ]
+  },
+  "mca-sem1-paper7": {
+    "width": 1254,
+    "height": 1254,
+    "widths": [
+      160,
+      320,
+      640
+    ]
+  },
+  "mca-sem1-paper8": {
+    "width": 1254,
+    "height": 1254,
+    "widths": [
+      160,
+      320,
+      640
+    ]
+  },
+  "mca-sem1-paper9": {
+    "width": 1254,
+    "height": 1254,
+    "widths": [
+      160,
+      320,
+      640
+    ]
+  }
+}

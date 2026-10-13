@@ -1,6 +1,7 @@
+import Illustration from '../../shared/components/Illustration'
 import { useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
-import { Mail, ArrowRight } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
 import CatalogueLayout from '../../layouts/CatalogueLayout'
 import PageIntro from '../../shared/components/PageIntro'
 import DocumentHead from '../../shared/components/DocumentHead'
@@ -28,7 +29,7 @@ export default function Contact(){
           <button type="submit" className={button} aria-describedby="contact-availability">Send message</button><p role="status" className={`text-sm ${muted}`}>{status}</p>
         </form>
       </section>
-      <aside className="space-y-5"><section className={`${panel} p-6`}><Mail className="text-brand dark:text-night-brand" size={24} aria-hidden="true"/><h2 className="mt-4 text-xl font-semibold">Study Shelf support</h2>{site.contactEmail?<a className={`${link} mt-3 block break-all`} href={`mailto:${site.contactEmail}`}>{site.contactEmail}</a>:<p className={`mt-3 leading-7 ${muted}`}>Our dedicated contact address will appear here when it is available.</p>}<p className={`mt-4 text-sm leading-6 ${muted}`}>Questions, corrections, and requests are welcome. Include enough detail to identify the chapter or problem.</p></section><section className={`${panel} p-6`}><h2 className="text-xl font-semibold">Need a quick answer?</h2><p className={`mt-3 leading-7 ${muted}`}>Find help with saved notes, printing, reading controls, syllabus coverage, and practice questions.</p><Link className={`${link} mt-4 inline-flex items-center gap-2`} to="/help">Help and FAQs<ArrowRight size={17} aria-hidden="true"/></Link></section><Link className={`${link} block text-sm`} to="/content-policy">How we handle sources and corrections</Link></aside>
+      <aside className="space-y-5"><section className={`${panel} p-6`}><Illustration name="contact-message" sizes="160px" className="mx-auto w-32 sm:w-40"/><h2 className="mt-4 text-xl font-semibold">Study Shelf support</h2>{site.contactEmail?<a className={`${link} mt-3 block break-all`} href={`mailto:${site.contactEmail}`}>{site.contactEmail}</a>:<p className={`mt-3 leading-7 ${muted}`}>Our dedicated contact address will appear here when it is available.</p>}<p className={`mt-4 text-sm leading-6 ${muted}`}>Questions, corrections, and requests are welcome. Include enough detail to identify the chapter or problem.</p></section><section className={`${panel} p-6`}><h2 className="text-xl font-semibold">Need a quick answer?</h2><p className={`mt-3 leading-7 ${muted}`}>Find help with saved notes, printing, reading controls, syllabus coverage, and practice questions.</p><Link className={`${link} mt-4 inline-flex items-center gap-2`} to="/help">Help and FAQs<ArrowRight size={17} aria-hidden="true"/></Link></section><Link className={`${link} block text-sm`} to="/content-policy">How we handle sources and corrections</Link></aside>
     </div>
   </CatalogueLayout>
 }
