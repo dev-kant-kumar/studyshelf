@@ -1,0 +1,191 @@
+{
+  "intro": "Computer evolution is the development of ways to represent information, mechanise operations, control their sequence, and make computation accessible. Study the changes in capability and constraints; a list of dates alone cannot explain why modern systems work as they do.",
+  "outcomes": [
+    "Distinguish calculating aids, automatic machines, and programmable computers.",
+    "Explain mechanical, electromechanical, electronic, and stored-program developments.",
+    "Connect changes in hardware with software, interaction, and distributed computing."
+  ],
+  "sections": [
+    {
+      "title": "1. From counting to mechanised calculation",
+      "paragraphs": [
+        "A counting aid, such as an abacus, externalises quantities and helps a person carry out operations. The person supplies the procedure and interprets the result. Mechanical calculators automate parts of arithmetic with gears and carry mechanisms. They reduce repetitive manual work, but automating an operation is different from storing and executing an arbitrary program.",
+        "The important conceptual steps are representation, an operation on that representation, a way to sequence operations, and a way to retain intermediate results. A modern spreadsheet still uses these ideas: cells represent values, formulas specify operations, dependencies determine evaluation, and stored results preserve state. Its electronic implementation is different, but the computational problem is recognisable.",
+        "Accuracy depends on mechanism and use. A reliable gear carry cannot correct a wrongly entered amount. Mechanisation transfers some work from the operator to the machine; it does not remove the need for a valid specification."
+      ],
+      "table": {
+        "caption": "Early calculation tools and their contribution",
+        "headers": [
+          "Development",
+          "Contribution",
+          "Limit to remember"
+        ],
+        "rows": [
+          [
+            "Abacus",
+            "Represents quantities and supports arithmetic manipulation",
+            "The operator supplies the procedure"
+          ],
+          [
+            "Pascal’s mechanical calculator",
+            "Mechanises addition and carry operations",
+            "A specialised calculator, not a stored-program machine"
+          ],
+          [
+            "Leibniz’s stepped-reckoner approach",
+            "Extends mechanical arithmetic mechanisms",
+            "Mechanical precision and reliable construction are substantial challenges"
+          ],
+          [
+            "Babbage’s Difference Engine",
+            "Automates specialised mathematical table generation",
+            "A different design goal from general programmability"
+          ],
+          [
+            "Analytical Engine design",
+            "Separates storage, processing, and instruction control",
+            "A proposed design; do not describe it as a completed electronic computer"
+          ]
+        ]
+      }
+    },
+    {
+      "title": "2. Programmability before electronic computers",
+      "paragraphs": [
+        "Babbage’s Difference Engine was designed around a specialised numerical task: generating mathematical tables using finite differences. The Analytical Engine design proposed a more general arrangement with a store for values, a mill for operations, and instruction control using punched cards. These designs illustrate the difference between a fixed mathematical mechanism and a programmable architecture; do not write that the proposed Analytical Engine was a completed modern electronic computer.",
+        "Ada Lovelace’s notes on the Analytical Engine described how operations could be organised and considered wider symbolic possibilities. Punched-card tabulation, associated with Hollerith’s census work, represented records and automated counting and sorting. Cards served as a physical data medium and, in other systems, an instruction medium. A card is not inherently a program: its meaning depends on the system interpreting it.",
+        "When explaining this period, connect the innovation to the limitation it addressed: repetitive table production, reliable record processing, or changing the procedure without rebuilding the whole mechanism.",
+        "Keep design and construction distinct. Babbage worked on Difference Engine designs in the 1820s and early 1830s and developed the Analytical Engine concept in the 1830s. Later historical reconstructions of a Difference Engine demonstrate the design’s feasibility; they do not mean a complete machine was operating in his lifetime. This is a useful example of why evidence and precise wording matter in computing history."
+      ]
+    },
+    {
+      "title": "3. Relays, valves, and electronic execution",
+      "paragraphs": [
+        "Electromechanical machines used electrically controlled relays. A relay physically opens or closes a contact, so switching involves mechanical movement. Electronic valve or vacuum-tube circuits can switch without moving contacts. Electronic switching made much faster operation possible, but early electronic systems required substantial power, cooling, maintenance, and space.",
+        "Different early machines satisfied different criteria. The Z3 was an electromechanical programmable calculating machine; Colossus was electronic and specialised for wartime cryptanalysis; ENIAC was electronic and designed for general numerical computation. Their input methods, instruction control, and memory arrangements were not identical. Claims about “the first computer” are meaningful only after stating criteria such as electronic, programmable, general-purpose, or stored-program.",
+        "An exam answer should therefore describe milestones rather than invent one undisputed inventor of every aspect of computing. Historical development involved many teams, incomplete designs, wartime secrecy, and later modifications."
+      ]
+    },
+    {
+      "title": "4. Stored programs changed how tasks were supplied",
+      "paragraphs": [
+        "A stored-program machine represents instructions in memory accessible to the execution mechanism. Changing a task can mean loading different instructions rather than manually changing extensive wiring. Instructions and data can use the same general storage technology, although particular architectures may separate their paths or memories.",
+        "The Manchester Baby demonstrated electronic execution of a program held in its memory in 1948. EDSAC became an important early practical stored-program system. The architectural principle is more important than memorising an isolated date: instruction selection becomes part of machine state, controlled by a program counter and control-flow instructions.",
+        "Stored programs also enable assemblers, compilers, operating systems, and programs that transform other programs. They create a security requirement as well: systems must control which stored bytes may become executable instructions. Modern memory permissions are one response to that requirement."
+      ]
+    },
+    {
+      "title": "5. Integration, personal computing, and networks",
+      "paragraphs": [
+        "Replacing valves with transistors reduced several engineering costs. Integrated circuits placed multiple components on a substrate, reducing interconnections and enabling denser construction. Microprocessors integrated CPU functions into a chip. None of these changes eliminated the need for memory, input/output, software, or power: a CPU chip is not a complete useful computer on its own.",
+        "Personal computers brought interactive computing to individual desks. Graphical interfaces, inexpensive storage, and application software mattered alongside processor improvements. Networking then enabled shared services and communication between independent machines. The Internet connects networks; the Web is one application environment using that infrastructure, not another name for every Internet service.",
+        "Mobile and embedded systems moved computation into devices with constraints such as battery life, heat, cost, and real-time response. Cloud systems made remote pooled resources accessible as services. GPUs and other accelerators specialise in particular workloads. These are overlapping developments, not a replacement chain where every older category disappears."
+      ]
+    },
+    {
+      "title": "6. Read evolution as a series of trade-offs",
+      "paragraphs": [
+        "Smaller switching devices can improve density, but useful performance also depends on algorithms, data movement, memory capacity, communication, and software organisation. More computing power can increase energy use if more work is performed. Progress in one dimension does not guarantee improvement in every dimension.",
+        "Consider a payroll service. A batch mainframe can process many records efficiently; a personal application improves individual interaction; a network service shares current data; a mobile client improves access. Each changes where work and responsibility sit. The underlying requirements-correct arithmetic, authorised access, durable records, and recovery-remain.",
+        "To evaluate a historical transition, ask four questions: what new capability appeared, what limitation was reduced, what dependency remained, and what new risk arose. This method connects historical study with present architectural decisions."
+      ],
+      "example": [
+        "Compare a wired procedure with a stored program for calculating a new tax rule. With extensive physical configuration, changing the rule may require a technician to alter connections and verify the arrangement. With a stored program, instructions can be replaced and tested. The second approach reduces reconfiguration effort, but a wrong program can spread the same wrong calculation across every record. Flexibility increases the importance of validation and version control."
+      ]
+    }
+  ],
+  "revision": [
+    "Explain the progression using representation, control, storage, and accessibility.",
+    "Contrast a fixed calculator with a programmable stored-program computer.",
+    "State criteria before making a “first computer” claim.",
+    "Trace which requirements remain when a local application becomes a cloud service."
+  ],
+  "questions": [
+    {
+      "level": "easy",
+      "tags": [
+        "Exam practice",
+        "Concept check"
+      ],
+      "question": "How is evolution different from generations?",
+      "answer": [
+        "Evolution describes a broad, overlapping history of hardware, software, interaction, and use. Generations are a simplified classification based mainly on dominant electronic implementation technology. Use evolution to explain causes and consequences; use generations to organise comparisons."
+      ],
+      "id": "how-is-evolution-different-from-generations"
+    },
+    {
+      "level": "medium",
+      "tags": [
+        "Exam practice"
+      ],
+      "question": "Why was the stored-program principle a major change?",
+      "answer": [
+        "It allowed instruction sequences to be represented in memory and loaded as machine state. This made changing tasks more practical and enabled software tools that manipulate programs. It did not automatically create an operating system, guarantee correctness, or require every implementation to use one physical memory for all purposes."
+      ],
+      "id": "why-was-the-stored-program-principle-a-major-change"
+    },
+    {
+      "level": "medium",
+      "tags": [
+        "Interview practice"
+      ],
+      "question": "Is a microprocessor a complete computer?",
+      "answer": [
+        "A microprocessor implements processor functions. A usable system also needs an environment providing memory, power, timing, input/output, and software. Some chips integrate many of these components, but “processor” and “computer system” describe different levels of organisation."
+      ],
+      "id": "is-a-microprocessor-a-complete-computer"
+    },
+    {
+      "level": "hard",
+      "tags": [
+        "Curious learner"
+      ],
+      "question": "Who invented the first computer?",
+      "answer": [
+        "The question lacks criteria. Mechanical design, electronic switching, programmability, general-purpose operation, and stored-program execution have different milestones. Define the property being discussed, name a relevant machine, and distinguish a proposed design from an implemented system. A qualified explanation is more accurate than a single universal name."
+      ],
+      "id": "who-invented-the-first-computer"
+    },
+    {
+      "level": "medium",
+      "tags": [
+        "Practical reasoning"
+      ],
+      "question": "Does cloud computing make local computing obsolete?",
+      "answer": [
+        "No. Cloud services rely on physical computers, networks, and local clients. Offline access, latency, privacy, cost, and device control can favour local processing. Moving execution remotely changes resource ownership and failure modes; it does not remove computation from hardware."
+      ],
+      "id": "does-cloud-computing-make-local-computing-obsolete"
+    },
+    {
+      "level": "hard",
+      "tags": [
+        "Interview practice",
+        "Curious learner"
+      ],
+      "question": "Why can a newer system be worse for one workload?",
+      "answer": [
+        "A design can optimise throughput, power, cost, or generality at the expense of a particular response time or compatibility requirement. A workload dominated by remote data access may run slower after migration despite a faster processor. Specify the metric and compare equivalent work under equivalent conditions."
+      ],
+      "id": "why-can-a-newer-system-be-worse-for-one-workload"
+    }
+  ],
+  "references": [
+    {
+      "title": "Computer History Museum: computer timeline",
+      "url": "https://www.computerhistory.org/timeline/computers/"
+    },
+    {
+      "title": "Computer History Museum: the Silicon Engine",
+      "url": "https://www.computerhistory.org/siliconengine/timeline/"
+    },
+    {
+      "title": "Computer History Museum: mechanical calculators",
+      "url": "https://www.computerhistory.org/brochures/calculators/"
+    },
+    {
+      "title": "Computer History Museum: Babbage’s engines",
+      "url": "https://www.computerhistory.org/babbage/engines/"
+    }
+  ]
+}

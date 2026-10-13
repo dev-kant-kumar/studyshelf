@@ -1,0 +1,178 @@
+{
+  "intro": "Transmission media carry signals between interfaces. Selecting a medium means balancing distance, capacity, noise, mobility, installation, safety, security, and cost. Neither “wireless” nor “fibre” is a complete performance specification.",
+  "outcomes": [
+    "Compare twisted pair, coaxial cable, optical fibre, and unguided media.",
+    "Explain attenuation, interference, dispersion, and link budgets.",
+    "Choose media for practical scenarios with explicit assumptions."
+  ],
+  "sections": [
+    {
+      "title": "1. Guided and unguided transmission",
+      "paragraphs": [
+        "Guided media constrain propagation along a physical path such as copper conductors or optical fibre. Unguided media propagate electromagnetic energy through space, usually with antennas or optical transmitters and receivers. Both obey physical limitations and need suitable signalling hardware.",
+        "Useful selection variables include supported rate over distance, attenuation, available spectrum, interference, installation environment, bend or mechanical restrictions, mobility, maintenance, and total cost. A cable category or radio standard label does not by itself establish actual end-to-end throughput. Interfaces, negotiation, layout, and shared use matter.",
+        "Attenuation reduces signal power with distance. Noise and interference obscure distinctions between signal states. Distortion changes signal shape. Receivers need enough signal quality to decode correctly. Amplifying a weak signal can also amplify noise; regeneration attempts to recover symbols and construct a new signal, within the limits of successful decoding."
+      ]
+    },
+    {
+      "title": "2. Twisted-pair copper",
+      "paragraphs": [
+        "Twisted pair uses paired copper conductors twisted to reduce susceptibility to certain interference and crosstalk effects. Differential signalling interprets the difference between conductors, helping reject noise coupled similarly into both. Unshielded and shielded variants have different installation considerations; shielding is useful only when the complete installation and grounding are suitable.",
+        "Category ratings describe tested cabling characteristics. Real channel support depends on the selected Ethernet or other physical-layer standard, cable length, connectors, installation quality, and environment. Do not write that every twisted-pair link has exactly one speed or universal maximum distance. The common 100 m copper Ethernet channel limit applies to particular standardised arrangements, not every copper technology.",
+        "Copper can carry electrical power in supported Power over Ethernet arrangements, useful for access points, phones, and cameras. Power budgets, cable quality, heating, and device support must be checked. Connecting buildings with conductors also raises electrical and grounding concerns."
+      ]
+    },
+    {
+      "title": "3. Coaxial cable",
+      "paragraphs": [
+        "Coaxial cable has a central conductor, insulating dielectric, an outer conductor/shield, and protective covering. Its geometry controls electrical characteristics and shielding. It has been used in legacy Ethernet, cable television, broadband access, and other communication systems. The medium is not synonymous with a single protocol.",
+        "Impedance matching and termination matter. Reflections from discontinuities can distort signals. Branching and splitting introduce losses and engineering requirements; connecting arbitrary pieces is not a substitute for a designed channel. Shared cable systems require access coordination between users.",
+        "For comparison answers, explain structure, interference behaviour, typical use, and installation constraints. Avoid universally ranking coaxial as faster or slower than fibre or twisted pair without naming the implemented system."
+      ]
+    },
+    {
+      "title": "4. Optical fibre",
+      "paragraphs": [
+        "Optical fibre guides light through a core and surrounding cladding with suitable refractive properties. Single-mode fibre supports a mode arrangement useful for long distances and high-capacity systems; multimode fibre supports multiple propagation modes and is often used for shorter installations with compatible optics. Match wavelength, fibre type, transceiver, connector, and optical power requirements.",
+        "Fibre avoids electromagnetic interference in its optical transmission path and provides electrical isolation between endpoints. It still suffers attenuation, connector loss, bending loss, and dispersion. Modal dispersion can spread pulses in multimode systems; chromatic dispersion arises from wavelength-dependent propagation. “No interference” should not be expanded into “no errors or loss”.",
+        "Optical links can use multiple wavelengths and sophisticated modulation. Fibre is not automatically impossible to tap, nor does it encrypt information. Security still requires appropriate access controls and cryptographic protection. Installation cleanliness, bend radius, and handling affect reliability."
+      ],
+      "table": {
+        "caption": "4. Optical fibre",
+        "headers": [
+          "Medium",
+          "Strengths",
+          "Constraints"
+        ],
+        "rows": [
+          [
+            "Twisted pair",
+            "Common local cabling, economical interfaces, possible power delivery",
+            "Distance/rate limits, electrical interference, installation quality"
+          ],
+          [
+            "Coaxial",
+            "Controlled geometry and shielding, access-network use",
+            "Termination, splitting loss, shared-access design"
+          ],
+          [
+            "Fibre",
+            "Electrical isolation, long-distance/high-capacity potential",
+            "Optics compatibility, loss budget, handling and installation"
+          ],
+          [
+            "Radio",
+            "Mobility and flexible installation",
+            "Shared spectrum, obstruction, interference, exposure"
+          ]
+        ]
+      }
+    },
+    {
+      "title": "5. Radio, microwave, infrared, and satellite",
+      "paragraphs": [
+        "Radio systems trade range, capacity, spectrum rules, antenna design, and interference. Wi-Fi is local wireless networking using shared radio channels; it is not Internet access by itself. Cellular systems coordinate mobile access through provider infrastructure. A wireless path’s quality changes with distance, obstacles, movement, interference, and shared demand.",
+        "Directional microwave links can connect sites with a suitable path and antenna alignment. Line-of-sight and clearance, including the relevant Fresnel-zone considerations, matter; seeing an antenna is not a complete radio survey. Infrared and free-space optical links can provide short-range or directional communication but may be obstructed or affected by environmental conditions.",
+        "Satellite communication covers locations where terrestrial paths may be impractical. Orbit and path geometry affect propagation delay, coverage, handover, and equipment. Geostationary and low-Earth-orbit systems should not be assigned identical latency. Weather and spectrum also affect particular systems."
+      ],
+      "example": [
+        "For a simplified geostationary ground → satellite → ground path, use two 35,786 km vertical legs: distance ≈ 71,572 km. At 300,000 km/s, one-way propagation alone is about 0.239 s and the corresponding round trip about 0.477 s. Real slant paths are longer and processing adds delay. This calculation is not a latency estimate for low-Earth-orbit systems."
+      ]
+    },
+    {
+      "title": "6. Link budgets and practical selection",
+      "paragraphs": [
+        "A link budget accounts for transmitted power, path losses, connector losses, gains, and receiver sensitivity in consistent units. Power in dBm is relative to 1 mW; loss and gain in dB are ratios. Subtract losses from transmitted power and compare received power with the receiver’s required level. Include margin for ageing, repair, environmental change, and uncertainty.",
+        "For a campus building connection, fibre can provide electrical isolation and room for distance and rate requirements. Inside an office, supported copper may be economical and power devices. For a moving handheld device, wireless is necessary for mobility, but backhaul capacity and access-point placement still matter. A good design can combine all three.",
+        "Validate the complete link and workload. A high-rate wireless access point connected to a slow upstream service cannot supply that advertised radio rate to every Internet download. Test cable or optical parameters, negotiated rates, loss, and useful traffic; distinguish physical defects from congestion or application slowness."
+      ],
+      "example": [
+        "Suppose an optical transmitter outputs −3 dBm. Fibre loss is 4 dB and connectors/splices total 2 dB. Estimated receive power is −3 − 4 − 2 = −9 dBm. If sensitivity is −15 dBm, nominal margin is 6 dB before additional allowances. Also check the receiver’s maximum input level: a link can be too strong as well as too weak."
+      ]
+    }
+  ],
+  "revision": [
+    "Sketch the construction of twisted pair, coaxial, and fibre.",
+    "Explain why a medium has no single universal speed.",
+    "Calculate a link budget with dBm power and dB losses.",
+    "Recommend media for an office, interbuilding path, and mobile user with reasons."
+  ],
+  "questions": [
+    {
+      "level": "easy",
+      "tags": [
+        "Exam practice"
+      ],
+      "question": "What is the difference between guided and unguided media?",
+      "answer": [
+        "Guided media constrain signals along a physical path; unguided media transmit through space. Give copper and fibre examples for guided media, and radio or optical-space examples for unguided media. Both require compatible transmitters and receivers."
+      ],
+      "id": "what-is-the-difference-between-guided-and-unguided-media"
+    },
+    {
+      "level": "medium",
+      "tags": [
+        "Interview practice"
+      ],
+      "question": "Why twist copper pairs?",
+      "answer": [
+        "Twisting changes how the pair couples to external fields and neighbouring pairs, while differential signalling helps reject common-mode noise. Good design and installation improve interference behaviour; twisting does not make noise or crosstalk impossible."
+      ],
+      "id": "why-twist-copper-pairs"
+    },
+    {
+      "level": "medium",
+      "tags": [
+        "Practical reasoning"
+      ],
+      "question": "Why choose fibre between buildings?",
+      "answer": [
+        "Electrical isolation, supported distance, capacity, and immunity to electromagnetic interference in the optical path can be useful. Check optics, fibre type, route, loss budget, handling, and cost. Fibre still needs security and reliable endpoint equipment."
+      ],
+      "id": "why-choose-fibre-between-buildings"
+    },
+    {
+      "level": "hard",
+      "tags": [
+        "Curious learner"
+      ],
+      "question": "Why can increasing optical power fail to solve a bad link?",
+      "answer": [
+        "The problem may be dispersion, incompatible optics, damaged connectors, reflections, or receiver overload rather than insufficient power. More power does not restore badly distorted information. Measure the cause and stay within equipment specifications."
+      ],
+      "id": "why-can-increasing-optical-power-fail-to-solve-a-bad-link"
+    },
+    {
+      "level": "medium",
+      "tags": [
+        "Exam practice"
+      ],
+      "question": "Why does satellite orbit affect latency?",
+      "answer": [
+        "Propagation time depends on path length. High-orbit paths generally have much longer travel distances than low-orbit paths. Processing and routing add further delay. State the orbit and geometry before quoting a number."
+      ],
+      "id": "why-does-satellite-orbit-affect-latency"
+    },
+    {
+      "level": "hard",
+      "tags": [
+        "Interview practice"
+      ],
+      "question": "Does a secure wireless password make the whole connection trustworthy?",
+      "answer": [
+        "It protects specified aspects of local access under the chosen protocol, not every endpoint or onward service. Compromised devices, phishing, malicious servers, and insecure applications remain possible. Use end-to-end authentication and protection appropriate to the data."
+      ],
+      "id": "does-a-secure-wireless-password-make-the-whole-connection-trustworthy"
+    }
+  ],
+  "references": [
+    {
+      "title": "MIT OpenCourseWare: digital communications",
+      "url": "https://ocw.mit.edu/courses/6-450-principles-of-digital-communication-i-fall-2006/"
+    },
+    {
+      "title": "Cisco: Ethernet networking fundamentals",
+      "url": "https://www.cisco.com/site/us/en/learn/topics/small-business/networking-basics.html"
+    }
+  ]
+}

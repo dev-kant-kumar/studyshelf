@@ -1,0 +1,181 @@
+{
+  "intro": "A computer network connects independent devices so they can exchange data and use services. Understanding a network requires more than naming cables: you must explain addressing, forwarding, service boundaries, performance, and failure. This chapter establishes the model used throughout the remaining networking topics.",
+  "outcomes": [
+    "Describe network components, scope, and service models.",
+    "Distinguish Internet, intranet, extranet, and the Web.",
+    "Trace a request across links and routers and calculate transfer limits."
+  ],
+  "sections": [
+    {
+      "title": "1. Nodes, links, interfaces, and services",
+      "paragraphs": [
+        "A node is a participating device: a host, router, switch, or other networked system. A link provides communication between interfaces. An interface is the attachment point to that link and has relevant configuration and addressing. A computer may have multiple interfaces, such as wired Ethernet and Wi-Fi, with different addresses and routes.",
+        "Hosts usually originate or consume application data. Intermediate devices forward traffic according to rules. Servers provide services; clients request them. These are roles, so one host can be a client of one service and a server for another. Peer-to-peer arrangements distribute responsibilities between peers rather than depending on one application server for every operation.",
+        "Networks provide resource sharing, communication, remote access, distributed computation, and access to services. Shared access creates dependencies and risks: a network outage can interrupt a service even when both endpoint computers still work. Authentication, authorisation, confidentiality, and availability must be designed explicitly."
+      ]
+    },
+    {
+      "title": "2. Scope and ownership",
+      "paragraphs": [
+        "PAN, LAN, MAN, and WAN describe common scopes: personal vicinity, a local site, a metropolitan area, and broader geographical connection. They are useful descriptive categories, not rigid universal distance limits. A campus network may combine several LANs over fibre, and a WAN may connect sites through a service provider.",
+        "A LAN is not necessarily private or secure merely because it is small. A WAN is not automatically the public Internet. Ownership, administration, technology, and geographical scope are separate properties. A private link can span countries; a public Wi-Fi LAN can expose local access to strangers.",
+        "An intranet supplies internal organisational network services. An extranet provides controlled access to selected external parties. The Internet is a global interconnection of networks using Internet protocols. The Web is a set of services and resources typically accessed through HTTP-based applications over that infrastructure. Email, remote shells, and many other applications also use Internet networks."
+      ],
+      "table": {
+        "caption": "2. Scope and ownership",
+        "headers": [
+          "Scope / term",
+          "Typical example",
+          "What it does not guarantee"
+        ],
+        "rows": [
+          [
+            "PAN",
+            "Phone and nearby accessories",
+            "A particular protocol or security level"
+          ],
+          [
+            "LAN",
+            "Office Ethernet or Wi-Fi",
+            "Privacy or unlimited speed"
+          ],
+          [
+            "MAN / WAN",
+            "Metro connection / intercity sites",
+            "Public Internet access"
+          ],
+          [
+            "Intranet / extranet",
+            "Internal portal / partner access",
+            "Automatic trust or safe users"
+          ],
+          [
+            "Internet / Web",
+            "Interconnected networks / web services",
+            "The two terms are interchangeable"
+          ]
+        ]
+      }
+    },
+    {
+      "title": "3. Circuit, packet, and layered thinking",
+      "paragraphs": [
+        "Most Internet communication sends data in packets. A packet carries headers used for delivery and a payload containing information from a higher layer. A large application message may be divided across many packets; packet boundaries need not match application message boundaries.",
+        "Layers divide responsibilities. The link layer handles communication on a particular link; the Internet layer addresses and routes packets across networks; the transport layer provides endpoint communication services; applications define meaning and operations. Encapsulation wraps higher-layer data inside lower-layer units. The receiver interprets the wrappers in the reverse direction.",
+        "Layering allows one application to work over different link technologies. It is a model, not a promise that every device performs exactly one layer’s work. Firewalls, proxies, and offload hardware can examine or implement several responsibilities."
+      ],
+      "code": "Application data → transport unit → IP packet → link frame → physical signal\nAt the receiver: signal → frame → IP packet → transport data → application"
+    },
+    {
+      "title": "4. Addresses answer different delivery questions",
+      "paragraphs": [
+        "A link-layer address identifies an interface for delivery on a link. An IP address identifies an interface or endpoint in the Internet-layer addressing scheme. A port identifies a transport service or communication endpoint within a host’s transport context. A DNS name is an application-friendly identifier whose records may supply addresses. These are different namespaces, not four interchangeable names for a person.",
+        "For an off-link destination, a host sends the link frame toward its next-hop router while the IP packet identifies the remote destination. Routers choose subsequent next hops. The Ethernet destination on the first link is therefore usually the router’s interface, not the remote web server’s Ethernet address.",
+        "An IPv4 prefix describes an address range. With prefix /24, 24 of 32 bits identify the prefix and 8 remain for addresses within it: 2^8 = 256 addresses. Conventional /24 subnets reserve network and directed-broadcast addresses, commonly leaving 254 host addresses. This convention must not be generalised to every prefix or to IPv6."
+      ]
+    },
+    {
+      "title": "5. A request through a network",
+      "paragraphs": [
+        "Imagine a laptop requesting a campus service on a different IP subnet. It needs a valid local configuration and route. It may resolve the service name through DNS, determine the next hop, resolve the next-hop link address, and send frames carrying transport and IP data. The switch forwards on the local network; a router forwards toward the destination network. The application server receives the request and constructs a response.",
+        "For HTTPS, secure transport is established and the server identity is checked using the relevant certificate and trust rules. The response follows routing decisions that need not be identical to the request’s path. Caches, proxies, NAT, and load balancers can alter the practical flow. This simplified trace supplies a starting model, not a claim that every web request repeats every setup step.",
+        "If name resolution fails, that differs from IP reachability failing. If the server returns an application error, packets may have been delivered correctly. Diagnose the failed responsibility rather than describing every problem as “the Internet is down”."
+      ]
+    },
+    {
+      "title": "6. Performance, resilience, and network effects",
+      "paragraphs": [
+        "Bandwidth is a capacity measure, typically bits per second. Throughput is the observed delivery rate. Goodput counts useful application data rather than all transmitted overhead. Latency is time taken for an operation or delivery; round-trip time includes a path out and back. Low latency and high throughput are distinct goals.",
+        "The narrowest capacity along a path can limit steady throughput, but congestion, loss, protocol behaviour, endpoints, and storage can reduce it further. A queue adds delay when arrivals exceed service temporarily. Buffers postpone loss but do not create capacity; excessively large queues can create long interactive delays.",
+        "Reliability requires considering independent failures and recovery. A redundant link does not protect against a shared failed switch or power supply. Network security needs access boundaries, secure protocols, updates, monitoring, and recovery. Connectivity alone provides none of these guarantees."
+      ],
+      "example": [
+        "A 100 MB decimal file contains 800 million bits. On a 20 Mb/s bottleneck, ideal payload transfer time is 800/20 = 40 seconds. Headers, retransmissions, setup, and application delays increase the real time. If the path RTT is 80 ms, bandwidth-delay product is 20,000,000 × 0.08 = 1,600,000 bits, or 200,000 bytes. This estimates data needed in flight to use that rate under the simplified path model; it is not a guarantee of actual throughput."
+      ]
+    }
+  ],
+  "revision": [
+    "Draw a host → switch → router → remote network path and label roles.",
+    "Distinguish link address, IP address, port, and DNS name.",
+    "Explain scope separately from trust and ownership.",
+    "Calculate ideal transfer time and list omitted overheads."
+  ],
+  "questions": [
+    {
+      "level": "easy",
+      "tags": [
+        "Exam practice"
+      ],
+      "question": "What are the main components of a computer network?",
+      "answer": [
+        "Participating nodes, interfaces, communication links, forwarding devices, protocols, addresses, and services. Explain what each contributes with a simple path diagram. Software rules are as necessary as physical connectivity."
+      ],
+      "id": "what-are-the-main-components-of-a-computer-network"
+    },
+    {
+      "level": "medium",
+      "tags": [
+        "Interview practice"
+      ],
+      "question": "Is the Internet the same as the Web?",
+      "answer": [
+        "No. The Internet supplies interconnected packet networks. The Web supplies application resources and services commonly accessed using HTTP-based protocols. Email and many other Internet applications are outside the Web."
+      ],
+      "id": "is-the-internet-the-same-as-the-web"
+    },
+    {
+      "level": "medium",
+      "tags": [
+        "Practical reasoning"
+      ],
+      "question": "Why can a website fail while messaging still works?",
+      "answer": [
+        "They may depend on different servers, routes, name records, transport protocols, credentials, or service policies. Some connectivity is evidently available. Check the failing service and its dependencies before assuming a complete network outage."
+      ],
+      "id": "why-can-a-website-fail-while-messaging-still-works"
+    },
+    {
+      "level": "hard",
+      "tags": [
+        "Interview practice"
+      ],
+      "question": "Why does a faster link not always improve downloads?",
+      "answer": [
+        "Another path link or the endpoint may be the bottleneck. Loss, transport limits, congestion, server rate limits, disk performance, and setup overhead can dominate. Compare goodput and latency under the same workload and identify the limiting stage."
+      ],
+      "id": "why-does-a-faster-link-not-always-improve-downloads"
+    },
+    {
+      "level": "medium",
+      "tags": [
+        "Concept check"
+      ],
+      "question": "Does a server have to be a special hardware category?",
+      "answer": [
+        "No. Server is a service role. A laptop can serve a file, and a large dedicated machine can act as a client. Hardware is chosen according to service workload, resilience, and operational requirements."
+      ],
+      "id": "does-a-server-have-to-be-a-special-hardware-category"
+    },
+    {
+      "level": "hard",
+      "tags": [
+        "Curious learner"
+      ],
+      "question": "Can sending and receiving use different paths?",
+      "answer": [
+        "Yes. Routing is determined independently at forwarding points and can be asymmetric. Successful outbound delivery does not prove a usable return path. Stateful policy devices and diagnosis tools must account for this possibility."
+      ],
+      "id": "can-sending-and-receiving-use-different-paths"
+    }
+  ],
+  "references": [
+    {
+      "title": "IETF RFC 1122: Internet communication layers",
+      "url": "https://datatracker.ietf.org/doc/html/rfc1122"
+    },
+    {
+      "title": "Cisco: networking basics",
+      "url": "https://www.cisco.com/site/us/en/learn/topics/small-business/networking-basics.html"
+    }
+  ]
+}

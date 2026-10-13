@@ -1,0 +1,4 @@
+import { focus, muted, eyebrow } from '@/ui/classes'
+export default function TableOfContents({ headings, active }) {
+  return <nav aria-label="On this page"><p className={`${eyebrow} mb-4`}>On this page</p>{headings.length ? <ol className="space-y-1 border-l border-line dark:border-night-line">{headings.map(heading => <li key={heading.id}><a className={`${focus} -ml-px block border-l-2 py-2 pr-2 text-sm leading-snug ${heading.level===3?'pl-5':'pl-3'} ${active===heading.id?'border-brand text-brand dark:border-night-brand dark:text-night-brand':'border-transparent text-subtle hover:text-ink dark:text-night-subtle dark:hover:text-night-ink'}`} href={`#${heading.id}`} aria-current={active===heading.id?'location':undefined}>{heading.text}</a></li>)}</ol> : <p className={`text-sm ${muted}`}>Headings appear here as the note loads.</p>}</nav>
+}

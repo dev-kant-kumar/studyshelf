@@ -1,0 +1,199 @@
+{
+  "intro": "Network topology describes how nodes and links are arranged and how communication is organised. Physical and logical topology may differ. Draw a topology, then reason about shared resources, failure domains, scalability, and the protocols needed to operate it.",
+  "outcomes": [
+    "Compare bus, star, ring, mesh, tree, hybrid, and point-to-point arrangements.",
+    "Derive full-mesh link count and reason about failure impacts.",
+    "Distinguish physical redundancy from operational resilience."
+  ],
+  "sections": [
+    {
+      "title": "1. Physical versus logical arrangement",
+      "paragraphs": [
+        "Physical topology describes actual attachments and links. Logical topology describes how traffic or access behaves over them. A network physically wired to a central hub can behave like a shared logical bus because the hub repeats signals. A switched star provides separate link attachments and different forwarding behaviour.",
+        "Overlay networks can establish logical relationships over an underlying physical network. A virtual network may appear to connect endpoints directly while packets traverse many physical devices. Physical and logical views answer different diagnosis questions: which cable is broken versus which forwarding or policy relationship is unavailable.",
+        "Always state the level and relevant protocol. A drawing of lines does not determine capacity, collision behaviour, encryption, or recovery. These depend on the link and forwarding technologies and their configuration."
+      ]
+    },
+    {
+      "title": "2. Bus and point-to-point",
+      "paragraphs": [
+        "A bus connects nodes to a shared communication path. Shared access needs coordination, and traditional electrical buses need suitable termination. A fault in the common path can affect many nodes. Adding nodes can increase shared demand and change electrical characteristics; a bus is not infinitely extensible.",
+        "Legacy shared Ethernet is a useful bus example, but it should not be generalised to modern switched Ethernet. Ethernet protocol families have used several physical arrangements. Token, contention, and scheduled access are access mechanisms, not topology names.",
+        "A point-to-point link directly connects two relevant interfaces. It is simple to reason about, but two nodes having a direct logical link does not establish that the provider supplies one unshared physical path. Capacity and protection still need specification."
+      ],
+      "code": "Bus:    A ─┬─ B ─┬─ C ─┬─ D  (shared backbone)\nPoint-to-point: A ───────── B"
+    },
+    {
+      "title": "3. Star topology",
+      "paragraphs": [
+        "A star attaches each endpoint to a central device. Adding or disconnecting one endpoint is usually straightforward. A single endpoint-link fault commonly isolates that endpoint, while central-device failure can disconnect many endpoints. The centre is therefore an important dependency.",
+        "A hub-centred star repeats physical signals; a switch-centred star learns and forwards frames. This distinction changes resource sharing and collision behaviour. The same physical picture can have very different performance and fault properties.",
+        "Redundant central devices and separate uplinks can reduce some failure risks, but shared power, rack, configuration, or upstream dependencies remain. A second switch is useful only if endpoints and routing or switching protocols can actually use the alternative during failure."
+      ],
+      "code": "      A\n      │\nB ─ Switch ─ C\n      │\n      D"
+    },
+    {
+      "title": "4. Ring topology",
+      "paragraphs": [
+        "A ring connects nodes or forwarding points in a closed sequence. Communication may use one direction, both directions, or protocol-defined paths. Some historical ring systems used token-based access, but a ring does not inherently require a token. Access mechanism and shape are separate.",
+        "A simple unprotected ring can be disrupted by a break or failed participant. Dual rings, bypass mechanisms, and protection protocols can support recovery under specified failures. Describe the mechanism before claiming that a ring survives every fault.",
+        "Ring designs can offer structured paths and predictable arrangements, but changes and multiple failures need consideration. Modern service-provider and industrial designs can use protected ring structures; historical classroom examples are not the only implementations."
+      ],
+      "code": "A ─ B\n│   │\nD ─ C"
+    },
+    {
+      "title": "5. Mesh: redundancy has a cost",
+      "paragraphs": [
+        "A full mesh directly connects every pair of nodes. For n nodes, each has n − 1 neighbours. Counting n(n − 1) incidences counts each undirected link twice, so link count is n(n − 1)/2. A partial mesh supplies selected alternative paths with fewer links.",
+        "Mesh arrangements can reduce dependence on one central path, but bring interface cost, cabling, management, and routing complexity. A physical alternative does not ensure automatic failover. The forwarding system must detect failure and select a valid alternative, and the remaining capacity must support the workload.",
+        "In wireless mesh, hops may share radio spectrum. Adding a path does not create independent capacity if neighbouring transmissions contend. Redundancy, throughput, and latency need separate analysis."
+      ],
+      "example": [
+        "For eight nodes, a full undirected mesh requires 8 × 7 / 2 = 28 links and seven direct attachments per node. A star needs eight endpoint links plus its central device under this comparison. Increasing full-mesh nodes from eight to nine adds eight links. The quadratic growth makes full mesh expensive at large scale."
+      ]
+    },
+    {
+      "title": "6. Tree, hybrid, and hierarchical networks",
+      "paragraphs": [
+        "A tree organises branches beneath higher-level nodes. It scales naturally for structured expansion, but upper-level links and devices can carry aggregate demand and create broad failure domains. “No cycles” describes the tree graph, not guaranteed reliability.",
+        "Hybrid topology combines arrangements: office stars connected through a backbone, or an access hierarchy with a partially meshed core. Modern data centres may use leaf-spine structures to supply multiple paths and more predictable interconnection. Actual forwarding, oversubscription, and failure behaviour still depend on protocol and capacity choices.",
+        "When comparing hierarchies, calculate uplink demand. Forty endpoints each with a 1 Gb/s attachment do not all obtain 1 Gb/s simultaneously through one 10 Gb/s uplink. Oversubscription may be acceptable for the workload, but should be deliberate and measured."
+      ],
+      "table": {
+        "caption": "6. Tree, hybrid, and hierarchical networks",
+        "headers": [
+          "Topology",
+          "Typical strength",
+          "Failure / scaling concern"
+        ],
+        "rows": [
+          [
+            "Bus",
+            "Few common-path attachments",
+            "Shared path faults and shared demand"
+          ],
+          [
+            "Star",
+            "Simple endpoint expansion",
+            "Central dependency"
+          ],
+          [
+            "Ring",
+            "Structured alternate-path possibilities",
+            "Protection mechanism and multi-fault behaviour"
+          ],
+          [
+            "Mesh",
+            "Multiple paths",
+            "Link count and routing complexity"
+          ],
+          [
+            "Tree",
+            "Hierarchical organisation",
+            "Upper-level bottlenecks and broad outages"
+          ],
+          [
+            "Hybrid",
+            "Fits different parts of a network",
+            "Complexity and hidden shared dependencies"
+          ]
+        ]
+      }
+    },
+    {
+      "title": "7. Loops, redundancy, and choosing a topology",
+      "paragraphs": [
+        "A redundant Ethernet path can create a forwarding loop if frames circulate and are repeatedly flooded. Ordinary Ethernet frames do not contain the IP hop-limit mechanism. Loop-prevention or controlled multipath mechanisms are therefore important. A blocked standby path can offer recovery without normal simultaneous use; routed designs use their own path-selection rules.",
+        "Choose topology from endpoint count, growth, traffic patterns, distance, resilience target, operations, and cost. Identify which failures are tolerated and how recovery occurs. Test failure behaviour rather than assuming a redundant picture is a redundant service.",
+        "For a campus, local switched stars with suitably designed interbuilding connections may be practical. For a small two-device exchange, point-to-point may suffice. There is no universally best topology without requirements."
+      ],
+      "example": [
+        "If 24 access ports can each offer 1 Gb/s toward a single 10 Gb/s uplink, peak offered-to-uplink ratio is 24:10 = 2.4:1. If normal aggregate demand is 2 Gb/s, this may be acceptable. If all ports must sustain peak off-switch traffic simultaneously, the requirement is not met. Local traffic that stays on the access switch does not necessarily consume the uplink."
+      ]
+    }
+  ],
+  "revision": [
+    "Draw each topology and name physical and logical interpretations.",
+    "Derive n(n−1)/2 rather than memorising it.",
+    "Analyse one endpoint failure and one central/backbone failure.",
+    "Explain why redundant links need a forwarding and recovery mechanism."
+  ],
+  "questions": [
+    {
+      "level": "easy",
+      "tags": [
+        "Exam practice"
+      ],
+      "question": "What is network topology?",
+      "answer": [
+        "The arrangement of nodes and links or the logical organisation of communication. State whether you mean physical or logical topology, draw it, and explain the implications for access, growth, and failure."
+      ],
+      "id": "what-is-network-topology"
+    },
+    {
+      "level": "medium",
+      "tags": [
+        "Exam practice"
+      ],
+      "question": "How many links are needed for a full mesh of ten nodes?",
+      "answer": [
+        "10 × 9 / 2 = 45 undirected links. Each pair requires one link; counting ten nodes each connected to nine others double-counts every link. Directed connections require a different counting model."
+      ],
+      "id": "how-many-links-are-needed-for-a-full-mesh-of-ten-nodes"
+    },
+    {
+      "level": "medium",
+      "tags": [
+        "Interview practice"
+      ],
+      "question": "Why can a hub star behave like a bus?",
+      "answer": [
+        "The hub repeats signals to other attachments, so nodes share the communication domain despite separate physical cables. A switch forwards using learned frame information and provides different resource behaviour."
+      ],
+      "id": "why-can-a-hub-star-behave-like-a-bus"
+    },
+    {
+      "level": "hard",
+      "tags": [
+        "Practical reasoning"
+      ],
+      "question": "Does adding a second uplink always improve resilience?",
+      "answer": [
+        "No. It may create a loop, share the same failed upstream device, or remain unusable without recovery configuration. Specify independent dependencies, loop control, routing, and capacity after failure, then test the transition."
+      ],
+      "id": "does-adding-a-second-uplink-always-improve-resilience"
+    },
+    {
+      "level": "medium",
+      "tags": [
+        "Concept check"
+      ],
+      "question": "Is token passing required by every ring?",
+      "answer": [
+        "No. Ring describes arrangement. Token passing is an access-control mechanism used by some ring systems. Other protocols can operate on ring-shaped physical networks."
+      ],
+      "id": "is-token-passing-required-by-every-ring"
+    },
+    {
+      "level": "hard",
+      "tags": [
+        "Curious learner"
+      ],
+      "question": "Why can a wireless mesh have many paths but poor throughput?",
+      "answer": [
+        "Nearby hops may share spectrum and interfere or take turns. Retransmissions and repeated forwarding consume airtime. Path count does not equal independent capacity. Analyse channel reuse, hop count, scheduling, and load."
+      ],
+      "id": "why-can-a-wireless-mesh-have-many-paths-but-poor-throughput"
+    }
+  ],
+  "references": [
+    {
+      "title": "Cisco: network fundamentals",
+      "url": "https://www.cisco.com/site/us/en/learn/topics/small-business/networking-basics.html"
+    },
+    {
+      "title": "Cisco: Ethernet switching",
+      "url": "https://www-cloud.cisco.com/site/us/en/learn/topics/networking/what-is-an-ethernet-switch.html"
+    }
+  ]
+}

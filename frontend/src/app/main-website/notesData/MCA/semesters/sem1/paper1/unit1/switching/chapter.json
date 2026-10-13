@@ -1,0 +1,182 @@
+{
+  "intro": "Switching moves information through intermediate nodes toward a destination. Circuit, message, and packet switching make different choices about resource reservation and forwarding granularity. These choices affect delay, efficiency, buffering, and failure recovery.",
+  "outcomes": [
+    "Explain circuit, message, datagram, and virtual-circuit switching.",
+    "Calculate store-and-forward and pipelined transfer time.",
+    "Distinguish forwarding, routing, reservation, and reliability."
+  ],
+  "sections": [
+    {
+      "title": "1. Circuit switching: establish, transfer, release",
+      "paragraphs": [
+        "Circuit switching establishes a communication path with resources allocated for the connection, transfers information, and releases the allocation. The circuit may use physical paths or reserved time/frequency resources rather than one exclusive wire per call. Setup can be refused if resources are unavailable.",
+        "Once established under its design conditions, reserved capacity provides predictable service and avoids competition for that allocated capacity at every data unit. Idle allocation can be wasted. A physical fault can interrupt the connection, and setup takes time. Circuit switching does not inherently encrypt data or prevent endpoint failure.",
+        "It suits traffic requiring sustained predictable allocation. Bursty computer traffic can waste reservation because a user may spend long periods reading or thinking. Compare the complete lifecycle, not only transfer once the path is ready."
+      ]
+    },
+    {
+      "title": "2. Message switching",
+      "paragraphs": [
+        "Message switching forwards a complete message from one intermediate node to the next. Each node stores the whole message before sending it onward. No end-to-end circuit must be reserved first. Store-and-forward allows scheduling and route decisions, but complete messages can require substantial storage and impose large waiting times.",
+        "A long message may delay shorter messages behind it. Nodes need finite buffer management and an overload policy. Some messaging applications also store and forward at the application layer, but application email handling should not be confused with a claim that all its underlying Internet links use network-layer message switching.",
+        "The key defining distinction is forwarding granularity: the whole message. Packet switching divides data into smaller independently handled units, permitting finer-grained scheduling and pipelining."
+      ]
+    },
+    {
+      "title": "3. Packet switching and statistical sharing",
+      "paragraphs": [
+        "Packet switching divides traffic into bounded units containing control information and payload. Intermediate nodes use headers and forwarding state to choose an output. Multiple flows share links; their packets can be interleaved. Shared capacity is used efficiently for bursty traffic, but contention produces queueing and finite-buffer loss.",
+        "Packet overhead consumes capacity, and dividing a message creates requirements for reassembly or stream recovery at suitable endpoints. Packets can be lost, duplicated, delayed, or reordered depending on the system. Reliability is supplied by additional mechanisms where required, not by the word “packet”.",
+        "Store-and-forward packet devices receive the required packet before forwarding. Cut-through implementations can begin earlier under supported conditions, changing latency and error-handling trade-offs. Calculations should state which forwarding model is assumed."
+      ],
+      "table": {
+        "caption": "3. Packet switching and statistical sharing",
+        "headers": [
+          "Method",
+          "Allocation / unit",
+          "Main advantage",
+          "Main cost"
+        ],
+        "rows": [
+          [
+            "Circuit",
+            "Reserved connection resources",
+            "Predictable allocated service",
+            "Setup and idle reservation"
+          ],
+          [
+            "Message",
+            "Whole message stored at each hop",
+            "No prior end-to-end reservation",
+            "Large storage and delay"
+          ],
+          [
+            "Packet",
+            "Small units sharing links",
+            "Pipelining and bursty sharing",
+            "Headers, queues, loss and ordering concerns"
+          ]
+        ]
+      }
+    },
+    {
+      "title": "4. Datagram and virtual-circuit arrangements",
+      "paragraphs": [
+        "A datagram network forwards packets using destination addressing and current forwarding information without requiring a prior per-flow path setup. IP is the central Internet example. Different packets may follow different paths after routing changes. The network does not promise that they arrive in order or arrive at all.",
+        "A virtual-circuit arrangement establishes forwarding state and identifiers for a logical path. Packets then follow that arrangement while it remains valid. This can reduce per-packet decision information or support particular service policies, but state must be installed, maintained, and recovered. A virtual circuit does not automatically reserve bandwidth; reservation is a separate design choice.",
+        "A TCP connection over IP is transport state between endpoints, not proof that IP routers have established a circuit for it. Distinguish an application session, transport connection, network forwarding path, and physical circuit."
+      ]
+    },
+    {
+      "title": "5. Routing and forwarding are separate",
+      "paragraphs": [
+        "Routing determines paths or constructs forwarding information. Forwarding uses that information to move an arriving unit to a chosen next hop or output. A router does not compute a fresh global shortest path from scratch for every packet in the usual model.",
+        "Routes depend on reachability, metrics, and policy. The chosen route need not be geographically shortest or lowest latency. A forwarding loop can occur when information is inconsistent; hop limits prevent packets from circulating forever but do not fix the underlying route. Convergence after failure takes time and may temporarily disrupt traffic.",
+        "Queues form when several inputs request an output faster than it can serve them. Scheduling affects fairness and delay. Priority can help selected traffic but can starve other traffic without safeguards. A switching system needs both a forwarding decision and a plan for contention."
+      ]
+    },
+    {
+      "title": "6. Store-and-forward calculation and packet pipelining",
+      "paragraphs": [
+        "For one L-bit message over H identical links of rate R, pure store-and-forward transmission takes H × L/R when propagation, setup, processing, and queueing are ignored. Splitting into N equal packets allows links to operate on different packets simultaneously. In the ideal equal-rate model, completion takes (H + N − 1) × packet_bits/R.",
+        "Headers make packet_bits larger than payload_bits. Very small packets increase overhead; very large packets increase waiting and reduce scheduling granularity. Unequal link rates and queueing need a more detailed model. The formula is a teaching model, not a universal Internet-transfer prediction.",
+        "Performance conclusions should name assumptions. Packet pipelining can reduce message completion time without reducing the physical propagation delay of any one bit. A faster average does not establish guaranteed delivery or deadline compliance."
+      ],
+      "example": [
+        "Send 12,000 payload bits over three 1 Mb/s links. One whole store-and-forward message takes 3 × 12,000 / 1,000,000 = 36 ms. Divide it into six packets of 2,000 payload bits with 100 header bits each. Each packet transmission takes 2.1 ms. Ideal pipeline completion is (3 + 6 − 1) × 2.1 = 16.8 ms, excluding propagation and other delays. Total transmitted data per link is 12,600 bits, so the speed gain comes from overlapping stages despite header overhead."
+      ]
+    },
+    {
+      "title": "7. Failure and service guarantees",
+      "paragraphs": [
+        "Reserved resources simplify certain guarantees but do not eliminate faults. Statistical packet sharing accommodates changing traffic efficiently but needs explicit mechanisms if a bounded delay or loss target is required. Retries can restore delivery after transient loss but increase completion time and duplicate risk at higher layers.",
+        "Choose by workload: a short bursty transaction benefits from flexible sharing; a sustained deadline-sensitive flow may need admission and resource control. Modern systems can combine packet switching with policy, prioritisation, or reservations. Avoid a rigid claim that packet networks can never support quality of service.",
+        "An architectural explanation should identify who detects failure, who retransmits, who keeps state, and what happens during recovery. Delivery and successful application processing remain different outcomes."
+      ]
+    }
+  ],
+  "revision": [
+    "Compare setup, storage, overhead, and utilisation across methods.",
+    "Compute whole-message versus packet-pipeline completion time.",
+    "Explain why TCP is not a physical or network-layer circuit.",
+    "Separate route computation from per-packet forwarding."
+  ],
+  "questions": [
+    {
+      "level": "easy",
+      "tags": [
+        "Exam practice"
+      ],
+      "question": "What is store-and-forward switching?",
+      "answer": [
+        "An intermediate node receives and stores the required unit before forwarding it. The unit can be a whole message or a packet. Name the unit and account for its transmission time on each link."
+      ],
+      "id": "what-is-store-and-forward-switching"
+    },
+    {
+      "level": "medium",
+      "tags": [
+        "Exam practice"
+      ],
+      "question": "Why is packet switching efficient for bursty traffic?",
+      "answer": [
+        "Flows share link capacity rather than holding idle reservations. Their packets can be interleaved and pipelined. This efficiency brings contention, headers, and variable queueing, so it is not a free guarantee of low delay."
+      ],
+      "id": "why-is-packet-switching-efficient-for-bursty-traffic"
+    },
+    {
+      "level": "medium",
+      "tags": [
+        "Interview practice"
+      ],
+      "question": "Does a virtual circuit guarantee bandwidth?",
+      "answer": [
+        "No. It establishes logical path state or identifiers. Bandwidth reservation, admission, and scheduling require additional mechanisms. A logical connection and a capacity guarantee are different properties."
+      ],
+      "id": "does-a-virtual-circuit-guarantee-bandwidth"
+    },
+    {
+      "level": "hard",
+      "tags": [
+        "Practical reasoning"
+      ],
+      "question": "Why can smaller packets improve completion time but reduce goodput?",
+      "answer": [
+        "Smaller units enable finer pipelining and shorter blocking intervals, but each carries overhead and requires processing. Goodput can fall when headers dominate. The right size depends on path MTU, workload, device capability, and delay requirements."
+      ],
+      "id": "why-can-smaller-packets-improve-completion-time-but-reduce-goodput"
+    },
+    {
+      "level": "medium",
+      "tags": [
+        "Concept check"
+      ],
+      "question": "Are routing and switching interchangeable words?",
+      "answer": [
+        "They are often used loosely, but routing determines paths or forwarding information; forwarding moves units using that information. Layer-2 switching commonly uses MAC/VLAN state, while IP routing uses prefixes. Modern devices may perform both."
+      ],
+      "id": "are-routing-and-switching-interchangeable-words"
+    },
+    {
+      "level": "hard",
+      "tags": [
+        "Curious learner"
+      ],
+      "question": "Why does a hop limit not guarantee successful routing?",
+      "answer": [
+        "It bounds how long a packet can continue forwarding and helps terminate loops. It does not choose a correct path, restore missing reachability, or ensure delivery. A packet can expire while the route remains broken."
+      ],
+      "id": "why-does-a-hop-limit-not-guarantee-successful-routing"
+    }
+  ],
+  "references": [
+    {
+      "title": "IETF RFC 1122: Internet layer behaviour",
+      "url": "https://datatracker.ietf.org/doc/html/rfc1122"
+    },
+    {
+      "title": "IETF RFC 9293: transport connection semantics",
+      "url": "https://www.rfc-editor.org/rfc/rfc9293.html"
+    }
+  ]
+}

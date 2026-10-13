@@ -1,0 +1,185 @@
+{
+  "intro": "Computer generations are a teaching framework for comparing dominant hardware technologies. Their date ranges overlap and vary between textbooks. Learn the engineering changes and their effects, and treat the fifth-generation label as a broad historical aspiration rather than a precise new physical component.",
+  "outcomes": [
+    "Compare five conventional generations using technology and consequences.",
+    "Separate hardware generations from programming-language generations.",
+    "Explain integration, compatibility, and the limits of chronological labels."
+  ],
+  "sections": [
+    {
+      "title": "1. What the classification actually measures",
+      "paragraphs": [
+        "A generation usually groups systems by a dominant technology used to implement processing logic. It is not an international certification assigned to a computer. Manufacturers adopted technology at different times; older machines continued operating after newer designs appeared. Memory, peripherals, operating systems, and programming practices did not all change on one date.",
+        "In an exam, use the date ranges prescribed by your course if required, but explain that they are approximate. Compare switching technology, size, energy, reliability, speed, software environment, and examples. Do not infer that a later generation is better in every possible workload or that its arrival erased earlier systems."
+      ],
+      "table": {
+        "caption": "1. What the classification actually measures",
+        "headers": [
+          "Conventional label",
+          "Approximate teaching period",
+          "Dominant idea",
+          "Consequences and cautions"
+        ],
+        "rows": [
+          [
+            "First",
+            "1940s–mid-1950s",
+            "Vacuum-tube electronic logic",
+            "Large installations, considerable heat and power, substantial maintenance; software often close to machine representation."
+          ],
+          [
+            "Second",
+            "Mid-1950s–mid-1960s",
+            "Discrete transistor logic",
+            "Smaller and more dependable implementations; assembly and high-level language use expanded."
+          ],
+          [
+            "Third",
+            "Mid-1960s–early 1970s",
+            "Integrated circuits",
+            "More logic integrated; operating-system and compatible-family development expanded, with hybrid implementations too."
+          ],
+          [
+            "Fourth",
+            "1970s onward",
+            "Microprocessors and increasingly dense integration",
+            "Personal, mobile, embedded, and server computing; substantial variety and continuing development."
+          ],
+          [
+            "Fifth",
+            "Often described as 1980s onward",
+            "AI-oriented, knowledge-processing, and parallel-computing ambitions",
+            "Not a clean universal component boundary; AI runs on many contemporary hardware designs."
+          ]
+        ]
+      }
+    },
+    {
+      "title": "2. First generation: electronic switching with valves",
+      "paragraphs": [
+        "A vacuum tube controls electrical current and can implement switching behaviour. Large computers required many such devices plus wiring, power supplies, memory, and input/output machinery. Heat and component failures made operation and maintenance significant parts of the computing process.",
+        "Programming often involved machine-level representations or extensive physical configuration, depending on the machine and its stage of development. Punched cards, paper tape, printed output, and batch work were important, but avoid claiming that all machines had identical storage or lacked stored programs. ENIAC and early stored-program machines illustrate different arrangements within the broad period.",
+        "The achievement was reliable automated electronic computation at useful scale. The constraint was the cost of implementing and maintaining it. “Slow” is relative to later electronic machines; these systems could still outperform manual calculation dramatically."
+      ]
+    },
+    {
+      "title": "3. Second generation: transistors and software growth",
+      "paragraphs": [
+        "A transistor is a solid-state device whose behaviour can implement switching and amplification. Transistor logic reduced the size and energy requirements associated with valves and improved practical reliability. These benefits arise from device and system engineering; a transistor alone does not make a system error-free.",
+        "Assembly language and higher-level languages reduced the need to express every task in raw machine code. FORTRAN and COBOL are associated with expanding scientific and business programming in this era. Language availability depended on machines and tools; programming languages do not map perfectly to one hardware generation.",
+        "Batch processing remained common. A user could submit a job and receive output later. Higher-level expression made software easier to write and maintain, but translating it required compilers and a supported runtime environment. Hardware progress and software progress reinforced each other."
+      ]
+    },
+    {
+      "title": "4. Third generation: integration and compatible systems",
+      "paragraphs": [
+        "An integrated circuit fabricates multiple electronic components in a compact structure. Reducing separate component connections can reduce size and improve manufacturing economics and reliability. Integration also creates design and fabrication challenges; chip complexity is not a direct measure of application correctness.",
+        "Compatible computer families allowed organisations to expand hardware while preserving investments in software and training. The IBM System/360 family is a useful historical example of compatibility and system organisation, but some implementations used hybrid modules rather than the simplified “every third-generation machine used monolithic ICs” description.",
+        "Multiprogramming keeps several jobs available so that the processor can perform other work when one waits for I/O. Time-sharing divides service among interactive users. These are operating-system techniques enabled by suitable resources and protection, not properties of an integrated circuit itself. Distinguish the technological enabler from the software policy."
+      ]
+    },
+    {
+      "title": "5. Fourth generation: CPU integration and diverse systems",
+      "paragraphs": [
+        "A microprocessor places CPU functions on an integrated chip. Increasing integration enabled compact, relatively inexpensive computer systems and enormous expansion in personal and embedded computing. A microcontroller often integrates a processor, memory, and peripheral interfaces for control tasks; the terms describe differing integration and usage patterns.",
+        "The fourth-generation category spans many decades and many architectures. Multicore CPUs, GPUs, systems on a chip, laptops, smartphones, and servers can all use highly integrated electronic components. Transistor count does not predict performance on its own: frequency, instruction efficiency, memory, parallelism, cooling, and workload matter.",
+        "Moore’s-law discussions concern historical trends in device integration and economics. They are not a law of physics promising that application speed doubles on a fixed schedule. Developers still need efficient algorithms and careful data movement."
+      ]
+    },
+    {
+      "title": "6. Fifth generation and how to avoid misleading claims",
+      "paragraphs": [
+        "Fifth-generation descriptions often emphasise artificial intelligence, knowledge processing, natural-language interaction, or parallel computation. These goals do not identify one universally agreed replacement for transistor-based hardware. AI applications can run on CPUs, GPUs, or specialised accelerators; an AI label describes a task or approach, not necessarily a separate physical generation.",
+        "Parallelism also predates current AI systems. A workload benefits only when enough independent work exists and overhead does not consume the gain. Quantum computers use a distinct computational model, but should not simply be inserted as the definition of the conventional fifth generation.",
+        "For a strong answer, state the conventional classification, compare actual engineering properties, and include the limitation of the labels. This shows both syllabus knowledge and the judgement expected of a postgraduate student."
+      ],
+      "example": [
+        "A manufacturer offers a 16-core machine for a program whose execution is 80% serial and 20% perfectly parallel. Ignoring overhead, the speedup is 1 / (0.8 + 0.2 / 16) ≈ 1.23. A modern highly integrated processor does not override the program’s serial dependency. Hardware generation is an inadequate basis for predicting this program’s speed."
+      ]
+    }
+  ],
+  "revision": [
+    "Build a comparison answer around technology, impact, and limitations.",
+    "Explain transistor → IC → microprocessor without treating them as mutually exclusive materials.",
+    "Distinguish integration from parallel speedup and software correctness.",
+    "Qualify fifth-generation and “doubling speed” claims."
+  ],
+  "questions": [
+    {
+      "level": "easy",
+      "tags": [
+        "Exam practice"
+      ],
+      "question": "What distinguishes the first four generations?",
+      "answer": [
+        "The conventional sequence is valve-based logic, discrete transistor logic, integrated circuits, and microprocessor-based dense integration. Explain effects on size, heat, cost, reliability, and accessibility. Treat dates as approximate rather than universal boundaries."
+      ],
+      "id": "what-distinguishes-the-first-four-generations"
+    },
+    {
+      "level": "medium",
+      "tags": [
+        "Concept check"
+      ],
+      "question": "Are transistors absent from third- and fourth-generation computers?",
+      "answer": [
+        "No. Integrated circuits contain transistors and other structures; microprocessors are integrated circuits. The distinction concerns integration and organisation, not the disappearance of transistor technology."
+      ],
+      "id": "are-transistors-absent-from-third-and-fourth-generation-computers"
+    },
+    {
+      "level": "medium",
+      "tags": [
+        "Interview practice"
+      ],
+      "question": "Is programming-language generation the same classification?",
+      "answer": [
+        "No. Machine, assembly, higher-level, and later language categories classify ways of expressing programs. Hardware generations classify implementation trends. A modern processor can execute code originating from many language styles after translation."
+      ],
+      "id": "is-programming-language-generation-the-same-classification"
+    },
+    {
+      "level": "hard",
+      "tags": [
+        "Curious learner"
+      ],
+      "question": "Does fifth generation mean all computers think like humans?",
+      "answer": [
+        "No. The label is often associated with AI-oriented ambitions. A system can recognise patterns or generate responses without establishing human-like understanding or correctness. Evaluate a capability using its task, evidence, limitations, and validation requirements."
+      ],
+      "id": "does-fifth-generation-mean-all-computers-think-like-humans"
+    },
+    {
+      "level": "medium",
+      "tags": [
+        "Exam practice"
+      ],
+      "question": "Why did integrated circuits improve practical reliability?",
+      "answer": [
+        "Integration reduces many external component connections and can improve repeatable manufacture. Fewer problematic connections can reduce some failure opportunities. Reliability still depends on design, cooling, power, fabrication, software, and operation; integration does not eliminate failures."
+      ],
+      "id": "why-did-integrated-circuits-improve-practical-reliability"
+    },
+    {
+      "level": "hard",
+      "tags": [
+        "Practical reasoning"
+      ],
+      "question": "How should you compare two computers advertised as a newer generation?",
+      "answer": [
+        "Run representative equivalent workloads and measure the required outcomes: latency, throughput, energy, capacity, and total cost. Specify configuration and software. Generation labels and component counts cannot replace measurements or account for bottlenecks."
+      ],
+      "id": "how-should-you-compare-two-computers-advertised-as-a-newer-generation"
+    }
+  ],
+  "references": [
+    {
+      "title": "Computer History Museum: semiconductor milestones",
+      "url": "https://www.computerhistory.org/siliconengine/timeline/"
+    },
+    {
+      "title": "Computer History Museum: integrated circuits",
+      "url": "https://www.computerhistory.org/revolution/story/276"
+    }
+  ]
+}

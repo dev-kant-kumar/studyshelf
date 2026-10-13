@@ -1,0 +1,10 @@
+export const container = 'mx-auto w-full max-w-[1200px] px-4 sm:px-6 lg:px-8'
+export const muted = 'text-subtle dark:text-night-subtle'
+export const eyebrow = 'text-xs font-semibold tracking-[0.14em] uppercase text-subtle dark:text-night-subtle'
+export const title = 'font-display text-[1.75rem] leading-tight font-medium tracking-tight sm:text-4xl'
+export const focus = 'focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand dark:focus-visible:outline-night-brand'
+export const button = `inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-brand px-5 py-2.5 text-base font-semibold text-on-brand transition-colors hover:bg-brand-hover dark:bg-night-brand dark:text-night-on-brand dark:hover:bg-night-brand-hover motion-reduce:transition-none ${focus}`
+export const secondary = `inline-flex min-h-11 items-center justify-center gap-2 rounded-lg border border-line bg-surface px-4 py-2.5 text-base font-semibold transition-colors hover:bg-soft dark:border-night-line dark:bg-night-surface dark:hover:bg-night-soft motion-reduce:transition-none ${focus}`
+export const iconButton = `inline-flex size-11 shrink-0 items-center justify-center rounded-lg text-subtle transition-colors hover:bg-soft hover:text-brand dark:text-night-subtle dark:hover:bg-night-soft dark:hover:text-night-brand motion-reduce:transition-none ${focus}`
+export const panel = 'rounded-xl border border-line bg-surface dark:border-night-line dark:bg-night-surface'
+export const link = `text-brand underline decoration-brand/40 underline-offset-4 hover:decoration-brand dark:text-night-brand dark:decoration-night-brand/40 dark:hover:decoration-night-brand ${focus}`

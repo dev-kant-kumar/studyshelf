@@ -1,0 +1,184 @@
+{
+  "intro": "Data communication is the transfer of represented information between endpoints through a medium under agreed rules. The central questions are how the signal represents bits, how endpoints coordinate, how errors are detected, and how delivery performance is measured.",
+  "outcomes": [
+    "Explain the five communication components and transmission modes.",
+    "Distinguish analog/digital data from analog/digital signals.",
+    "Calculate delay, capacity limits, and basic error-control overhead."
+  ],
+  "sections": [
+    {
+      "title": "1. Message, sender, receiver, medium, and protocol",
+      "paragraphs": [
+        "The message is the information being communicated. The sender generates a representation; the receiver interprets it. The medium carries a physical signal. A protocol supplies rules for format, timing, sequence, and reactions to events. Both endpoints must agree on enough rules for successful interpretation.",
+        "Useful communication requires correct delivery to the intended endpoint, acceptable integrity, suitable timeliness, and an appropriate level of security. Real-time media also care about jitter: variation in delivery timing. A video stream can have sufficient average throughput yet experience playback interruptions when delays vary substantially.",
+        "Data and signal are different concepts. A photograph stored as digital bytes can be transmitted through a modulated radio signal. A microphone captures a continuous-world quantity, which can be sampled and encoded into digital data. “Analog data” and “analog medium” do not determine whether every subsequent representation is analog."
+      ]
+    },
+    {
+      "title": "2. Direction, timing, and organisation",
+      "paragraphs": [
+        "Simplex communication allows one-way information flow. Half-duplex supports both directions but not simultaneously on the relevant channel. Full-duplex supports simultaneous communication in both directions. These describe a channel or arrangement; a conversation having alternating speakers does not prove that the physical link is half-duplex.",
+        "Serial transmission sends a sequence of symbols over a channel; parallel transmission uses multiple paths for portions of a representation. Parallel paths can suffer skew and require coordination. Modern high-rate links often use serial signalling, so serial does not mean universally slower.",
+        "Asynchronous character-oriented transmission may use start and stop bits to identify character boundaries without a continuously shared bit clock. Synchronous arrangements establish timing for a stream or frames through suitable signalling and framing. All communication still requires timing assumptions; asynchronous does not mean “no timing needed”."
+      ],
+      "table": {
+        "caption": "2. Direction, timing, and organisation",
+        "headers": [
+          "Mode",
+          "Direction",
+          "Example interpretation"
+        ],
+        "rows": [
+          [
+            "Simplex",
+            "One way",
+            "A unidirectional telemetry feed"
+          ],
+          [
+            "Half-duplex",
+            "Both ways, taking turns",
+            "Shared radio channel with coordinated speaking"
+          ],
+          [
+            "Full-duplex",
+            "Both ways at once",
+            "Appropriate switched Ethernet link"
+          ],
+          [
+            "Asynchronous / synchronous",
+            "Timing and framing arrangements",
+            "A separate axis from direction"
+          ]
+        ]
+      }
+    },
+    {
+      "title": "3. Encoding and modulation",
+      "paragraphs": [
+        "Line coding maps bits to physical signal patterns suitable for a link. Desirable properties can include clock recovery, manageable frequency content, and reliable distinction between symbols. Modulation maps information onto carrier properties such as amplitude, frequency, or phase. ASK, FSK, and PSK describe basic families; QAM combines amplitude and phase distinctions.",
+        "Bit rate counts bits per second. Symbol rate, often called baud, counts symbols per second. If M equally usable symbols represent log2(M) bits each, an uncoded mapping can carry symbol_rate × log2(M) bits per second. Error-correction codes, framing, pilots, and other overhead reduce useful payload rate.",
+        "Increasing symbol choices requires reliably distinguishing them under noise and distortion. Higher nominal bits per symbol do not provide free capacity. A design balances bandwidth, received signal quality, error tolerance, and complexity. The physical channel must support the chosen signalling, not just the desired file size."
+      ],
+      "example": [
+        "At 2,400 symbols/s with 16 distinguishable symbols, log2(16) = 4 bits/symbol, giving 9,600 bits/s before overhead. If one half of those mapped bits are useful payload under a particular coding/framing arrangement, goodput is at most 4,800 bits/s. Always state whether the quoted rate is physical, coded, or application payload."
+      ]
+    },
+    {
+      "title": "4. Delay: transmission is not propagation",
+      "paragraphs": [
+        "Transmission delay is time to put a unit’s bits onto a link: L/R for L bits and rate R bits/s. Propagation delay is travel time through the medium: distance / propagation speed. Processing examines or transforms data. Queueing waits for service. End-to-end delay combines the relevant stages and paths.",
+        "Increasing a link rate reduces transmission delay but does not eliminate propagation delay over the same path. Small interactive requests can be dominated by round trips even on a high-capacity link. Large transfers can be dominated by sustained throughput. Store-and-forward devices must receive the required unit before sending it onward; pipelining changes total transfer behaviour for many packets.",
+        "Jitter is variation in delay, not a synonym for low speed. Media playback buffers can absorb some variation but add latency. The right amount depends on whether interactive response or smooth delayed playback matters more."
+      ],
+      "example": [
+        "A 1,500-byte frame has 12,000 bits. At 100 Mb/s, transmission takes 0.12 ms. Over a 1,000 km path with propagation speed 2 × 10^8 m/s, propagation takes 5 ms. Ignoring other delays, one link contributes 5.12 ms. Doubling rate saves only 0.06 ms on this frame; it does not halve the 5 ms propagation term."
+      ]
+    },
+    {
+      "title": "5. Capacity bounds and their assumptions",
+      "paragraphs": [
+        "A simplified noiseless-channel Nyquist bound is C = 2B log2(M), where B is bandwidth in hertz and M is the number of distinguishable signalling levels. It assumes the relevant idealised channel and signalling conditions. Shannon’s noisy-channel capacity is C = B log2(1 + S/N), using a linear signal-to-noise power ratio. These are theoretical bounds, not promises that every modem achieves them.",
+        "Convert decibels before using Shannon’s formula: SNR_dB = 10 log10(S/N). Thus 30 dB corresponds to a linear power ratio of 1,000, not 30. Capacity in bits/s and frequency bandwidth in hertz are different units even though “bandwidth” is used informally for both.",
+        "The practical rate must respect physical channel limitations, coding, hardware, and protocol overhead. A larger constellation is useful only when the receiver can distinguish symbols adequately. The Shannon bound explains why arbitrarily increasing signalling complexity cannot create unlimited reliable communication through a fixed noisy channel."
+      ],
+      "example": [
+        "For B = 3,000 Hz and S/N = 1,000, Shannon capacity is 3,000 log2(1,001) ≈ 29,902 bits/s. A proposed 60,000 bits/s reliable scheme for that unchanged model exceeds the bound. For a separate noiseless 16-level model, Nyquist gives 2 × 3,000 × 4 = 24,000 bits/s. Do not combine incompatible assumptions without stating the actual model."
+      ]
+    },
+    {
+      "title": "6. Errors, flow control, and delivery semantics",
+      "paragraphs": [
+        "Noise can alter received symbols, causing bit or burst errors. Parity detects some patterns, checksums detect many corruptions, and CRC uses polynomial structure for stronger detection of specified error classes. None is automatically a cryptographic integrity guarantee. An attacker may modify data and recompute an ordinary checksum.",
+        "Error detection identifies a problem; recovery can retransmit or use redundancy sufficient to correct certain errors. Acknowledgements and timeouts can trigger retransmission. Lost acknowledgements can cause duplicates, so sequence information helps receivers recognise repeated data. Stop-and-wait sends a unit and waits; sliding windows allow multiple units in flight.",
+        "Flow control limits sending to receiver capacity. Congestion control responds to network capacity and congestion. They solve different problems. Reliable delivery still cannot ensure that an application action occurred exactly once after a crash: durable state, identifiers, and idempotent operations may be needed."
+      ],
+      "example": [
+        "If a sender transmits 1,000 payload bytes then waits a 40 ms RTT for acknowledgement, with negligible transmission time, stop-and-wait payload rate is roughly 8,000 / 0.04 = 200,000 bits/s. A fast physical link alone cannot overcome this waiting pattern. A window permits more in-flight data, but receiver capacity and congestion still constrain it."
+      ]
+    }
+  ],
+  "revision": [
+    "Explain bit rate versus baud with a constellation example.",
+    "Calculate transmission, propagation, and round-trip effects separately.",
+    "Convert dB to a linear ratio before a Shannon calculation.",
+    "Distinguish error detection, correction, flow control, and congestion control."
+  ],
+  "questions": [
+    {
+      "level": "easy",
+      "tags": [
+        "Exam practice"
+      ],
+      "question": "What are the five components of data communication?",
+      "answer": [
+        "Message, sender, receiver, medium, and protocol. Use a concrete example and explain each role. A medium without agreed interpretation and timing rules is not sufficient to transfer meaningful information."
+      ],
+      "id": "what-are-the-five-components-of-data-communication"
+    },
+    {
+      "level": "medium",
+      "tags": [
+        "Exam practice"
+      ],
+      "question": "Why are baud and bits per second different?",
+      "answer": [
+        "A symbol can encode multiple bits. With M distinguishable mapped symbols, log2(M) bits can be represented per symbol in an uncoded fixed-length scheme when M is a power of two. Coding and other overhead reduce payload. Baud measures symbols, not useful application bits."
+      ],
+      "id": "why-are-baud-and-bits-per-second-different"
+    },
+    {
+      "level": "medium",
+      "tags": [
+        "Interview practice"
+      ],
+      "question": "Will doubling link rate halve request latency?",
+      "answer": [
+        "Only the affected transmission component halves. Propagation, queueing, processing, setup, and round trips may dominate. Break latency into components before predicting an improvement."
+      ],
+      "id": "will-doubling-link-rate-halve-request-latency"
+    },
+    {
+      "level": "hard",
+      "tags": [
+        "Curious learner"
+      ],
+      "question": "Does a CRC protect a message from deliberate modification?",
+      "answer": [
+        "Ordinary CRC is designed for accidental-error detection, not adversarial authenticity. An attacker may modify a message and generate a matching CRC. Use an appropriate cryptographic integrity and authentication mechanism when the threat includes deliberate tampering."
+      ],
+      "id": "does-a-crc-protect-a-message-from-deliberate-modification"
+    },
+    {
+      "level": "medium",
+      "tags": [
+        "Practical reasoning"
+      ],
+      "question": "What can a jitter buffer fix?",
+      "answer": [
+        "It can absorb some variation in arrival time by delaying playback. It cannot create missing bandwidth or reconstruct unlimited lost data. A larger buffer can improve smoothness but worsens interactive delay."
+      ],
+      "id": "what-can-a-jitter-buffer-fix"
+    },
+    {
+      "level": "hard",
+      "tags": [
+        "Interview practice"
+      ],
+      "question": "Why can retransmission cause a duplicate payment?",
+      "answer": [
+        "A request may be processed while its response is lost. The client cannot infer that processing failed and may retry. An application-level operation identifier with durable deduplication or an idempotent design addresses this ambiguity; transport reliability alone does not."
+      ],
+      "id": "why-can-retransmission-cause-a-duplicate-payment"
+    }
+  ],
+  "references": [
+    {
+      "title": "MIT OpenCourseWare: digital communication",
+      "url": "https://ocw.mit.edu/courses/6-450-principles-of-digital-communication-i-fall-2006/"
+    },
+    {
+      "title": "IETF RFC 9293: TCP mechanisms",
+      "url": "https://www.rfc-editor.org/rfc/rfc9293.html"
+    }
+  ]
+}

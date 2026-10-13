@@ -1,0 +1,152 @@
+{
+  "intro": "Multiplexing lets multiple signals, streams, or users share a transmission resource while keeping them distinguishable at the receiver. It improves resource use but does not create unlimited capacity. Learn what is divided-frequency, time, wavelength, code, or another dimension-and how the receiver separates contributions.",
+  "outcomes": [
+    "Compare FDM, synchronous/statistical TDM, WDM, and code-division methods.",
+    "Calculate capacity, slot utilisation, and guard-band overhead.",
+    "Distinguish multiplexing from multiple access, modulation, and switching."
+  ],
+  "sections": [
+    {
+      "title": "1. Multiplexer and demultiplexer",
+      "paragraphs": [
+        "A multiplexer combines contributions into a shared channel. A demultiplexer identifies and separates them at the receiving side. The endpoints need compatible assignments, timing, or identifiers. Losing that coordination can make signals inseparable even when the medium carries adequate energy.",
+        "The motivation is economic and practical: one high-capacity resource can carry many lower-rate streams. The trade-off includes overhead, synchronisation, interference control, buffering, and fairness. Total useful capacity is bounded by the resource and by how efficiently the scheme uses it.",
+        "Multiplexing is not modulation. Modulation maps information onto signal properties; multiplexing arranges several contributions on a resource. Nor is it switching: switching decides where traffic goes through a network. These functions can occur together in the same system."
+      ],
+      "code": "Input A ─┐                    ┌─ Output A\nInput B ─┼─ MUX → shared → DEMUX ┼─ Output B\nInput C ─┘      channel       └─ Output C"
+    },
+    {
+      "title": "2. Frequency-division multiplexing",
+      "paragraphs": [
+        "FDM allocates different frequency bands to simultaneous signals. Each occupies an assigned part of the available spectrum. Receivers select the desired band using appropriate filtering and demodulation. Guard bands reduce interference from imperfect filters and neighbouring signals.",
+        "The total frequency span includes payload bands and guards. Increasing the number of users while keeping every user’s band unchanged requires more spectrum or less separation. Narrower guards can improve utilisation but place stronger demands on implementation. FDM can carry analog or digitally modulated signals; it is not exclusively an analog-data technique.",
+        "FDM is multiplexing. FDMA applies frequency allocation as a multiple-access arrangement among users. The physical division is related, but the access method also needs rules for user assignment and coordination."
+      ],
+      "example": [
+        "Five signals each require 4 kHz and adjacent pairs need 1 kHz guard bands. There are four internal gaps, so total span is 5 × 4 + 4 × 1 = 24 kHz. Payload-band utilisation is 20/24 ≈ 83.3%. Additional outside guards are excluded by this stated model; include them if the question specifies them."
+      ]
+    },
+    {
+      "title": "3. Synchronous time-division multiplexing",
+      "paragraphs": [
+        "Synchronous TDM allocates recurring time slots to inputs. The combined channel sends portions from different inputs in a defined sequence. The receiver uses synchronisation and slot position to associate data with its source. Inputs must be buffered and serviced according to that schedule.",
+        "A fixed slot can remain unused when its source has nothing to send. Predictable allocation is valuable for constant-rate traffic but can waste capacity with bursty traffic. Framing and synchronisation bits add overhead. A slot assignment is not enough unless the combined channel can serve the promised input rates.",
+        "“Synchronous” here means a coordinated recurring schedule, not that every application produces data at precisely the same instant. TDM operates at various granularities, from bits to larger units, depending on the implementation."
+      ],
+      "example": [
+        "Four inputs each supply 64 kb/s. If a frame takes one byte from each input, it contains 32 payload bits and repeats 8,000 times/s. With one framing bit per frame, output rate is 33 × 8,000 = 264 kb/s. Payload capacity is 256 kb/s and efficiency is 32/33 ≈ 97%. If two sources are idle and their slots remain reserved, only half the payload allocation is used."
+      ]
+    },
+    {
+      "title": "4. Statistical time-division multiplexing",
+      "paragraphs": [
+        "Statistical TDM assigns capacity to active sources rather than reserving every recurring slot unconditionally. Units need identification so the receiver knows their source. Bursty users can share a channel whose capacity is below the sum of their individual peaks, provided simultaneous demand and required delay are managed.",
+        "This works because users do not always peak together, not because the peak sum becomes irrelevant. If arrivals exceed service for long enough, queues grow and finite buffers overflow. Admission control, scheduling, dropping, and congestion responses may be needed. Average-load calculations cannot establish a hard delay guarantee.",
+        "Statistical multiplexing improves utilisation but adds queueing uncertainty and metadata overhead. Fixed allocation may be preferable when predictable service is more important than efficiency. Fairness also needs a policy: a busy source should not automatically starve others."
+      ],
+      "example": [
+        "Ten users can each send at 1 Mb/s but average 0.1 Mb/s. Their average offered load is 1 Mb/s. A 2 Mb/s shared link may handle ordinary bursts, but if all ten send at peak for one second, arrivals total 10 Mb and service only 2 Mb. The queue accumulates up to 8 Mb under the simplified model, requiring 1 MB of buffering or dropping. The average alone did not prove adequate service."
+      ]
+    },
+    {
+      "title": "5. Wavelength, code, and orthogonal subcarriers",
+      "paragraphs": [
+        "WDM carries separate optical channels using different wavelengths in one fibre. Its principle resembles frequency division, but optical transmitters, filters, amplifiers, and dispersion constraints govern implementation. Channel counts and spacing depend on the system; multiplying nominal channel rates gives an aggregate before relevant overhead and limits.",
+        "Code-division methods distinguish overlapping contributions using assigned spreading codes and correlation at the receiver. Useful separation depends on code properties, timing, received power, and interference. The near-far problem occurs when a strong signal overwhelms a weaker one despite code separation; power control can be important. Codes are not automatically encryption or secrecy.",
+        "OFDM uses many orthogonal subcarriers. Orthogonality depends on waveform and timing conditions; synchronisation errors and channel effects can break ideal separation. OFDMA allocates subsets of those resources to users. OFDM is a modulation/multiplexing structure; OFDMA adds multiple-access allocation."
+      ]
+    },
+    {
+      "title": "6. Resource accounting and choice",
+      "paragraphs": [
+        "A good comparison identifies the resource partition, simultaneous versus scheduled use, receiver coordination, overhead, unused allocation, and traffic fit. FDM reserves bands; fixed TDM reserves time; statistical methods share active demand; WDM separates optical wavelengths; code methods distinguish contributions with coding structures.",
+        "Application streams can also be multiplexed over one transport connection using identifiers and framing. That is a logical operation, not a claim that the fibre has gained more wavelengths. Sharing one connection can introduce scheduling interactions; the exact behaviour depends on the transport and application protocol.",
+        "For a design problem, state peak and average demand, latency bounds, acceptable loss, fairness, and physical capacity. Compute overhead explicitly and test simultaneous bursts. A scheme that fits average usage but misses deadlines is unsuitable for a guaranteed real-time service."
+      ]
+    }
+  ],
+  "revision": [
+    "Compute FDM span including the correct number of gaps.",
+    "Compute TDM output rate from frame length and frame frequency.",
+    "Explain why statistical multiplexing needs buffers and overload policy.",
+    "Distinguish FDM/FDMA and OFDM/OFDMA."
+  ],
+  "questions": [
+    {
+      "level": "easy",
+      "tags": [
+        "Exam practice"
+      ],
+      "question": "Why is multiplexing used?",
+      "answer": [
+        "It lets multiple contributions share an expensive or limited resource while remaining distinguishable. The benefit is efficient sharing; the costs include coordination, overhead, and potential interference or queueing."
+      ],
+      "id": "why-is-multiplexing-used"
+    },
+    {
+      "level": "medium",
+      "tags": [
+        "Exam practice"
+      ],
+      "question": "What is the main difference between fixed and statistical TDM?",
+      "answer": [
+        "Fixed TDM repeatedly reserves slots, including potentially idle ones. Statistical TDM serves active sources and carries identifying information. It improves bursty utilisation but introduces variable queues and cannot ignore simultaneous peak demand."
+      ],
+      "id": "what-is-the-main-difference-between-fixed-and-statistical-tdm"
+    },
+    {
+      "level": "medium",
+      "tags": [
+        "Interview practice"
+      ],
+      "question": "Does multiplexing increase physical channel capacity?",
+      "answer": [
+        "It can use available capacity more efficiently, but it does not remove physical limits. Guard intervals, metadata, coding, and contention can reduce useful payload. Aggregate promises must fit the actual resource and service requirements."
+      ],
+      "id": "does-multiplexing-increase-physical-channel-capacity"
+    },
+    {
+      "level": "hard",
+      "tags": [
+        "Curious learner"
+      ],
+      "question": "Why are spreading codes not equivalent to encryption?",
+      "answer": [
+        "Codes allow a receiver to distinguish or recover contributions under signal assumptions. An observer knowing or discovering the scheme may decode them. Confidentiality needs appropriate cryptography and key management, not merely a different spreading code."
+      ],
+      "id": "why-are-spreading-codes-not-equivalent-to-encryption"
+    },
+    {
+      "level": "medium",
+      "tags": [
+        "Practical reasoning"
+      ],
+      "question": "How many guard gaps separate six adjacent FDM channels?",
+      "answer": [
+        "Five internal gaps. The outside boundary may need additional guards if specified. State the layout before calculating: total internal span is six payload widths plus five guard widths."
+      ],
+      "id": "how-many-guard-gaps-separate-six-adjacent-fdm-channels"
+    },
+    {
+      "level": "hard",
+      "tags": [
+        "Interview practice"
+      ],
+      "question": "Can an average-load calculation prove a delay guarantee?",
+      "answer": [
+        "No. Correlated bursts can exceed service even when average load is low. A guarantee needs an arrival model, service allocation, buffer analysis, and explicit bounds. Statistical expectations and worst-case promises are different claims."
+      ],
+      "id": "can-an-average-load-calculation-prove-a-delay-guarantee"
+    }
+  ],
+  "references": [
+    {
+      "title": "MIT OpenCourseWare: communication principles",
+      "url": "https://ocw.mit.edu/courses/6-450-principles-of-digital-communication-i-fall-2006/"
+    },
+    {
+      "title": "IETF RFC 9000: multiplexed transport streams",
+      "url": "https://www.rfc-editor.org/rfc/rfc9000.html"
+    }
+  ]
+}

@@ -1,0 +1,1 @@
+{"name":"@studyshelf/backend","private":true,"version":"0.1.0","type":"module","description":"Reserved API foundation for StudyShelf","dependencies":{"drizzle-orm":"^0.45.2","hono":"^4.12.30","jose":"^6.2.3"},"devDependencies":{"drizzle-kit":"^0.31.10","wrangler":"^4.111.0"}}

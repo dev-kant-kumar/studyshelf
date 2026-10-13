@@ -1,0 +1,294 @@
+{
+  "intro": "A communication protocol specifies how participants represent, exchange, and interpret information and respond to events. Protocol knowledge becomes useful when you can trace a transaction, identify the responsible layer, and distinguish delivery, security, and application success.",
+  "outcomes": [
+    "Explain syntax, semantics, timing, state, and layered models.",
+    "Compare IP, TCP, UDP, DNS, DHCP, ARP, TLS, and application protocols.",
+    "Trace a local-to-remote request and diagnose failures using layer-specific evidence."
+  ],
+  "sections": [
+    {
+      "title": "1. Rules require more than a message format",
+      "paragraphs": [
+        "Syntax specifies representation and structure: field lengths, encoding, delimiters, and framing. Semantics specifies meaning and actions: what a request means, how a reply changes state, and how errors are handled. Timing includes ordering, rate, deadlines, and timeout behaviour. A protocol may also specify capabilities, negotiation, versioning, and recovery.",
+        "State matters. A message valid before authentication may be invalid after closing a connection. A state machine describes legal states and transitions caused by messages, timers, or local actions. Timeouts indicate missing evidence, not proof that the remote operation did not happen.",
+        "Interoperability needs compatible interpretation and behaviour. Two implementations can exchange correctly shaped messages yet disagree on units, encoding, or retry semantics. Specifications must cover edge cases, and implementations must validate untrusted input and resource limits."
+      ],
+      "example": [
+        "Design a temperature-report message with version, sensor ID, timestamp, unit, numeric value, and sequence number. A value of 32 without its unit is ambiguous. A repeated sequence number may indicate a retry. A timestamp without time-zone or clock assumptions is insufficient for comparing readings. This is protocol design even if the transport already delivers bytes reliably."
+      ]
+    },
+    {
+      "title": "2. OSI and Internet-layer models",
+      "paragraphs": [
+        "The OSI reference model has seven layers: physical, data link, network, transport, session, presentation, and application. Physical concerns signals; link concerns local transfer and framing; network concerns delivery across networks; transport concerns endpoint communication. Session, presentation, and application separate dialogue organisation, representation, and application meaning in the model.",
+        "The Internet model commonly groups link, Internet, transport, and application responsibilities; a five-layer teaching model separates physical from link. Internet applications often implement representation and session functions within their own libraries and protocols. There is no exact one-to-one mapping that places every real protocol in only one OSI box.",
+        "Encapsulation adds control information around higher-layer data. A transport unit may carry application bytes; an IP packet carries transport data; a link frame carries the IP packet on a particular link. Headers change according to the layer and path. Encapsulation is a conceptual organisation, not a requirement to copy every byte separately in software."
+      ],
+      "table": {
+        "caption": "2. OSI and Internet-layer models",
+        "headers": [
+          "OSI layer",
+          "Typical responsibility",
+          "Internet-model placement"
+        ],
+        "rows": [
+          [
+            "7 Application",
+            "Service operations and meaning",
+            "Application"
+          ],
+          [
+            "6 Presentation",
+            "Representation, encoding, transformation",
+            "Usually application/libraries"
+          ],
+          [
+            "5 Session",
+            "Dialogue and session organisation",
+            "Usually application/libraries"
+          ],
+          [
+            "4 Transport",
+            "Endpoint data transfer",
+            "Transport"
+          ],
+          [
+            "3 Network",
+            "Across-network addressing and forwarding",
+            "Internet"
+          ],
+          [
+            "2 Data link",
+            "Frames and local-link delivery",
+            "Link"
+          ],
+          [
+            "1 Physical",
+            "Signals and bit transmission",
+            "Link, or physical in five-layer model"
+          ]
+        ]
+      }
+    },
+    {
+      "title": "3. Link delivery and address resolution",
+      "paragraphs": [
+        "Ethernet provides link-layer frame communication in its supported arrangements. Switching commonly uses destination MAC addresses and VLAN context. A MAC address belongs to the relevant link-delivery namespace; it is not a globally trustworthy identity and can be changed or spoofed.",
+        "For IPv4 on a local Ethernet network, ARP maps an on-link protocol address to a link address. To reach an off-link destination, a host usually resolves the next-hop router’s IPv4 address, not the remote server’s MAC address. ARP requests are local broadcasts in the relevant broadcast domain; routers do not normally forward them as ordinary broadcasts between subnets.",
+        "IPv6 uses Neighbor Discovery rather than ARP and has different addressing conventions. Do not apply IPv4 broadcast assumptions to IPv6. Link address discovery also does not authenticate that a responder is legitimate; local-network threat models matter."
+      ]
+    },
+    {
+      "title": "4. IP addressing, prefixes, and forwarding",
+      "paragraphs": [
+        "IP supplies packet addressing and forwarding across connected networks. It is a best-effort service: loss, duplication, and reordering are possible. IPv4 uses 32-bit addresses; IPv6 uses 128-bit addresses. Neither address length alone determines security, speed, or successful delivery.",
+        "A prefix identifies a range used in routing. Forwarding commonly selects the most specific matching prefix: longest-prefix match. The host uses routes to determine whether a destination is on-link or which next hop to use. The default route is a fallback for destinations without a more specific match.",
+        "The IP hop-limit or IPv4 TTL field bounds forwarding lifetime; it is not a clock-based end-to-end delivery deadline. Path MTU limits packet size along a route. Oversized traffic may require appropriate endpoint adaptation or fragmentation under the relevant version and conditions. Applications should not assume that one arbitrary large unit crosses every path intact."
+      ],
+      "example": [
+        "A route table contains 10.0.0.0/8 through router A, 10.2.0.0/16 through router B, and a default route through C. Destination 10.2.3.4 matches both /8 and /16; the /16 route is more specific, so B is chosen under longest-prefix forwarding. Destination 10.5.1.2 uses A; destination 203.0.113.9 uses C if no other route exists. Documentation addresses in examples do not identify a real service."
+      ]
+    },
+    {
+      "title": "5. TCP, UDP, and modern transport choices",
+      "paragraphs": [
+        "TCP supplies an ordered reliable byte stream while a connection is functioning. Sequence information, acknowledgements, retransmission, flow control, and congestion-control behaviour support that service. The byte stream does not preserve application write boundaries: one send may be received in pieces, and several sends may arrive together. Applications need framing, such as length prefixes or delimiters.",
+        "TCP connection establishment coordinates endpoint state, commonly described by the SYN, SYN-ACK, ACK three-way exchange. Establishing a connection does not authenticate an application user or encrypt traffic. Closing or resetting has separate semantics. A connection can fail, and application recovery still needs explicit design.",
+        "UDP sends datagrams with minimal built-in delivery machinery. It does not itself guarantee delivery, order, or duplicate protection. Applications may implement their own reliability and timing behaviour. UDP is not universally faster, and using it does not excuse a design from congestion-aware behaviour.",
+        "QUIC is a secure multiplexed transport built over UDP with its own connection, recovery, and stream machinery. It illustrates why “UDP means unreliable application” is wrong: the service above UDP can add substantial guarantees. Transport choice should follow message, latency, loss, security, and operational requirements."
+      ],
+      "table": {
+        "caption": "5. TCP, UDP, and modern transport choices",
+        "headers": [
+          "Property",
+          "TCP",
+          "UDP"
+        ],
+        "rows": [
+          [
+            "Application view",
+            "Ordered byte stream",
+            "Datagrams"
+          ],
+          [
+            "Delivery machinery",
+            "Built-in sequencing and retransmission",
+            "No built-in reliable delivery/order"
+          ],
+          [
+            "Message boundaries",
+            "Application must frame messages",
+            "Datagram boundaries present"
+          ],
+          [
+            "Encryption",
+            "Not inherent in TCP",
+            "Not inherent in UDP"
+          ],
+          [
+            "Appropriate reasoning",
+            "Stream framing and connection failure",
+            "Application semantics and required recovery"
+          ]
+        ]
+      }
+    },
+    {
+      "title": "6. Configuration and naming: DHCP and DNS",
+      "paragraphs": [
+        "DHCPv4 can lease an address and supply configuration such as prefix-related information, default router, and DNS servers. A simplified initial exchange is Discover, Offer, Request, Acknowledge. Leases have lifetimes and renewal behaviour. A DHCP server may be remote with relay support; do not assume every client directly shares its physical segment.",
+        "DNS is a hierarchical distributed naming system with different record types. A and AAAA records supply IPv4 and IPv6 addresses; other records support different purposes. A stub resolver commonly asks a recursive resolver, which may answer from cache or consult authoritative information. DNS does not download the webpage and does not assign the host’s own address.",
+        "Caching and TTL affect how long a stored answer can be reused. A cached DNS record’s TTL is unrelated to an IP packet’s TTL despite the shared abbreviation. A name can map to multiple addresses, and an address can support multiple services. Naming is not equivalent to trust: secure application identity checks remain necessary."
+      ]
+    },
+    {
+      "title": "7. Application protocols and security boundaries",
+      "paragraphs": [
+        "HTTP defines web request/response semantics; HTTPS uses secure transport to protect that communication and support server authentication under the applicable certificate rules. TLS protects confidentiality and integrity in transit within its threat model. It does not make a dishonest server truthful, validate business logic, or secure a compromised endpoint.",
+        "SMTP supports email transfer; IMAP and POP serve different mailbox-access roles. SSH provides protected remote access with authentication. Traditional FTP separates control and data mechanisms and does not inherently supply modern confidentiality; secure alternatives have different protocol designs. A port number suggests conventional service use but is not proof of the application or its safety.",
+        "Authentication checks identity claims; authorisation determines allowed actions; encryption protects confidentiality; integrity mechanisms detect unauthorised changes under their assumptions. Firewalls apply policy but cannot replace all these functions. State which property is supplied and which trust boundary it covers."
+      ]
+    },
+    {
+      "title": "8. A complete transaction and a diagnostic method",
+      "paragraphs": [
+        "For a fresh IPv4 HTTPS request, the client needs interface configuration and routes, resolves the service name when needed, resolves its next-hop link address when needed, establishes the chosen transport and secure session, and sends the application request. Caches and reused connections can omit repeated setup. HTTP/3 uses QUIC, so a TCP-only trace is not universal.",
+        "The local frame targets the next-hop interface. Routers forward according to IP information and rebuild link encapsulation as required for each next link. The server interprets the application request and checks access before producing a response. Successful packet delivery is only one part of successful service.",
+        "Diagnose from evidence: link status, valid local configuration, route, name resolution, transport reachability, secure-session identity, and application response. A failed ping does not prove every service is unreachable because ICMP may be filtered. A successful ping does not prove HTTP, TLS, authentication, or database availability.",
+        "On your own authorised development environment, compare a DNS lookup, a route listing, and an application request. Record the observation and the inference separately. Avoid scanning networks or capturing other users’ traffic as a routine exercise."
+      ],
+      "code": "Configuration → route decision → name/address resolution as needed\n→ transport/security setup → application request → authorised processing → response\nEach stage can fail independently; cached state may skip repeated work."
+    }
+  ],
+  "revision": [
+    "Reconstruct the OSI model and compare it with Internet responsibilities.",
+    "Trace link and IP destinations for an off-subnet request.",
+    "Explain TCP stream framing and UDP-based higher-level reliability.",
+    "Separate DHCP configuration, DNS naming, ARP link resolution, and TLS protection.",
+    "Diagnose a failed request with evidence rather than one universal connectivity test."
+  ],
+  "questions": [
+    {
+      "level": "easy",
+      "tags": [
+        "Exam practice"
+      ],
+      "question": "What are syntax, semantics, and timing in a protocol?",
+      "answer": [
+        "Syntax defines message structure; semantics defines meaning and reactions; timing defines ordering, rates, and timeout expectations. A complete protocol also needs states and failure handling where these affect behaviour."
+      ],
+      "id": "what-are-syntax-semantics-and-timing-in-a-protocol"
+    },
+    {
+      "level": "medium",
+      "tags": [
+        "Interview practice"
+      ],
+      "question": "Why does TCP need application framing?",
+      "answer": [
+        "It provides a stream of bytes, not preserved application messages. Reads may return partial data or data spanning several writes. Use an explicit length or other framing rule, validate limits, and continue reading until the required message is complete or the connection fails."
+      ],
+      "id": "why-does-tcp-need-application-framing"
+    },
+    {
+      "level": "medium",
+      "tags": [
+        "Exam practice"
+      ],
+      "question": "How are ARP, DHCP, and DNS different?",
+      "answer": [
+        "ARP resolves IPv4 next-hop link addresses locally; DHCP supplies leased configuration; DNS resolves names and other records. They solve different problems and can fail separately. IPv6 does not use ARP."
+      ],
+      "id": "how-are-arp-dhcp-and-dns-different"
+    },
+    {
+      "level": "hard",
+      "tags": [
+        "Interview practice"
+      ],
+      "question": "Can a TCP acknowledgement prove an order was saved?",
+      "answer": [
+        "No. It concerns transport receipt, not application validation or durable database commit. The application needs a defined response and durable processing semantics. If the response is lost after commit, safe retries require operation identifiers or idempotent behaviour."
+      ],
+      "id": "can-a-tcp-acknowledgement-prove-an-order-was-saved"
+    },
+    {
+      "level": "medium",
+      "tags": [
+        "Practical reasoning"
+      ],
+      "question": "Does HTTPS prove a website is honest?",
+      "answer": [
+        "No. It protects the connection and authenticates the server under certificate and trust rules. A malicious site can have a valid certificate. Evaluate origin, permissions, content, and application behaviour separately."
+      ],
+      "id": "does-https-prove-a-website-is-honest"
+    },
+    {
+      "level": "hard",
+      "tags": [
+        "Curious learner"
+      ],
+      "question": "Why is UDP used underneath a reliable transport such as QUIC?",
+      "answer": [
+        "UDP supplies datagram carriage that a higher protocol can use to implement its own secure connection, streams, recovery, and congestion behaviour. The guarantees of the complete stack are not limited to the base transport’s guarantees."
+      ],
+      "id": "why-is-udp-used-underneath-a-reliable-transport-such-as-quic"
+    },
+    {
+      "level": "medium",
+      "tags": [
+        "Exam practice"
+      ],
+      "question": "Does the OSI model require seven separate software programs?",
+      "answer": [
+        "No. It is a reference model for responsibilities. Real implementations can combine functions in libraries, applications, kernels, and hardware. Explain the responsibilities without inventing a rigid implementation requirement."
+      ],
+      "id": "does-the-osi-model-require-seven-separate-software-programs"
+    },
+    {
+      "level": "hard",
+      "tags": [
+        "Practical reasoning"
+      ],
+      "question": "Why can DNS lookup succeed while a secure request fails?",
+      "answer": [
+        "Naming may be correct while routing, transport, certificate validation, clock settings, service availability, or authorisation fails. Test each responsible stage and preserve the actual error. A resolved address proves only that a naming answer was obtained."
+      ],
+      "id": "why-can-dns-lookup-succeed-while-a-secure-request-fails"
+    }
+  ],
+  "references": [
+    {
+      "title": "IETF RFC 1122: Internet layers",
+      "url": "https://datatracker.ietf.org/doc/html/rfc1122"
+    },
+    {
+      "title": "IETF RFC 9293: TCP",
+      "url": "https://www.rfc-editor.org/rfc/rfc9293.html"
+    },
+    {
+      "title": "IETF RFC 768: UDP",
+      "url": "https://www.rfc-editor.org/rfc/rfc768"
+    },
+    {
+      "title": "IETF RFC 826: ARP",
+      "url": "https://www.rfc-editor.org/rfc/rfc826"
+    },
+    {
+      "title": "IETF RFC 2131: DHCP",
+      "url": "https://www.rfc-editor.org/rfc/rfc2131"
+    },
+    {
+      "title": "IETF RFC 1034: DNS",
+      "url": "https://www.rfc-editor.org/rfc/rfc1034"
+    },
+    {
+      "title": "IETF RFC 8446: TLS 1.3",
+      "url": "https://www.rfc-editor.org/rfc/rfc8446"
+    },
+    {
+      "title": "IETF RFC 9000: QUIC",
+      "url": "https://www.rfc-editor.org/rfc/rfc9000.html"
+    }
+  ]
+}

@@ -1,0 +1,236 @@
+{
+  "intro": "Network devices implement different responsibilities: attaching hosts, carrying signals, forwarding frames or packets, joining wireless clients, and enforcing policy. A consumer “router” often contains several of these functions. Identify the function being discussed rather than relying on the label printed on the box.",
+  "outcomes": [
+    "Compare NICs, repeaters, hubs, bridges, switches, routers, access points, modems, gateways, and firewalls.",
+    "Trace switch learning and router next-hop forwarding.",
+    "Explain collision/broadcast domains, VLANs, NAT, and common failure evidence."
+  ],
+  "sections": [
+    {
+      "title": "1. Network interface and physical-layer devices",
+      "paragraphs": [
+        "A network interface controller or adapter connects a host to a link technology. It implements relevant physical and link functions and cooperates with drivers and the operating system. An interface can have a link address, supported rates, queues, and offload features. A visible “connected” indication does not prove valid IP configuration or application access.",
+        "A repeater regenerates or repeats signals to extend a supported physical arrangement within its rules. It does not select paths based on IP destination or authenticate application messages. A hub is a multiport repeater: traffic is repeated to other ports. Traditional shared half-duplex Ethernet hubs place attached nodes in a shared collision domain.",
+        "A modem modulates and demodulates for a supported access technology. The word does not mean it routes every network packet or supplies Wi-Fi. Optical network terminals and other provider access equipment have technology-specific functions. Consumer packages may combine access termination, routing, switching, and wireless access."
+      ]
+    },
+    {
+      "title": "2. Bridges and switches: learning local delivery",
+      "paragraphs": [
+        "A bridge forwards frames between link segments. A conventional Ethernet switch is a multiport bridge. It learns source MAC addresses associated with ingress ports in the relevant VLAN context. A known destination can be forwarded to its learned output; unknown unicast and broadcast traffic are flooded within the allowed domain, subject to controls.",
+        "The switch learns from the source, not by asking every destination where it lives on each frame. Entries age and change as devices move. A switch does not normally need the application’s DNS name to forward an Ethernet frame. Broadcast behaviour and VLAN boundaries matter even when a switch has many physical ports.",
+        "Full-duplex switched Ethernet avoids the old shared-link collision model on those links. This does not eliminate congestion: several inputs can still compete for one output. Buffers, scheduling, port rates, and fabric capacity determine what happens under load."
+      ],
+      "example": [
+        "Initially a switch has no learned entries. A frame from A arrives on port 1 for B. The switch learns A → port 1 and floods the unknown destination to eligible other ports in that VLAN. B replies on port 3; the switch learns B → port 3 and forwards toward known A on port 1. Later A → B traffic can use port 3 directly until state changes or ages out."
+      ]
+    },
+    {
+      "title": "3. Routers: forwarding between IP networks",
+      "paragraphs": [
+        "A router forwards IP packets between networks using destination prefixes and forwarding information. It selects a next hop and output interface, applies relevant policies, and creates the link encapsulation needed on the next link. The link destination changes at hops; the original endpoint IP destination usually remains unless a translation or other mechanism changes it.",
+        "The router decrements the applicable hop-limit/TTL and handles expiration. Routes can be static or learned using routing protocols. The default gateway is the next-hop router a host uses for destinations requiring that route; it is not automatically the DNS server or Internet provider’s final destination.",
+        "Routing does not inherently encrypt, block attacks, or reserve bandwidth. A device may add those features. Longest-prefix match and adjacency resolution are core forwarding ideas; security and translation are additional responsibilities."
+      ],
+      "code": "Host A → local frame addressed to Router R\nR examines destination IP → chooses next hop/interface\nR sends a new link frame toward next hop\nDestination IP usually remains the remote host; link headers are hop-specific."
+    },
+    {
+      "title": "4. Wireless access points and shared airtime",
+      "paragraphs": [
+        "An access point provides a wireless attachment to a network and commonly bridges client traffic into a wired or other distribution network. It is not necessarily a router. Multiple wireless clients share airtime under the technology’s access rules, so the advertised radio rate is not guaranteed payload throughput for every client.",
+        "Distance, interference, channel allocation, obstacles, client capability, retries, and backhaul limit useful performance. Wireless LANs should not simply be described as collision-free full-duplex Ethernet. Roaming and authentication involve additional coordination beyond receiving a strong signal.",
+        "For campus design, placing many access points without channel and power planning can increase contention. A strong signal with poor application performance may indicate upstream congestion, client load, interference, or service failure. Measure the relevant layer before adding more hardware."
+      ]
+    },
+    {
+      "title": "5. Domains, VLANs, and controlled interconnection",
+      "paragraphs": [
+        "A collision domain describes where transmissions can interfere under the applicable shared-medium rules. A broadcast domain describes where relevant link broadcasts are delivered. These are different concepts. A router generally separates IP-network broadcast domains, while a conventional switch forwards broadcasts within a VLAN.",
+        "A VLAN divides a bridged network into logical link domains. Access ports typically carry one selected VLAN for untagged endpoint traffic; trunk links can carry several VLANs with tagging under the relevant configuration. VLAN tags identify a forwarding context, not encryption. Communication between VLANs requires routing or an equivalent controlled layer-3 function.",
+        "VLAN isolation depends on correct configuration and policy. Misconfigured trunks or access ports can undermine the intended boundary. Modern multilayer switches can route as well as bridge; “switches are always layer 2” is a useful introductory simplification with important limits."
+      ],
+      "table": {
+        "caption": "5. Domains, VLANs, and controlled interconnection",
+        "headers": [
+          "Function/device",
+          "Main decision or action",
+          "Important limitation"
+        ],
+        "rows": [
+          [
+            "Hub / repeater",
+            "Physical repeating",
+            "No destination-based frame isolation"
+          ],
+          [
+            "Bridge / L2 switch",
+            "MAC and VLAN forwarding",
+            "Broadcasts stay within allowed VLAN domain"
+          ],
+          [
+            "Router / L3 switch",
+            "IP-prefix next-hop selection",
+            "Routing alone is not encryption or access control"
+          ],
+          [
+            "Access point",
+            "Wireless attachment and bridging",
+            "Shared airtime and separate backhaul"
+          ],
+          [
+            "Firewall",
+            "Configured policy enforcement",
+            "Needs appropriate rules and cannot prove application correctness"
+          ],
+          [
+            "Gateway / proxy",
+            "Boundary or protocol/service intermediation",
+            "Meaning depends on the stated role"
+          ]
+        ]
+      }
+    },
+    {
+      "title": "6. Gateways, NAT, firewalls, and proxies",
+      "paragraphs": [
+        "Gateway is a broad term for a boundary function. A default IP gateway is a next-hop router; an application gateway may translate or mediate application protocols. State the context rather than assigning every gateway exactly one OSI layer.",
+        "NAT changes specified address information. Port/address translation can allow several internal connections to use one public address by tracking mappings. This complicates inbound reachability and end-to-end assumptions. NAT is not encryption and should not be treated as a complete security policy; a stateful firewall is a distinct function even when both run in the same appliance.",
+        "A firewall permits or denies traffic according to rules and inspection capabilities. Rules may involve addresses, ports, state, or application context. Allowed traffic can still contain harmful content. A proxy acts on behalf of a client or server at a relevant protocol boundary; a load balancer distributes selected service traffic. These functions introduce their own trust, availability, and observability requirements."
+      ]
+    },
+    {
+      "title": "7. A complete campus path",
+      "paragraphs": [
+        "A student’s laptop attaches through its network interface to an access point or switch. The access network carries frames in the assigned VLAN. A layer-3 device routes toward a server VLAN or external provider. A policy device may inspect or filter the flow; access termination connects the provider medium. DNS, configuration, and application services may reside on separate hosts.",
+        "The consumer box at home might combine nearly all these roles. Drawing it as one “router” is convenient, but troubleshooting benefits from separating wireless association, DHCP, switching, routing, NAT, DNS forwarding, and firewall policy. A failure in one function can leave others working.",
+        "Resilience requires independent paths and recovery configuration. Two devices connected to the same power circuit, upstream link, or configuration source may share an outage cause. Back up configurations, monitor actual service, and practise recovery appropriate to the environment."
+      ]
+    },
+    {
+      "title": "8. Diagnose with evidence and safe experiments",
+      "paragraphs": [
+        "In your own local lab, first check interface status and assigned address. Inspect the expected prefix and route. Compare reachability to a local service with reachability to a routed service. Check name resolution separately. Read application errors rather than assuming transport failure. Ping is useful evidence but neither necessary nor sufficient proof of application availability.",
+        "For a switch-learning thought experiment, trace source learning and destination forwarding over three frames. For VLANs, draw allowed broadcast delivery and the router boundary. For NAT, track an example private source address/port to a public mapping and the returning response. Do not use packet capture or scans against systems without authorisation.",
+        "Record hypothesis, observation, and inference. “Link is up” supports a physical/link attachment conclusion. “DNS resolved” supports a naming conclusion. “HTTP returned 403” indicates the service responded but denied the request. Each narrows the failure stage without pretending to prove every dependency healthy."
+      ],
+      "example": [
+        "A laptop has 192.168.10.25/24, gateway 192.168.10.1, and requests a server at 192.168.20.50. It sends the first frame to the gateway’s resolved link address, not directly to the server’s MAC. The router needs a route and allowed policy to the server subnet. A switch can deliver the first frame perfectly while routing or policy still prevents the request."
+      ]
+    }
+  ],
+  "revision": [
+    "Trace source learning and unknown-destination flooding.",
+    "Distinguish collision and broadcast domains for hubs, switches, VLANs, and routers.",
+    "Draw separate roles inside a combined consumer router.",
+    "Explain why NAT, VLANs, and routing do not automatically provide encryption.",
+    "Diagnose a failure with stage-specific evidence and a stated inference."
+  ],
+  "questions": [
+    {
+      "level": "easy",
+      "tags": [
+        "Exam practice"
+      ],
+      "question": "How are a hub, switch, and router different?",
+      "answer": [
+        "A hub repeats signals; a conventional switch forwards link frames using MAC/VLAN information; a router forwards IP packets using prefixes and next hops. Explain the responsibility, address namespace, and domain effect. Modern combined devices can perform several roles."
+      ],
+      "id": "how-are-a-hub-switch-and-router-different"
+    },
+    {
+      "level": "medium",
+      "tags": [
+        "Interview practice"
+      ],
+      "question": "Does a switch learn from destination addresses?",
+      "answer": [
+        "Its conventional dynamic learning associates source addresses with ingress ports in a VLAN context. Destination information selects forwarding or flooding. This distinction explains how the first exchange builds useful state."
+      ],
+      "id": "does-a-switch-learn-from-destination-addresses"
+    },
+    {
+      "level": "medium",
+      "tags": [
+        "Practical reasoning"
+      ],
+      "question": "Why is Wi-Fi association not proof of Internet access?",
+      "answer": [
+        "Association establishes a local wireless relationship. The client still needs configuration, routes, upstream access, naming, and working applications. Captive portals and policy can also restrict access. Test the dependency that is failing."
+      ],
+      "id": "why-is-wi-fi-association-not-proof-of-internet-access"
+    },
+    {
+      "level": "hard",
+      "tags": [
+        "Interview practice"
+      ],
+      "question": "Is NAT a firewall?",
+      "answer": [
+        "They are distinct functions. NAT translates addressing and often maintains mappings; a firewall applies traffic policy. NAT can incidentally affect unsolicited inbound reachability but is not a complete security rule set, encryption, or protection from allowed malicious traffic."
+      ],
+      "id": "is-nat-a-firewall"
+    },
+    {
+      "level": "medium",
+      "tags": [
+        "Exam practice"
+      ],
+      "question": "Does a VLAN require a separate physical switch?",
+      "answer": [
+        "No. One physical bridged system can maintain multiple VLAN forwarding domains. Correct tagging, port membership, and routing policy are required. Physical sharing remains a common dependency, and VLAN tags do not encrypt traffic."
+      ],
+      "id": "does-a-vlan-require-a-separate-physical-switch"
+    },
+    {
+      "level": "hard",
+      "tags": [
+        "Curious learner"
+      ],
+      "question": "Why can a redundant switched link cause an outage?",
+      "answer": [
+        "Uncontrolled loops can circulate and multiply flooded traffic and destabilise learned addresses. Redundancy needs a loop-control or supported multipath mechanism. More cabling without correct forwarding design can reduce reliability."
+      ],
+      "id": "why-can-a-redundant-switched-link-cause-an-outage"
+    },
+    {
+      "level": "medium",
+      "tags": [
+        "Concept check"
+      ],
+      "question": "Can a switch route packets?",
+      "answer": [
+        "A multilayer switch can implement IP routing as well as frame switching. Describe the function used for the traffic in question. Device marketing names do not restrict all implementations to one layer."
+      ],
+      "id": "can-a-switch-route-packets"
+    },
+    {
+      "level": "hard",
+      "tags": [
+        "Practical reasoning"
+      ],
+      "question": "What does an HTTP 403 response tell you about the network?",
+      "answer": [
+        "The request reached a responding HTTP service through enough of the stack to receive that response. The service denied access under its application rules. It does not prove every backend healthy, but it points investigation toward authorisation or service policy rather than a total lack of connectivity."
+      ],
+      "id": "what-does-an-http-403-response-tell-you-about-the-network"
+    }
+  ],
+  "references": [
+    {
+      "title": "Cisco: Ethernet switch behaviour",
+      "url": "https://www-cloud.cisco.com/site/us/en/learn/topics/networking/what-is-an-ethernet-switch.html"
+    },
+    {
+      "title": "Cisco: networking basics",
+      "url": "https://www.cisco.com/site/us/en/learn/topics/small-business/networking-basics.html"
+    },
+    {
+      "title": "IETF RFC 826: link-address resolution",
+      "url": "https://www.rfc-editor.org/rfc/rfc826"
+    },
+    {
+      "title": "IETF RFC 1122: IP communication requirements",
+      "url": "https://datatracker.ietf.org/doc/html/rfc1122"
+    }
+  ]
+}

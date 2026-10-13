@@ -1,0 +1,11 @@
+/AGENTS.md
+# Generated files and local configuration
+node_modules/
+dist/
+.wrangler/
+.env
+.env.*
+!.env.example
+.dev.vars
+.dev.vars.*
+*.log

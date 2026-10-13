@@ -1,0 +1,2 @@
+import { eyebrow as eyebrowClass, title as titleClass, muted } from '@/ui/classes'
+export default function PageIntro({ eyebrow, title, description, children }) { return <div className="mb-8">{eyebrow && <p className={`${eyebrowClass} mb-3`}>{eyebrow}</p>}<h1 className={titleClass} tabIndex={-1}>{title}</h1>{description && <p className={`mt-4 max-w-2xl text-lg leading-relaxed ${muted}`}>{description}</p>}{children}</div> }

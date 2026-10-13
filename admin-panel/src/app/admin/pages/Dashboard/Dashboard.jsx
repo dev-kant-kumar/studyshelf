@@ -1,0 +1,1 @@
+export default function Dashboard() { return <section className="hero"><p className="eyebrow">PUBLISHING WORKSPACE</p><h1>Your notes start here.</h1><p className="intro">The admin foundation is ready. Note editing, publishing, and sign-in are not connected yet.</p></section> }

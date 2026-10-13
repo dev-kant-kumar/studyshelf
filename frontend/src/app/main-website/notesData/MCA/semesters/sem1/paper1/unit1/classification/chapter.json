@@ -1,0 +1,183 @@
+{
+  "intro": "Computer classifications answer different questions: what kind of data is processed, what tasks are intended, how resources are organised, and what constraints govern operation. A single system can belong to several categories because these are independent axes.",
+  "outcomes": [
+    "Classify analog, digital, and hybrid systems correctly.",
+    "Compare general-purpose, special-purpose, embedded, real-time, mainframe, and high-performance systems.",
+    "Choose a category from requirements rather than physical appearance."
+  ],
+  "sections": [
+    {
+      "title": "1. By representation: analog, digital, and hybrid",
+      "paragraphs": [
+        "An analog computing system represents quantities through continuously varying physical quantities, such as voltage, and uses physical relationships to model a problem. Measurement and noise limit precision. A digital computing system operates on discrete representations. Binary digital implementations are common, but “digital” does not logically require exactly two symbols.",
+        "A hybrid computing system combines analog computation with digital computation. Do not call every laptop with a microphone a hybrid computer merely because it accepts an analog-world signal. An analog-to-digital converter in an otherwise digital computer is an input interface; the historical hybrid-computer category concerns how computation itself is organised.",
+        "Sampling selects measurements at discrete times; quantisation maps amplitudes to a finite set of representable levels. These steps lose information unless suitable assumptions and precision are provided. Digital data can be copied reliably once represented, but digitisation does not guarantee that the original measurement was accurate."
+      ],
+      "example": [
+        "An ideal 8-bit unsigned converter has 256 possible codes. If a design maps a 0–5 V span to 256 equal quantisation intervals, the nominal interval width is 5/256 ≈ 0.0195 V. This is resolution under that model, not guaranteed accuracy: sensor calibration, noise, and converter errors also matter. Code-to-voltage endpoint conventions must be stated before using a different denominator."
+      ]
+    },
+    {
+      "title": "2. By purpose: general and special",
+      "paragraphs": [
+        "A general-purpose computer supports a wide range of tasks by running different programs. A laptop can edit documents, compile software, and analyse data. A special-purpose system is designed around a constrained role, such as a controller or specialised processing appliance. Special-purpose systems can still be programmable; purpose and programmability are separate questions.",
+        "Specialisation can improve cost, energy efficiency, predictability, or throughput for a target workload. It can also reduce flexibility. An accelerator may require particular data formats and transfer work from a host before useful processing starts. Evaluate the complete task, including transfers and software, rather than only the specialised arithmetic stage.",
+        "General-purpose machines often contain specialised components. A server with a video-processing accelerator does not become useless for every other task. Classification describes an architectural role, not an absolute prohibition on other operations."
+      ]
+    },
+    {
+      "title": "3. By scale and workload",
+      "paragraphs": [
+        "Traditional categories include microcomputers, minicomputers, mainframes, and supercomputers. Their boundaries reflect historical markets and capabilities, not a timeless ranking by box size. Microcomputer historically emphasises microprocessor-based systems; minicomputer describes an important intermediate historical class. Contemporary “server” describes a service-providing role and can be implemented at many scales.",
+        "Mainframes are associated with large-scale transaction and data processing, strong operational continuity, and extensive I/O. Supercomputers focus on very demanding computation, often with large parallel systems and high-performance interconnects. Neither definition says the machine is best at every workload. A numerical simulation and a banking transaction service have different requirements.",
+        "Workstations emphasise demanding individual professional tasks. Personal computers emphasise individual use. Phones are general programmable computers constrained by power, thermal limits, mobility, and integration. The presence of a small screen does not determine computational capability."
+      ],
+      "table": {
+        "caption": "3. By scale and workload",
+        "headers": [
+          "Category",
+          "Typical priority",
+          "Useful evaluation"
+        ],
+        "rows": [
+          [
+            "Personal computer",
+            "Interactive individual work",
+            "Responsiveness, capability, price"
+          ],
+          [
+            "Workstation",
+            "Professional interactive computation",
+            "Memory, graphics, validated software"
+          ],
+          [
+            "Mainframe",
+            "Large transaction and I/O workloads",
+            "Availability, transaction throughput, recovery"
+          ],
+          [
+            "Supercomputer / HPC cluster",
+            "Large numerical and parallel workloads",
+            "Time to solution, scaling, interconnect, energy"
+          ],
+          [
+            "Server",
+            "Providing a service",
+            "Service latency, capacity, availability, security"
+          ]
+        ]
+      }
+    },
+    {
+      "title": "4. Embedded and real-time are different properties",
+      "paragraphs": [
+        "An embedded computer is part of a larger product or process. Examples include vehicle control units, appliance controllers, and industrial equipment. Embedded systems may run tiny firmware or a full operating system. They can be networked or isolated, general processors or specialised controllers.",
+        "A real-time system must produce relevant results within required timing constraints. Correctness includes timeliness. In hard real-time operation, missing a required deadline is unacceptable under the system’s stated assumptions. In soft real-time operation, lateness reduces usefulness or quality. “Real-time” does not merely mean fast, live, or connected to the Internet.",
+        "Many embedded systems are real-time, but not all are. A logging device may tolerate delayed uploads; a control loop may not tolerate a missed response. A desktop can execute real-time tasks if the full scheduling and device environment provides the needed guarantees. Average speed is not a worst-case deadline guarantee."
+      ]
+    },
+    {
+      "title": "5. By organisation: standalone, distributed, and cloud",
+      "paragraphs": [
+        "A standalone system can complete a task without collaborating with other networked machines. A distributed system coordinates components on multiple machines. Components communicate through messages and can fail independently. Network delay and partial failure become architectural concerns.",
+        "A cluster groups computers for coordinated work. Cloud services supply access to pooled resources through managed interfaces; they may provide virtual machines, platforms, or applications. Virtualisation allows logical computing environments to share hardware, but a virtual machine is not physically independent of its host. Containers share important host operating-system facilities and should not be equated with separate hardware.",
+        "These categories overlap. A cloud service may run on a cluster of general-purpose servers, some containing accelerators. Its client may be an embedded device. Classification becomes useful when it identifies a requirement or failure boundary."
+      ]
+    },
+    {
+      "title": "6. A requirements-based classification exercise",
+      "paragraphs": [
+        "Start with the task, inputs, outputs, deadlines, capacity, environment, recovery needs, and cost constraints. Then classify along each relevant axis. Avoid selecting a “supercomputer” simply because a system has many users; user count and numerical computation are different dimensions.",
+        "For a campus enrolment service, general-purpose networked servers, a durable database, and interactive clients are reasonable roles. Important requirements include peak transaction load, access control, backups, and recovery. For an industrial emergency shutdown controller, bounded timing and dependable local action may matter more than broad application flexibility.",
+        "The best classification answer states why a category fits and which evidence would be needed to choose an implementation. Labels organise reasoning; they do not substitute for specifications."
+      ],
+      "example": [
+        "A temperature controller samples every 10 ms and must adjust output within 2 ms after each sample. It is embedded and has a timing requirement. A 1 ms average response with occasional 20 ms pauses fails that requirement. A faster desktop specification does not prove suitability; scheduling, interrupts, sensor interfaces, and worst-case processing must be assessed."
+      ]
+    }
+  ],
+  "revision": [
+    "Compare categories along independent axes.",
+    "Explain why digital resolution is not measurement accuracy.",
+    "Distinguish embedded operation from real-time guarantees.",
+    "Classify a banking service, simulation cluster, phone, and controller with reasons."
+  ],
+  "questions": [
+    {
+      "level": "easy",
+      "tags": [
+        "Exam practice"
+      ],
+      "question": "What are analog, digital, and hybrid computers?",
+      "answer": [
+        "Analog systems compute using continuous physical representations. Digital systems compute on discrete representations. Hybrid systems combine analog and digital computation. Explain the representation and computation, not just whether a device receives a real-world signal."
+      ],
+      "id": "what-are-analog-digital-and-hybrid-computers"
+    },
+    {
+      "level": "medium",
+      "tags": [
+        "Interview practice"
+      ],
+      "question": "Can a server be a normal personal computer?",
+      "answer": [
+        "Yes. Server describes a role: supplying a service to clients. A personal computer can run server software. Dedicated server hardware may add capacity, manageability, or resilience, but the role does not require a particular enclosure."
+      ],
+      "id": "can-a-server-be-a-normal-personal-computer"
+    },
+    {
+      "level": "medium",
+      "tags": [
+        "Exam practice"
+      ],
+      "question": "How is a mainframe different from a supercomputer?",
+      "answer": [
+        "Mainframes are commonly designed for large transaction and I/O workloads with operational continuity. Supercomputers emphasise demanding numerical and parallel computation. Compare workload, architecture, and performance metrics rather than claiming one is universally faster."
+      ],
+      "id": "how-is-a-mainframe-different-from-a-supercomputer"
+    },
+    {
+      "level": "hard",
+      "tags": [
+        "Interview practice"
+      ],
+      "question": "Why is real-time different from high performance?",
+      "answer": [
+        "High performance may mean high throughput or low average latency. Real-time correctness includes satisfying stated deadlines under stated conditions. A very fast average with unbounded pauses can be unsuitable for a deadline-sensitive task."
+      ],
+      "id": "why-is-real-time-different-from-high-performance"
+    },
+    {
+      "level": "medium",
+      "tags": [
+        "Practical reasoning"
+      ],
+      "question": "Is every embedded system special-purpose and offline?",
+      "answer": [
+        "Embedded describes integration into a larger product. Many have specialised roles, but can use general-purpose processors and operating systems. They may also communicate over networks. State the role, capability, and connectivity separately."
+      ],
+      "id": "is-every-embedded-system-special-purpose-and-offline"
+    },
+    {
+      "level": "hard",
+      "tags": [
+        "Curious learner"
+      ],
+      "question": "Does a virtual machine remove hardware failure risk?",
+      "answer": [
+        "No. Several virtual machines may share one host, power supply, storage system, or network. Isolation of software environments is different from independent physical failure domains. Resilience requires redundancy and recovery across the actual shared dependencies."
+      ],
+      "id": "does-a-virtual-machine-remove-hardware-failure-risk"
+    }
+  ],
+  "references": [
+    {
+      "title": "NIST: cloud computing definition",
+      "url": "https://nvlpubs.nist.gov/nistpubs/legacy/sp/nistspecialpublication800-145.pdf"
+    },
+    {
+      "title": "Computer History Museum: computers timeline",
+      "url": "https://www.computerhistory.org/timeline/computers/"
+    }
+  ]
+}
