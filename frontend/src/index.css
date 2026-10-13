@@ -1,2 +1,38 @@
 @import "tailwindcss";
 @config "../tailwind.config.js";
+
+@keyframes search-topic-swap {
+  0% { opacity: 0; transform: translateY(0.45em); }
+  9%, 90% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(-0.45em); }
+}
+
+.search-topic-suggestion {
+  animation: search-topic-swap 3.6s ease-in-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .search-topic-suggestion { animation: none; }
+}
+
+@keyframes shelf-page-turn {
+  0%, 15% { transform: scaleX(1); }
+  65%, 85% { transform: scaleX(-1); }
+  100% { transform: scaleX(1); }
+}
+
+@keyframes shelf-loading-dot {
+  0%, 80%, 100% { opacity: .3; transform: translateY(0); }
+  40% { opacity: 1; transform: translateY(-3px); }
+}
+
+.shelf-loader-page {
+  transform-origin: 32px 32px;
+  animation: shelf-page-turn 2.4s ease-in-out infinite;
+}
+
+.shelf-loader-dot { animation: shelf-loading-dot 1.4s ease-in-out infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  .shelf-loader-page, .shelf-loader-dot { animation: none; }
+}

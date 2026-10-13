@@ -1,4 +1,5 @@
 export const publicPages = [
+  { path: '/vbu', label: 'VBU student guide' },
   { path: '/about', label: 'About Study Shelf' },
   { path: '/help', label: 'Help and FAQs' },
   { path: '/contact', label: 'Contact' },

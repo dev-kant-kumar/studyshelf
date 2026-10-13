@@ -8,5 +8,5 @@ export const site = {
   ).replace(/\/$/, ""),
   contactEmail:
     import.meta.env.VITE_CONTACT_EMAIL || "studyshelf@devkantkumar.com",
-  description: "BCA and MCA study notes, organised for easier learning.",
+  description: "Study notes for Vinoba Bhave University students in Jharkhand. Explore VBU MCA syllabus units, published chapters, examples and revision questions.",
 };

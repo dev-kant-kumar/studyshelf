@@ -27,7 +27,7 @@ function SubjectContent({ course, semester, paper, hash }) {
   const selected = paper.units.find(unit => `#${unit.id}` === hash)?.id ?? paper.units[0]?.id
   const [expanded, setExpanded] = useState(selected)
   return <CatalogueLayout>
-    <DocumentHead title={`${paper.title} - ${course.name} ${semester.title}`} description={`Explore ${paper.title} syllabus units and available study notes for ${course.name} ${semester.title}.`} path={paper.href} noindex={!paper.units.length && !paper.noteCount} />
+    <DocumentHead title={`${paper.title} - VBU ${course.name} ${semester.title}`} description={`Explore VBU ${paper.title} syllabus units and available study notes for ${course.name} ${semester.title}.`} path={paper.href} noindex={!paper.units.length && !paper.noteCount} />
     <Breadcrumbs items={[{label:course.name,href:course.href},{label:semester.title,href:semester.href},{label:paper.title}]} />
     <div className="mb-8 flex items-center justify-between gap-6 [&>div]:mb-0"><PageIntro eyebrow={paper.code} title={paper.title}>
       <div className={`mt-4 flex flex-wrap items-center gap-3 text-sm ${muted}`}><KindBadge kind={paper.kind} group={paper.electiveGroup} />{paper.credits != null && <span>{paper.credits} credits</span>}{paper.marks != null && <span>{paper.marks} marks</span>}<span>{paper.noteCount} published notes</span></div>

@@ -1,7 +1,17 @@
 import { Component } from 'react'
-import { secondary, panel, muted } from '@/ui/classes'
+import ErrorState from './ErrorState'
+import DocumentHead from './DocumentHead'
 export default class ContentBoundary extends Component {
   state={failed:false}
   static getDerivedStateFromError(){return {failed:true}}
-  render(){return this.state.failed?<div className={`${panel} p-6`} role="alert"><h2 className="text-lg font-semibold">{this.props.title ?? 'This note could not load.'}</h2><p className={`mt-2 ${muted}`}>Check your connection, then reload the page.</p><button type="button" className={`${secondary} mt-4`} onClick={()=>window.location.reload()}>Reload page</button></div>:this.props.children}
+  render() {
+    if (!this.state.failed) return this.props.children
+    const variant = this.props.variant ?? 'note'
+    const content = <ErrorState variant={variant} title={this.props.title} />
+    if (variant === 'note') return content
+    return <>
+      <DocumentHead title="Page could not load" description="Return to the Study Shelf library or reload the page to continue learning." path={typeof window === 'undefined' ? '/' : window.location.pathname} noindex />
+      {variant === 'app' ? <main id="main-content" className="flex min-h-dvh items-center bg-canvas font-sans text-ink dark:bg-night-canvas dark:text-night-ink">{content}</main> : content}
+    </>
+  }
 }
