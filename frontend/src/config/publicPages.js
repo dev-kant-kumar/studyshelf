@@ -1,4 +1,6 @@
 export const publicPages = [
+  { path: '/developers', label: 'Developer Shelf' },
+  { path: '/developers/nodejs-roadmap', label: 'Node.js backend roadmap' },
   { path: '/vbu', label: 'VBU student guide' },
   { path: '/about', label: 'About Study Shelf' },
   { path: '/help', label: 'Help and FAQs' },

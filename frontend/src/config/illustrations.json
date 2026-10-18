@@ -106,5 +106,23 @@
       320,
       640
     ]
+  },
+  "developer-backend": {
+    "width": 1448,
+    "height": 1086,
+    "widths": [
+      240,
+      480,
+      720
+    ]
+  },
+  "developer-production": {
+    "width": 1448,
+    "height": 1086,
+    "widths": [
+      240,
+      480,
+      720
+    ]
   }
 }
