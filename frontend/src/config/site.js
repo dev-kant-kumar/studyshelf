@@ -8,5 +8,5 @@ export const site = {
   ).replace(/\/$/, ""),
   contactEmail:
     import.meta.env.VITE_CONTACT_EMAIL || "studyshelf@devkantkumar.com",
-  description: "Study notes for Vinoba Bhave University students in Jharkhand. Explore VBU MCA syllabus units, published chapters, examples and revision questions.",
+  description: "Study notes for Vinoba Bhave University students in Jharkhand. Explore VBU BCA and MCA syllabus units, published MCA chapters, examples and revision questions.",
 };

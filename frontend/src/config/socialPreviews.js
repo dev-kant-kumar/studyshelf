@@ -1,7 +1,7 @@
 const previews = {
   site: { path: '/social-preview-site.png', alt: 'Study Shelf - BCA and MCA study resources and developer learning' },
   mca: { path: '/social-preview-vbu-mca.png', alt: 'Study Shelf - VBU MCA study notes, syllabus and revision' },
-  bca: { path: '/social-preview-bca.png', alt: 'Study Shelf - BCA learning and computing concepts, course material coming soon' },
+  bca: { path: '/social-preview-bca-syllabus.png', alt: 'Study Shelf - BCA syllabus and study planning across six semesters' },
   developers: { path: '/social-preview-developers.png', alt: 'Developer Shelf - roadmaps, projects and practical development' },
 }
 

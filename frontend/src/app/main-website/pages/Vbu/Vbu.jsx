@@ -32,7 +32,7 @@ function CollegeEntry({ college }) {
 export default function Vbu() {
   const mca = getCourse('mca')
   return <CatalogueLayout>
-    <DocumentHead title="VBU MCA Notes & Syllabus - Student Guide" description="Find VBU MCA study notes and syllabus units, with guidance for BCA students at Vinoba Bhave University colleges in Jharkhand." path="/vbu" />
+    <DocumentHead title="VBU BCA & MCA Syllabus - Student Guide" description="Find VBU MCA study notes and syllabus units, with guidance for BCA students at Vinoba Bhave University colleges in Jharkhand." path="/vbu" />
     <Breadcrumbs items={[{ label: 'VBU study guide' }]} />
     <PageIntro eyebrow="Vinoba Bhave University · Jharkhand" title="A study guide for VBU students." description="Find your semester, check your syllabus, and study one topic at a time."><SyllabusLabel course={mca} /></PageIntro>
     <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
@@ -44,9 +44,9 @@ export default function Vbu() {
           <Link className={`${link} mt-4 block`} to="/courses/mca/semesters/sem1">Browse MCA Semester 1 subjects</Link>
         </section>
         <section>
-          <h2 className="text-2xl font-semibold">VBU BCA study material</h2>
-          <p className={`mt-4 leading-7 ${muted}`}>BCA notes and semester navigation are planned. Our introductory computing and networking chapters can help you understand shared concepts now, but they do not cover the complete BCA syllabus. Use your college's applicable syllabus to choose topics.</p>
-          <Link className={`${link} mt-4 inline-block`} to="/courses/mca/semesters/sem1/subjects/paper1#unit1">Explore introductory computing topics</Link>
+          <h2 className="text-2xl font-semibold">VBU BCA syllabus and study planning</h2>
+          <p className={`mt-4 leading-7 ${muted}`}>Browse six semesters of the supplied VBU BCA CBCS syllabus, including theory units, practical guidance and elective choices. BCA chapter notes are being developed. Check the syllabus version against your course and batch.</p>
+          <Link className={`${link} mt-4 inline-block`} to="/courses/mca/semesters/sem1/subjects/paper1#unit1">Explore introductory computing topics</Link><Link className={`${link} mt-3 block`} to="/courses/bca">Browse BCA semesters and subjects</Link>
         </section>
         <section className="border-t border-line pt-7 dark:border-night-line">
           <h2 className="text-2xl font-semibold">Studying at a college under VBU?</h2>

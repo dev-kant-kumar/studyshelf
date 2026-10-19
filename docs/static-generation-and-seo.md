@@ -2,7 +2,7 @@
 
 ## SEO follow-up - 2026-10-19
 
-The homepage now targets VBU MCA study notes, syllabus, and revision. Course and semester headings name their course context. Chapter search titles add VBU and the course name while Article schema retains the original chapter headline. BCA remains explicitly forthcoming and its empty course page remains noindex. Course cards show current publication counts.
+The homepage now targets VBU MCA study notes, syllabus, and revision. Course and semester headings name their course context. Chapter search titles add VBU and the course name while Article schema retains the original chapter headline. At this earlier baseline, BCA was forthcoming and its empty course page was noindex. The later BCA import below supersedes that state. Course cards show current publication counts.
 
 Catalogue pages link to the official VBU MCA syllabus PDF at https://www.vbu.ac.in/resources/assets/img/syllubs/pg/MCASyllabus.pdf and distinguish the CBCS syllabus version from the study session. The VBU guide describes current coverage without claiming that every other paper lacks chapters.
 
@@ -32,7 +32,7 @@ References: [Google Article guidance](https://developers.google.com/search/docs/
 
 ## Indexing and sitemaps
 
-The sitemap is derived from each rendered page's robots directive rather than an independent allowlist. Search, saved notes, the BCA placeholder, empty paper entries without outlines or notes, and 404 are noindex. Useful supplied syllabus pages remain indexable even when their notes are forthcoming. The current output has 51 indexable canonical URLs. Chapter lastmod values use authored update dates, never build time. Robots.txt points to the canonical sitemap.
+The sitemap is derived from each rendered page's robots directive rather than an independent allowlist. Search, saved notes, empty paper entries without outlines, practical guidance or notes, and 404 are noindex. BCA now has indexable syllabus pages after its source import. Useful supplied syllabus pages remain indexable even when their notes are forthcoming. The current output has 51 indexable canonical URLs. Chapter lastmod values use authored update dates, never build time. Robots.txt points to the canonical sitemap.
 
 [Google sitemap guidance](https://developers.google.com/search/docs/crawling-indexing/sitemaps/build-sitemap) describes accurate lastmod values and sitemap submission.
 
@@ -48,8 +48,12 @@ See [Cloudflare Pages deployment](./cloudflare-pages-deployment.md) for deployme
 
 ## Social sharing previews
 
-Sharing images are selected by URL through `frontend/src/config/socialPreviews.js`. The homepage and general pages use `social-preview-site.png`, describing Study Shelf across BCA, MCA, and developer learning. MCA course routes and MCA note slugs use `social-preview-vbu-mca.png`. BCA course routes and BCA note slugs use `social-preview-bca.png`, which states that course material is coming soon. Developer pages, including the Node.js roadmap, use `social-preview-developers.png`. Article course metadata also supplies a fallback for future note URL formats.
+Sharing images are selected by URL through `frontend/src/config/socialPreviews.js`. The homepage and general pages use `social-preview-site.png`, describing Study Shelf across BCA, MCA, and developer learning. MCA course routes and MCA note slugs use `social-preview-vbu-mca.png`. BCA course routes and BCA note slugs use `social-preview-bca-syllabus.png`, which describes six semesters of syllabus and study planning. Developer pages, including the Node.js roadmap, use `social-preview-developers.png`. Article course metadata also supplies a fallback for future note URL formats.
 
 Every card is a 1200 x 630 PNG. Open Graph and Twitter use the selected absolute HTTPS URL and matching descriptive alternative text. Each page keeps its own title and description. The homepage search/share title describes the whole site. Build verification checks actual image format and dimensions, and routing tests cover course descendants, note slugs, general pages, and similar unmatched prefixes.
 
 Artwork was created with the built-in image generation tool. MCA prompt: blue and off-white Study Shelf card with an open book and stacked books; VBU MCA study notes, syllabus, examples and revision. Variant prompts: preserve the reference palette and layout; root headline Study Shelf with Learn. Revise. Build. and BCA & MCA study resources. Developer learning.; BCA Learning with Build your foundation. and Computing concepts. Course material coming soon.; Developer Shelf with Learn. Build. Ship. and Roadmaps. Projects. Practical development. All cards include studyshelf.devkantkumar.com. Generated artwork was resized to 1200 x 630 for delivery.
+
+## BCA catalogue import
+
+The supplied BCA PDF now populates six semesters, 49 paper/option entries, 156 unit outlines and 17 practical/project descriptions. BCA course, semester and supplied syllabus pages are indexable and included in the generated sitemap. No BCA chapter is falsely marked published. Source discrepancies and reproduction details are documented in `docs/syllabus/bca-import-notes.md`. A new BCA social image filename refreshes availability messaging for sharing crawlers.

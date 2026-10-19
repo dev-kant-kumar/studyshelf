@@ -6,7 +6,7 @@ export default function SyllabusNotice({ course }) {
     <Info size={16} className="mt-0.5 shrink-0" aria-hidden="true" />
     <div>{course.versionNote && <p>{course.versionNote}</p>}{course.source?.url && <>
       <p className="mt-2">Syllabus version: {course.version}. A study session label does not confirm that this syllabus applies to your batch.</p>
-      <a className={`${link} mt-2 inline-block`} href={course.source.url}>Read the official VBU {course.name} syllabus (PDF)</a>
+      <a className={`${link} mt-2 inline-block`} href={course.source.url}>{course.source.label ?? `Read the official VBU ${course.name} syllabus (PDF)`}</a>
     </>}</div>
   </aside>
 }

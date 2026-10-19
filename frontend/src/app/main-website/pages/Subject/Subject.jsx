@@ -27,12 +27,13 @@ function SubjectContent({ course, semester, paper, hash }) {
   const selected = paper.units.find(unit => `#${unit.id}` === hash)?.id ?? paper.units[0]?.id
   const [expanded, setExpanded] = useState(selected)
   return <CatalogueLayout>
-    <DocumentHead title={`${paper.title} - VBU ${course.name} ${semester.title}`} description={`Explore VBU ${paper.title} syllabus units and available study notes for ${course.name} ${semester.title}.`} path={paper.href} noindex={!paper.units.length && !paper.noteCount} />
+    <DocumentHead title={`${paper.title} - VBU ${course.name} ${semester.title}`} description={`Explore VBU ${paper.title} syllabus units and available study notes for ${course.name} ${semester.title}.`} path={paper.href} noindex={!paper.units.length && !paper.noteCount && !paper.practicalText} />
     <Breadcrumbs items={[{label:course.name,href:course.href},{label:semester.title,href:semester.href},{label:paper.title}]} />
     <div className="mb-8 flex items-center justify-between gap-6 [&>div]:mb-0"><PageIntro eyebrow={paper.code} title={paper.title}>
       <div className={`mt-4 flex flex-wrap items-center gap-3 text-sm ${muted}`}><KindBadge kind={paper.kind} group={paper.electiveGroup} />{paper.credits != null && <span>{paper.credits} credits</span>}{paper.marks != null && <span>{paper.marks} marks</span>}<span>{paper.noteCount} published notes</span></div>
-      <SyllabusLabel course={course} />
+      <SyllabusLabel course={course} />{paper.examMarks != null && paper.examMarks !== paper.marks && <p className={`mt-3 text-sm ${muted}`}>End-semester examination: {paper.examMarks} marks. Total paper marks above follow the course structure.</p>}
     </PageIntro>{illustration && <Illustration name={illustration} minWidth={640} priority sizes="(min-width: 768px) 192px, 128px" className="hidden w-32 shrink-0 sm:block md:w-48" />}</div>
+    {paper.sourceNote && <aside aria-label="Source clarification" className={`${panel} mb-6 p-5`}><h2 className="font-semibold">A note about the supplied syllabus</h2><p className={`mt-2 text-sm leading-relaxed ${muted}`}>{paper.sourceNote}</p></aside>}
     <div className="grid items-start gap-8 lg:grid-cols-[224px_minmax(0,1fr)]">
       <aside className="lg:sticky lg:top-24"><nav aria-label="Subject units" className={`${panel} p-5`}>
         <p className={`${eyebrow} mb-4 flex items-center gap-2`}><List size={16} aria-hidden="true" />In this subject</p>
@@ -57,7 +58,7 @@ function SubjectContent({ course, semester, paper, hash }) {
               {unit.sourcePage && <p className={`mt-4 text-xs ${muted}`}>Syllabus: supplied PDF, page {unit.sourcePage}.</p>}
             </div>
           </section>
-        })}</div> : <EmptyState compact title="No detailed outline supplied." description="This paper appears in the course structure, but the supplied document does not list units for it. Study material will be added when available." />}
+        })}</div> : paper.practicalText ? <section className={`${panel} p-6`}><h2 className="text-xl font-semibold">Practical syllabus</h2><p className={`mt-4 leading-relaxed ${muted}`}>{paper.practicalText}</p><p className={`mt-4 text-xs ${muted}`}>Syllabus: supplied PDF, page {paper.detailPage}.</p></section> : <EmptyState compact title="No detailed outline supplied." description="This paper appears in the course structure, but the supplied document does not list units for it. Study material will be added when available." />}
       </div>
     </div>
     <SyllabusNotice course={course} />
