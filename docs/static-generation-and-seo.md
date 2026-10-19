@@ -24,7 +24,7 @@ React replaces the initial static tree on startup. Build-time metadata is marked
 
 ## Metadata and structured data
 
-Every page has a self-referencing HTTPS canonical, a description, robots directives, Open Graph metadata, and Twitter preview metadata. The shared 1200 x 630 social preview is in `frontend/public/social-preview.png`. The default home title targets BCA and MCA study notes; semester and subject titles and descriptions include their course and semester.
+Every page has a self-referencing HTTPS canonical, a description, robots directives, Open Graph metadata, and Twitter preview metadata. The 1200 x 630 social previews are selected by link category from `frontend/public/social-preview-*.png`. The default home title targets BCA and MCA study notes; semester and subject titles and descriptions include their course and semester.
 
 JSON-LD includes WebSite and WebPage data, ContactPage or AboutPage where appropriate, breadcrumbs reflecting the visible trail, and Article data for published chapters. Author identity points to Dev Kant Kumar. Modified dates come from the chapter metadata. Publication dates are omitted unless explicitly supplied. No fabricated ratings, credentials, or publication timestamps are included.
 
@@ -45,3 +45,11 @@ The build checks one H1, title, description and canonical per page; unique title
 Choose the final subdomain and set VITE_SITE_URL and VITE_CONTACT_EMAIL in Cloudflare Pages before building. Confirm real 200 responses for published routes and a 404 response for unknown paths. Keep preview pages noindex. After deployment, verify the domain in Google Search Console, submit /sitemap.xml, and inspect the home page and a chapter with URL Inspection and Rich Results Test. These account-level steps have not been performed locally. Search indexing and enhanced search appearances are not guaranteed by this implementation.
 
 See [Cloudflare Pages deployment](./cloudflare-pages-deployment.md) for deployment settings. Update publication metadata when chapter content changes, and rebuild to refresh the static pages and sitemap.
+
+## Social sharing previews
+
+Sharing images are selected by URL through `frontend/src/config/socialPreviews.js`. The homepage and general pages use `social-preview-site.png`, describing Study Shelf across BCA, MCA, and developer learning. MCA course routes and MCA note slugs use `social-preview-vbu-mca.png`. BCA course routes and BCA note slugs use `social-preview-bca.png`, which states that course material is coming soon. Developer pages, including the Node.js roadmap, use `social-preview-developers.png`. Article course metadata also supplies a fallback for future note URL formats.
+
+Every card is a 1200 x 630 PNG. Open Graph and Twitter use the selected absolute HTTPS URL and matching descriptive alternative text. Each page keeps its own title and description. The homepage search/share title describes the whole site. Build verification checks actual image format and dimensions, and routing tests cover course descendants, note slugs, general pages, and similar unmatched prefixes.
+
+Artwork was created with the built-in image generation tool. MCA prompt: blue and off-white Study Shelf card with an open book and stacked books; VBU MCA study notes, syllabus, examples and revision. Variant prompts: preserve the reference palette and layout; root headline Study Shelf with Learn. Revise. Build. and BCA & MCA study resources. Developer learning.; BCA Learning with Build your foundation. and Computing concepts. Course material coming soon.; Developer Shelf with Learn. Build. Ship. and Roadmaps. Projects. Practical development. All cards include studyshelf.devkantkumar.com. Generated artwork was resized to 1200 x 630 for delivery.

@@ -65,6 +65,11 @@ for (const file of pages) {
   const image = new URL(document.querySelector('meta[property="og:image"]').getAttribute('content'))
   assert.equal(image.origin, url.origin)
   await access(join('dist', image.pathname.slice(1)))
+  const preview = await readFile(join('dist', image.pathname.slice(1)))
+  assert.equal(preview.subarray(0, 8).toString('hex'), '89504e470d0a1a0a', `${file}: PNG social image`)
+  assert.equal(preview.readUInt32BE(16), 1200, `${file}: social image width`)
+  assert.equal(preview.readUInt32BE(20), 630, `${file}: social image height`)
+  assert.equal(document.querySelector('meta[name="twitter:image"]')?.getAttribute('content'), image.href, `${file}: matching share images`)
   for (const anchor of document.querySelectorAll('a[href]')) {
     const href = anchor.getAttribute('href')
     if (!href.startsWith('/') || href.startsWith('//')) continue
