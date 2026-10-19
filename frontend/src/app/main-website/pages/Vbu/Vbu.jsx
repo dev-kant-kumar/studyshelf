@@ -32,14 +32,14 @@ function CollegeEntry({ college }) {
 export default function Vbu() {
   const mca = getCourse('mca')
   return <CatalogueLayout>
-    <DocumentHead title="VBU BCA & MCA Notes - Jharkhand Student Guide" description="Find VBU MCA study notes and syllabus units, with guidance for BCA students at Vinoba Bhave University colleges in Jharkhand." path="/vbu" />
+    <DocumentHead title="VBU MCA Notes & Syllabus - Student Guide" description="Find VBU MCA study notes and syllabus units, with guidance for BCA students at Vinoba Bhave University colleges in Jharkhand." path="/vbu" />
     <Breadcrumbs items={[{ label: 'VBU study guide' }]} />
     <PageIntro eyebrow="Vinoba Bhave University · Jharkhand" title="A study guide for VBU students." description="Find your semester, check your syllabus, and study one topic at a time."><SyllabusLabel course={mca} /></PageIntro>
     <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
       <div className="space-y-8">
         <section className={`${panel} p-6 sm:p-8`}>
           <h2 className="text-2xl font-semibold">VBU MCA notes and syllabus</h2>
-          <p className={`mt-4 leading-7 ${muted}`}>Start with Semester 1, Fundamentals of Computers. All 15 topics in Unit 1 have published chapters, worked examples, revision practice, and questions with answers. The other papers and units currently have syllabus outlines.</p>
+          <p className={`mt-4 leading-7 ${muted}`}>Start with Semester 1, Fundamentals of Computers. All 15 topics in Unit 1 have published chapters, worked examples, revision practice, and questions with answers. Explore the subject catalogue for current chapter coverage, including C programming notes. Topics without published chapters are listed as syllabus outlines.</p>
           <Link className={`${button} mt-5`} to="/courses/mca/semesters/sem1/subjects/paper1#unit1">Read Fundamentals of Computers Unit 1</Link>
           <Link className={`${link} mt-4 block`} to="/courses/mca/semesters/sem1">Browse MCA Semester 1 subjects</Link>
         </section>

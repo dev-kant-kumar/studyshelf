@@ -10,6 +10,7 @@ export default {
   versionNote:
     "Check your university’s syllabus for the topics covered in your exams.",
   source: {
+    url: "https://www.vbu.ac.in/resources/assets/img/syllubs/pg/MCASyllabus.pdf",
     file: "docs/syllabus/MCASyllabus.pdf",
     pages: 32,
   },

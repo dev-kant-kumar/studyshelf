@@ -1,6 +1,6 @@
 # StudyShelf frontend design
 
-Date: 13 October 2026. Status: recommended direction, ready for frontend implementation. Scope: public frontend at studyself.devkantkumar.com; admin and backend are excluded.
+Date: 13 October 2026. Status: recommended direction, ready for frontend implementation. Scope: public frontend at studyshelf.devkantkumar.com; admin and backend are excluded.
 
 ## 1. Direction and rationale
 

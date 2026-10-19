@@ -9,7 +9,9 @@ The site is prepared as a static, prerendered React website. No Pages Functions,
 - Build command: `npm run build`.
 - Output directory: `dist` (relative to frontend).
 - Build runtime: Node 22 or a later compatible runtime supported by the installed Vite version.
-- Public environment: `VITE_SITE_URL=https://<chosen-subdomain>` and `VITE_CONTACT_EMAIL=<dedicated-StudyShelf-inbox>`.
+- Public environment: `VITE_SITE_URL=https://studyshelf.devkantkumar.com` and `VITE_CONTACT_EMAIL=<dedicated-StudyShelf-inbox>`.
+
+The production domain is `studyshelf.devkantkumar.com`. Update `VITE_SITE_URL` in the Cloudflare Pages production build environment before redeploying, because an environment variable overrides the source default. The build rejects the former misspelled hostname. Deploy the rebuilt output, then run `npm run verify:production -- https://studyshelf.devkantkumar.com` from `frontend` to check live canonicals, the sitemap, robots.txt, and response status codes. Submit the corrected sitemap in the Search Console property for this domain and inspect affected chapter URLs after the live check passes.
 
 Do not put secrets in VITE_ variables. Cloudflare builds deliberately fail if either public setting is absent. The final subdomain can be chosen later; changing VITE_SITE_URL and rebuilding updates canonical metadata, sitemap URLs, and page links in correction reports. The inbox must exist and receive mail; this project does not provision it.
 

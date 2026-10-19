@@ -4,7 +4,7 @@ export const site = {
   authorUrl: "https://devkantkumar.com/",
   companyUrl: "https://unyrisetech.com/",
   url: (
-    import.meta.env.VITE_SITE_URL || "https://studyself.devkantkumar.com"
+    import.meta.env.VITE_SITE_URL || "https://studyshelf.devkantkumar.com"
   ).replace(/\/$/, ""),
   contactEmail:
     import.meta.env.VITE_CONTACT_EMAIL || "studyshelf@devkantkumar.com",

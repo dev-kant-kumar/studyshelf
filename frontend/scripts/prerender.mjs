@@ -7,6 +7,7 @@ try {
   const { paths, site, noteDates, render } = await server.ssrLoadModule('/src/entry-prerender.jsx')
   if (process.env.CF_PAGES && (!process.env.VITE_SITE_URL || !process.env.VITE_CONTACT_EMAIL)) throw new Error('Cloudflare Pages builds require VITE_SITE_URL and the dedicated VITE_CONTACT_EMAIL. Set them in the project environment variables before deployment.')
   const origin = new URL(site.url)
+  if (origin.hostname === 'studyself.devkantkumar.com') throw new Error('VITE_SITE_URL uses the misspelled host. Set it to https://studyshelf.devkantkumar.com and rebuild.')
   if (origin.protocol !== 'https:' || origin.pathname !== '/' || origin.search || origin.hash || origin.username || origin.password) throw new Error('VITE_SITE_URL must be an HTTPS origin without a path, query, fragment, or credentials.')
   if (new Set(paths).size !== paths.length) throw new Error('Duplicate static routes')
   const sitemapPaths = []

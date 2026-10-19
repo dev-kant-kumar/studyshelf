@@ -1,5 +1,19 @@
 # Static generation and SEO
 
+## SEO follow-up - 2026-10-19
+
+The homepage now targets VBU MCA study notes, syllabus, and revision. Course and semester headings name their course context. Chapter search titles add VBU and the course name while Article schema retains the original chapter headline. BCA remains explicitly forthcoming and its empty course page remains noindex. Course cards show current publication counts.
+
+Catalogue pages link to the official VBU MCA syllabus PDF at https://www.vbu.ac.in/resources/assets/img/syllubs/pg/MCASyllabus.pdf and distinguish the CBCS syllabus version from the study session. The VBU guide describes current coverage without claiming that every other paper lacks chapters.
+
+The corrected production origin is https://studyshelf.devkantkumar.com. Live checks on 2026-10-19 confirmed that this host serves the site, but the deployed canonicals, sitemap URLs, and robots.txt still referenced an incorrectly spelled host that failed DNS resolution. The local configuration is corrected; redeployment is required to update the live metadata. Google indexing remains unverified.
+
+After deployment, run `npm run verify:production -- https://studyshelf.devkantkumar.com` from `frontend`. This checks every sitemap URL for direct HTTP 200 responses, production self-canonicals, indexability, and a rendered H1, plus robots.txt, utility-page noindex, and a real HTTP 404 for an unknown route. It does not prove Google indexing or measure Core Web Vitals.
+
+In Google Search Console, verify domain ownership, submit `/sitemap.xml`, and inspect the homepage and representative chapters. Review queries, clicks, impressions, CTR, indexing, and Core Web Vitals after data becomes available. New course chapters, verified previous-year papers, earned external links, and live mobile performance measurements remain ongoing work.
+
+Validation for this follow-up: 84 rendered pages, 68 indexable URLs, 29 articles, and 3,480 local navigation links passed build verification. All 10 tests passed. Lint completed with an existing CodeBlock.jsx effect warning. Historical implementation counts below describe the earlier baseline.
+
 `npm run build` bundles the frontend, renders 66 public routes plus the 404 page, and verifies the generated output. Routes come from the live curriculum and publication catalogue, so publishing a chapter adds its static page automatically. A failed render or verification fails the build.
 
 ## Rendered content
