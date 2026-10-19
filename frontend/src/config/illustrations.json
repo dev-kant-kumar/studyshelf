@@ -124,5 +124,149 @@
       480,
       720
     ]
+  },
+  "career-mobile": {
+    "width": 1448,
+    "height": 1086,
+    "widths": [
+      240,
+      480,
+      720
+    ]
+  },
+  "career-quality": {
+    "width": 1448,
+    "height": 1086,
+    "widths": [
+      240,
+      480,
+      720
+    ]
+  },
+  "career-software": {
+    "width": 1448,
+    "height": 1086,
+    "widths": [
+      240,
+      480,
+      720
+    ]
+  },
+  "career-ai": {
+    "width": 1448,
+    "height": 1086,
+    "widths": [
+      240,
+      480,
+      720
+    ]
+  },
+  "career-analytics": {
+    "width": 1448,
+    "height": 1086,
+    "widths": [
+      240,
+      480,
+      720
+    ]
+  },
+  "career-data-engineering": {
+    "width": 1448,
+    "height": 1086,
+    "widths": [
+      240,
+      480,
+      720
+    ]
+  },
+  "career-analysis": {
+    "width": 1448,
+    "height": 1086,
+    "widths": [
+      240,
+      480,
+      720
+    ]
+  },
+  "career-cloud": {
+    "width": 1448,
+    "height": 1086,
+    "widths": [
+      240,
+      480,
+      720
+    ]
+  },
+  "career-design": {
+    "width": 1448,
+    "height": 1086,
+    "widths": [
+      240,
+      480,
+      720
+    ]
+  },
+  "career-enterprise": {
+    "width": 1448,
+    "height": 1086,
+    "widths": [
+      240,
+      480,
+      720
+    ]
+  },
+  "career-it-operations": {
+    "width": 1448,
+    "height": 1086,
+    "widths": [
+      240,
+      480,
+      720
+    ]
+  },
+  "career-security": {
+    "width": 1448,
+    "height": 1086,
+    "widths": [
+      240,
+      480,
+      720
+    ]
+  },
+  "career-automation": {
+    "width": 1448,
+    "height": 1086,
+    "widths": [
+      240,
+      480,
+      720
+    ]
+  },
+  "career-communication": {
+    "width": 1448,
+    "height": 1086,
+    "widths": [
+      240,
+      480,
+      720
+    ]
+  },
+  "career-games": {
+    "width": 1448,
+    "height": 1086,
+    "widths": [
+      240,
+      480,
+      720
+    ]
+  },
+  "career-iot": {
+    "width": 1448,
+    "height": 1086,
+    "widths": [
+      240,
+      480,
+      720
+    ]
   }
 }

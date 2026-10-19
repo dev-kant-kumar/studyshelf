@@ -1,0 +1,25 @@
+{
+  "tool": "Built-in image generation",
+  "date": "2026-10-19",
+  "styleReference": "frontend/artwork/developer-backend.png",
+  "transparentBackground": true,
+  "subjects": {
+  "software": "Software and web development: desktop monitor showing abstract application windows and code bars, a small connected server and browser wireframe cards.",
+  "mobile": "Mobile application development: two prominent modern smartphones showing abstract app screens, touch gesture trails, a small app component tile. Phones are the unmistakable main subject, no laptop.",
+  "quality": "Software testing and quality engineering: browser window with test checklist, magnifying glass inspecting a tiny bug symbol, green check marks and a small amber warning tile.",
+  "analytics": "Data analytics and business intelligence: elegant dashboard board with bar chart, line chart and pie chart, magnifying glass over data, small spreadsheet cards.",
+  "data-engineering": "Data engineering and databases: three database cylinders linked by clearly directed pipes passing small data cubes through a filter funnel into a tidy data warehouse.",
+  "ai": "Artificial intelligence and machine learning: stylized neural network of connected nodes forming a brain shape, small model training chart and abstract data tiles. No robot humanoid.",
+  "cloud": "Cloud DevOps and platform engineering: large cobalt cloud connected to server racks, deployment conveyor of software packages, small circular release arrows.",
+  "security": "Cybersecurity: prominent cobalt shield with lock, protected network nodes, magnifying glass examining a security alert. No hooded people, no weapons.",
+  "it-operations": "Networking systems and IT support: router with antennas, ethernet connections, desktop monitor, small wrench and diagnostic indicator lights.",
+  "design": "UI UX and digital product design: overlapping mobile and web wireframes, pen tool cursor, colour swatches and a small user journey diagram on a sketchpad.",
+  "analysis": "Business and systems analysis: process flow board with decision diamonds and connected steps, requirements clipboard and small stakeholder conversation bubbles.",
+  "enterprise": "Enterprise applications and business platforms: cohesive CRM dashboard connected to customer profile cards, workflow blocks and a small enterprise building symbol.",
+  "automation": "Automation and integration engineering: connected workflow nodes with trigger lightning icon, small gears, data moving between two application windows.",
+  "games": "Games graphics and immersive applications: game controller, VR headset and an isometric miniature 3D game scene with a few geometric platforms.",
+  "iot": "IoT embedded software and edge computing: exposed microcontroller board wired to temperature sensor and small smart device, wireless signal arcs, small connected cloud.",
+  "communication": "Technical communication and customer-facing technology: open technical documentation book with abstract code bars, friendly speech bubbles, presentation panel and pen."
+},
+  "commonPrompt": "New dedicated landscape 4:3 editorial illustration per field. Match fine ink contours, subtle watercolor texture, cobalt blue, periwinkle, off-white and small amber accents. Centered with transparent margins, readable at 240px. All objects in frame. No text, logos, watermark or background panel."
+}

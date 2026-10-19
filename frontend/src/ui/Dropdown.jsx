@@ -3,7 +3,7 @@ import { Check, ChevronDown } from 'lucide-react'
 import { focus } from './classes'
 
 // A select-only combobox. Focus stays on the trigger while arrows explore options.
-export default function Dropdown({ id, label, options, value, onChange, icon: Icon, disabled = false, className = '' }) {
+export default function Dropdown({ id, label, options, value, onChange, icon: Icon, disabled = false, className = '', focusClassName = focus }) {
   const generated = useId()
   const controlId = id || `dropdown-${generated}`
   const listId = `${controlId}-options`
@@ -70,7 +70,7 @@ export default function Dropdown({ id, label, options, value, onChange, icon: Ic
     }
   }
   return <div ref={root} className={`relative inline-block max-w-full ${className}`} onBlur={event => { if (!event.currentTarget.contains(event.relatedTarget)) setOpen(false) }}>
-    <button ref={trigger} id={controlId} type="button" role="combobox" aria-label={label} aria-haspopup="listbox" aria-expanded={open} aria-controls={open ? listId : undefined} aria-activedescendant={open ? `${listId}-${active}` : undefined} disabled={disabled || !options.length} onClick={() => open ? setOpen(false) : show()} onKeyDown={keyDown} className={`flex min-h-11 w-full items-center justify-between gap-3 rounded-lg border border-outline bg-surface px-3 py-2 text-left font-sans text-sm text-ink transition-colors hover:bg-soft disabled:cursor-not-allowed disabled:opacity-50 dark:border-night-outline dark:bg-night-surface dark:text-night-ink dark:hover:bg-night-soft motion-reduce:transition-none ${focus}`}>
+    <button ref={trigger} id={controlId} type="button" role="combobox" aria-label={label} aria-haspopup="listbox" aria-expanded={open} aria-controls={open ? listId : undefined} aria-activedescendant={open ? `${listId}-${active}` : undefined} disabled={disabled || !options.length} onClick={() => open ? setOpen(false) : show()} onKeyDown={keyDown} className={`flex min-h-11 w-full items-center justify-between gap-3 rounded-lg border border-outline bg-surface px-3 py-2 text-left font-sans text-sm text-ink transition-colors hover:bg-soft disabled:cursor-not-allowed disabled:opacity-50 dark:border-night-outline dark:bg-night-surface dark:text-night-ink dark:hover:bg-night-soft motion-reduce:transition-none ${focusClassName}`}>
       {Icon && <Icon size={17} className="shrink-0" aria-hidden="true" />}
       <span className="min-w-0 flex-1 truncate">{options[selected]?.label || 'Choose an option'}</span>
       <ChevronDown size={16} className={`shrink-0 transition-transform motion-reduce:transition-none ${open ? 'rotate-180' : ''}`} aria-hidden="true" />

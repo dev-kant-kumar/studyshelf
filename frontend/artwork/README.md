@@ -30,3 +30,7 @@ One transparent editorial illustration asset for Study Shelf adult BCA/MCA learn
 ### contact-message
 
 One transparent editorial illustration asset for Study Shelf adult computing study website contact page. A cobalt blue open envelope holding a cream page with three short abstract blue ink lines, a fountain pen alongside it and one small muted amber speech bubble above. Sophisticated hand-drawn ink contours and subtle watercolor paper texture. Matching a painted academic desk illustration. Palette cobalt #2457d6, periwinkle #93b4ff, muted amber #d7a54b, slate ink and off-white paper. Compact square composition readable at 150px, centered with generous transparent margins. No text, lettering, logos, people, watermark, or background panel. Actual transparent background. Clear on dark navy and near-white backgrounds. Not photorealistic, not 3D.
+
+## Career Explorer artwork
+
+All 16 career fields use dedicated illustrations under `artwork/careers`. Each field has a distinct subject-specific image, with transparent AVIF and WebP exports at 240, 480 and 720 pixels wide. See `careers/README.md` and `careers/prompts.json` for preparation steps and generation provenance.

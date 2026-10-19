@@ -1,4 +1,7 @@
+import { roleRoadmaps } from '../app/main-website/pages/Developers/roleRoadmapData.js'
 export const publicPages = [
+  ...roleRoadmaps.map(roadmap => ({ path: `/developers/${roadmap.slug}`, label: `${roadmap.title} roadmap` })),
+  { path: '/careers', label: 'Career Explorer' },
   { path: '/developers', label: 'Developer Shelf' },
   { path: '/developers/nodejs-roadmap', label: 'Node.js backend roadmap' },
   { path: '/vbu', label: 'VBU student guide' },
