@@ -36,11 +36,61 @@
         "Run this example in a fresh scratch database. It uses two entities and an association. The composite enrolment key assumes one enrolment per student and course; repeated offerings need another identifier. NUMERIC(5,2) stores up to five decimal digits including two after the decimal point. A mark may be NULL until assessment.",
         "The foreign keys require valid student and course identities. CHECK restricts known marks to 0 through 100; it does not reject NULL here. Add NOT NULL if every enrolment must already have a mark. This separates an unknown result from a numerical score of zero."
       ],
-      "code": "CREATE TABLE Student (\n  student_id INTEGER PRIMARY KEY,\n  name VARCHAR(80) NOT NULL\n);\nCREATE TABLE Course (\n  course_code VARCHAR(10) PRIMARY KEY,\n  title VARCHAR(100) NOT NULL\n);\nCREATE TABLE Enrolment (\n  student_id INTEGER REFERENCES Student(student_id),\n  course_code VARCHAR(10) REFERENCES Course(course_code),\n  mark NUMERIC(5,2) CHECK (mark BETWEEN 0 AND 100),\n  PRIMARY KEY (student_id, course_code)\n);\nINSERT INTO Student VALUES (101, 'Asha'), (102, 'Ravi');\nINSERT INTO Course VALUES ('DB101', 'Database Systems');\nINSERT INTO Enrolment VALUES\n  (101, 'DB101', 82), (102, 'DB101', NULL);\n\nSELECT s.name, c.title, e.mark\nFROM Enrolment AS e\nJOIN Student AS s ON s.student_id = e.student_id\nJOIN Course AS c ON c.course_code = e.course_code\nORDER BY s.student_id;",
+      "code": "CREATE TABLE Student (\n  student_id INTEGER PRIMARY KEY,\n  name VARCHAR(80) NOT NULL\n);\n\nCREATE TABLE Course (\n  course_code VARCHAR(10) PRIMARY KEY,\n  title VARCHAR(100) NOT NULL\n);\n\nCREATE TABLE Enrolment (\n  student_id INTEGER NOT NULL,\n  course_code VARCHAR(10) NOT NULL,\n  mark NUMERIC(5,2) CHECK (mark BETWEEN 0 AND 100),\n  PRIMARY KEY (student_id, course_code),\n  FOREIGN KEY (student_id) REFERENCES Student(student_id),\n  FOREIGN KEY (course_code) REFERENCES Course(course_code)\n);\n\nINSERT INTO Student VALUES\n  (101, 'Asha'),\n  (102, 'Ravi');\n\nINSERT INTO Course VALUES\n  ('DB101', 'Database Systems');\n\nINSERT INTO Enrolment VALUES\n  (101, 'DB101', 82),\n  (102, 'DB101', NULL);\n\nSELECT s.name, c.title, e.mark\nFROM Enrolment AS e\nJOIN Student AS s ON s.student_id = e.student_id\nJOIN Course AS c ON c.course_code = e.course_code\nORDER BY s.student_id;",
       "example": [
         "Expected rows: Asha | Database Systems | 82.00, then Ravi | Database Systems | NULL. A client may display NULL differently, but it must not be interpreted as zero.",
         "An enrolment for student 999 is rejected because the referenced student is absent. Repeating (101, DB101) violates the composite primary key. A mark of 120 violates the check. These are separate rules."
-      ]
+      ],
+      "sqlVariants": {
+        "postgresql": {
+          "code": "CREATE TABLE Student (\n  student_id INTEGER PRIMARY KEY,\n  name VARCHAR(80) NOT NULL\n);\n\nCREATE TABLE Course (\n  course_code VARCHAR(10) PRIMARY KEY,\n  title VARCHAR(100) NOT NULL\n);\n\nCREATE TABLE Enrolment (\n  student_id INTEGER NOT NULL,\n  course_code VARCHAR(10) NOT NULL,\n  mark NUMERIC(5,2) CHECK (mark BETWEEN 0 AND 100),\n  PRIMARY KEY (student_id, course_code),\n  FOREIGN KEY (student_id) REFERENCES Student(student_id),\n  FOREIGN KEY (course_code) REFERENCES Course(course_code)\n);\n\nINSERT INTO Student VALUES\n  (101, 'Asha'),\n  (102, 'Ravi');\n\nINSERT INTO Course VALUES\n  ('DB101', 'Database Systems');\n\nINSERT INTO Enrolment VALUES\n  (101, 'DB101', 82),\n  (102, 'DB101', NULL);\n\nSELECT s.name, c.title, e.mark\nFROM Enrolment AS e\nJOIN Student AS s ON s.student_id = e.student_id\nJOIN Course AS c ON c.course_code = e.course_code\nORDER BY s.student_id;",
+          "note": "PostgreSQL: standard multi-row INSERTs and explicit foreign-key constraints.",
+          "download": {
+            "href": "/examples/rdbms-lab-postgresql.sql",
+            "filename": "rdbms-lab-postgresql.sql"
+          }
+        },
+        "oracle": {
+          "code": "CREATE TABLE Student (\n  student_id NUMBER(10) PRIMARY KEY,\n  name VARCHAR2(80) NOT NULL\n);\n\nCREATE TABLE Course (\n  course_code VARCHAR2(10) PRIMARY KEY,\n  title VARCHAR2(100) NOT NULL\n);\n\nCREATE TABLE Enrolment (\n  student_id NUMBER(10) NOT NULL,\n  course_code VARCHAR2(10) NOT NULL,\n  mark NUMBER(5,2) CHECK (mark BETWEEN 0 AND 100),\n  PRIMARY KEY (student_id, course_code),\n  FOREIGN KEY (student_id) REFERENCES Student(student_id),\n  FOREIGN KEY (course_code) REFERENCES Course(course_code)\n);\n\nINSERT INTO Student VALUES (101, 'Asha');\nINSERT INTO Student VALUES (102, 'Ravi');\n\nINSERT INTO Course VALUES ('DB101', 'Database Systems');\n\nINSERT INTO Enrolment VALUES (101, 'DB101', 82);\nINSERT INTO Enrolment VALUES (102, 'DB101', NULL);\n\nCOMMIT;\n\nSELECT s.name, c.title, e.mark\nFROM Enrolment e\nJOIN Student s ON s.student_id = e.student_id\nJOIN Course c ON c.course_code = e.course_code\nORDER BY s.student_id;",
+          "note": "Oracle 19c-compatible: NUMBER/VARCHAR2 types, individual INSERT statements, and COMMIT for the sample data.",
+          "download": {
+            "href": "/examples/rdbms-lab-oracle.sql",
+            "filename": "rdbms-lab-oracle.sql"
+          }
+        },
+        "mysql": {
+          "code": "CREATE TABLE Student (\n  student_id INTEGER PRIMARY KEY,\n  name VARCHAR(80) NOT NULL\n) ENGINE=InnoDB;\n\nCREATE TABLE Course (\n  course_code VARCHAR(10) PRIMARY KEY,\n  title VARCHAR(100) NOT NULL\n) ENGINE=InnoDB;\n\nCREATE TABLE Enrolment (\n  student_id INTEGER NOT NULL,\n  course_code VARCHAR(10) NOT NULL,\n  mark NUMERIC(5,2) CHECK (mark BETWEEN 0 AND 100),\n  PRIMARY KEY (student_id, course_code),\n  FOREIGN KEY (student_id) REFERENCES Student(student_id),\n  FOREIGN KEY (course_code) REFERENCES Course(course_code)\n) ENGINE=InnoDB;\n\nINSERT INTO Student VALUES\n  (101, 'Asha'),\n  (102, 'Ravi');\n\nINSERT INTO Course VALUES\n  ('DB101', 'Database Systems');\n\nINSERT INTO Enrolment VALUES\n  (101, 'DB101', 82),\n  (102, 'DB101', NULL);\n\nSELECT s.name, c.title, e.mark\nFROM Enrolment AS e\nJOIN Student AS s ON s.student_id = e.student_id\nJOIN Course AS c ON c.course_code = e.course_code\nORDER BY s.student_id;",
+          "note": "MySQL 8.0.16+: InnoDB tables, explicit foreign keys, and enforced CHECK constraints.",
+          "download": {
+            "href": "/examples/rdbms-lab-mysql.sql",
+            "filename": "rdbms-lab-mysql.sql"
+          }
+        },
+        "mariadb": {
+          "code": "CREATE TABLE Student (\n  student_id INTEGER PRIMARY KEY,\n  name VARCHAR(80) NOT NULL\n) ENGINE=InnoDB;\n\nCREATE TABLE Course (\n  course_code VARCHAR(10) PRIMARY KEY,\n  title VARCHAR(100) NOT NULL\n) ENGINE=InnoDB;\n\nCREATE TABLE Enrolment (\n  student_id INTEGER NOT NULL,\n  course_code VARCHAR(10) NOT NULL,\n  mark NUMERIC(5,2) CHECK (mark BETWEEN 0 AND 100),\n  PRIMARY KEY (student_id, course_code),\n  FOREIGN KEY (student_id) REFERENCES Student(student_id),\n  FOREIGN KEY (course_code) REFERENCES Course(course_code)\n) ENGINE=InnoDB;\n\nINSERT INTO Student VALUES\n  (101, 'Asha'),\n  (102, 'Ravi');\n\nINSERT INTO Course VALUES\n  ('DB101', 'Database Systems');\n\nINSERT INTO Enrolment VALUES\n  (101, 'DB101', 82),\n  (102, 'DB101', NULL);\n\nSELECT s.name, c.title, e.mark\nFROM Enrolment AS e\nJOIN Student AS s ON s.student_id = e.student_id\nJOIN Course AS c ON c.course_code = e.course_code\nORDER BY s.student_id;",
+          "note": "MariaDB 10.6+: InnoDB tables, explicit foreign keys, and CHECK constraints.",
+          "download": {
+            "href": "/examples/rdbms-lab-mariadb.sql",
+            "filename": "rdbms-lab-mariadb.sql"
+          }
+        },
+        "sqlite": {
+          "code": "PRAGMA foreign_keys = ON;\n\nCREATE TABLE Student (\n  student_id INTEGER PRIMARY KEY,\n  name VARCHAR(80) NOT NULL\n);\n\nCREATE TABLE Course (\n  course_code VARCHAR(10) PRIMARY KEY,\n  title VARCHAR(100) NOT NULL\n);\n\nCREATE TABLE Enrolment (\n  student_id INTEGER NOT NULL,\n  course_code VARCHAR(10) NOT NULL,\n  mark NUMERIC(5,2) CHECK (mark BETWEEN 0 AND 100),\n  PRIMARY KEY (student_id, course_code),\n  FOREIGN KEY (student_id) REFERENCES Student(student_id),\n  FOREIGN KEY (course_code) REFERENCES Course(course_code)\n);\n\nINSERT INTO Student VALUES\n  (101, 'Asha'),\n  (102, 'Ravi');\n\nINSERT INTO Course VALUES\n  ('DB101', 'Database Systems');\n\nINSERT INTO Enrolment VALUES\n  (101, 'DB101', 82),\n  (102, 'DB101', NULL);\n\nSELECT s.name, c.title, e.mark\nFROM Enrolment AS e\nJOIN Student AS s ON s.student_id = e.student_id\nJOIN Course AS c ON c.course_code = e.course_code\nORDER BY s.student_id;",
+          "note": "SQLite: enables foreign keys for this connection. Declared VARCHAR lengths and NUMERIC precision are not enforced like PostgreSQL types.",
+          "download": {
+            "href": "/examples/rdbms-lab-sqlite.sql",
+            "filename": "rdbms-lab-sqlite.sql"
+          }
+        },
+        "sqlserver": {
+          "code": "CREATE TABLE Student (\n  student_id INTEGER PRIMARY KEY,\n  name VARCHAR(80) NOT NULL\n);\n\nCREATE TABLE Course (\n  course_code VARCHAR(10) PRIMARY KEY,\n  title VARCHAR(100) NOT NULL\n);\n\nCREATE TABLE Enrolment (\n  student_id INTEGER NOT NULL,\n  course_code VARCHAR(10) NOT NULL,\n  mark NUMERIC(5,2) NULL CHECK (mark BETWEEN 0 AND 100),\n  PRIMARY KEY (student_id, course_code),\n  FOREIGN KEY (student_id) REFERENCES Student(student_id),\n  FOREIGN KEY (course_code) REFERENCES Course(course_code)\n);\n\nINSERT INTO Student VALUES\n  (101, 'Asha'),\n  (102, 'Ravi');\n\nINSERT INTO Course VALUES\n  ('DB101', 'Database Systems');\n\nINSERT INTO Enrolment VALUES\n  (101, 'DB101', 82),\n  (102, 'DB101', NULL);\n\nSELECT s.name, c.title, e.mark\nFROM Enrolment AS e\nJOIN Student AS s ON s.student_id = e.student_id\nJOIN Course AS c ON c.course_code = e.course_code\nORDER BY s.student_id;",
+          "note": "SQL Server: explicit foreign keys. Run batches marked GO in SSMS or sqlcmd; GO is a client separator.",
+          "download": {
+            "href": "/examples/rdbms-lab-sqlserver.sql",
+            "filename": "rdbms-lab-sqlserver.sql"
+          }
+        }
+      }
     },
     {
       "title": "4. Relational operations and query meaning",

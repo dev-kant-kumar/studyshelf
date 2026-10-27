@@ -12,7 +12,7 @@ function TeachingContent({ content, nested = false }) {
     {content.steps && <ol>{content.steps.map(step => <li key={step.title}><strong>{step.title}</strong> {step.text}</li>)}</ol>}
     {content.diagram && <Figure src={diagrams[`./diagrams/${content.diagram}.svg`]} alt={content.alt} caption={content.caption} width={960} height={content.diagramHeight || 600} />}
     {content.table && <ComparisonTable {...content.table} />}
-    {content.code && <CodeBlock language="sql" code={content.code} />}
+    {content.code && <CodeBlock language="sql" code={content.code} sqlVariants={content.sqlVariants} />}
     {content.links && <ul>{content.links.map(link => <li key={link.href}><a href={link.href} download={link.download || undefined}>{link.label}</a></li>)}</ul>}
     {content.example && <><ExampleHeading>Worked example</ExampleHeading>{content.example.map((paragraph, index) => <p key={index}>{paragraph}</p>)}</>}
   </>

@@ -15,6 +15,7 @@ import Loader from '../../shared/components/Loader'
 import Drawer from '@/ui/Drawer'
 import { usePreferences } from '../../shared/hooks/preferencesContext'
 import useArticleOutline from '../../shared/hooks/useArticleOutline'
+import useReadingPosition from '../../shared/hooks/useReadingPosition'
 import { title, muted, eyebrow, secondary, focus, link } from '@/ui/classes'
 import { formatDate } from '@/lib/format'
 import { site } from '@/config/site'
@@ -25,6 +26,7 @@ export default function Note({ preview: fixture }){
   const {slug}=useParams(),note=preview?.note ?? getNote(slug), {preferences,remember}=usePreferences(), article=useRef(null)
   const [focusMode,setFocusMode]=useState(false),[drawer,setDrawer]=useState(false),[message,setMessage]=useState(''),[topicFilter,setTopicFilter]=useState('')
   const {headings,active,minutes}=useArticleOutline(article,slug)
+  useReadingPosition(article, note?.slug)
   useEffect(()=>{if(note && !preview)remember(note.slug)},[note,remember,preview])
   if(!note)return <ErrorPage />
   const paper=preview?.paper ?? getPaper(note.courseId,note.semesterId,note.paperId),course=preview?.course ?? getCourse(note.courseId),semester=preview?.semester ?? getSemester(note.courseId,note.semesterId)

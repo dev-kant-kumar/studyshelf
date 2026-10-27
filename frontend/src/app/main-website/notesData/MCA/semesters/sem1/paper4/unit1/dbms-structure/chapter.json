@@ -381,11 +381,37 @@
         "Consider two students attempting to reserve the last seat. If both independently read seats_available = 1 and later write 0, the counter alone can hide an oversubscription. A guarded database update expresses the condition and decrement as one operation. The application must inspect the affected-row count: one means it acquired a seat; zero means no matching available seat was changed.",
         "The seat reservation and enrolment insert belong in one transaction. If the insert fails, the seat must not remain consumed. The application should roll back the whole intended unit, or follow a carefully defined savepoint strategy, and handle lock waits or retryable conflicts according to its target DBMS. A statement error does not imply identical transaction-state behaviour across products."
       ],
-      "code": "BEGIN;\nUPDATE Course\nSET seats_available = seats_available - 1\nWHERE course_code = 'DB101' AND seats_available > 0;\n-- Continue only if the application observes one affected row.\nINSERT INTO Enrolment (student_id, course_code, mark)\nVALUES (104, 'DB101', NULL);\nCOMMIT;",
+      "code": "BEGIN;\nUPDATE Course\nSET seats_available = seats_available - 1\nWHERE course_code = 'DB101' AND seats_available > 0;\n-- Application: check rowCount = 1.\n-- Otherwise ROLLBACK and stop before the INSERT.\nINSERT INTO Enrolment (student_id, course_code, mark)\nVALUES (104, 'DB101', NULL);\nCOMMIT;",
       "example": [
-        "Student 104 exists in the supplied setup and has no enrolment yet. The application must still check that the guarded UPDATE affected one row before issuing the INSERT; the SQL comment is not executable branching logic.",
+        "Student 104 exists in the supplied setup and has no enrolment yet. PostgreSQL, MySQL, MariaDB, and SQLite versions rely on the application checking the affected-row result before the INSERT; their comments are not executable branching. Oracle and SQL Server versions include the guarded branch and error handling.",
         "If there are no available seats, do not perform the insert. If the insert violates a constraint, roll back instead of committing the seat decrement. Correct transactions connect business intent with the mechanisms in the architecture diagram."
-      ]
+      ],
+      "sqlVariants": {
+        "postgresql": {
+          "code": "BEGIN;\nUPDATE Course\nSET seats_available = seats_available - 1\nWHERE course_code = 'DB101' AND seats_available > 0;\n-- Application: check rowCount = 1.\n-- Otherwise ROLLBACK and stop before the INSERT.\nINSERT INTO Enrolment (student_id, course_code, mark)\nVALUES (104, 'DB101', NULL);\nCOMMIT;",
+          "note": "PostgreSQL: this is an application-coordinated transaction. Check the guarded UPDATE affected one row before sending INSERT; roll back on any failure."
+        },
+        "mysql": {
+          "code": "START TRANSACTION;\nUPDATE Course\nSET seats_available = seats_available - 1\nWHERE course_code = 'DB101' AND seats_available > 0;\n-- Application: check affectedRows / ROW_COUNT() = 1.\n-- Otherwise ROLLBACK and stop before the INSERT.\nINSERT INTO Enrolment (student_id, course_code, mark)\nVALUES (104, 'DB101', NULL);\nCOMMIT;",
+          "note": "MySQL: this is an application-coordinated transaction. Check the guarded UPDATE affected one row before sending INSERT; roll back on any failure."
+        },
+        "mariadb": {
+          "code": "START TRANSACTION;\nUPDATE Course\nSET seats_available = seats_available - 1\nWHERE course_code = 'DB101' AND seats_available > 0;\n-- Application: check affected rows / ROW_COUNT() = 1.\n-- Otherwise ROLLBACK and stop before the INSERT.\nINSERT INTO Enrolment (student_id, course_code, mark)\nVALUES (104, 'DB101', NULL);\nCOMMIT;",
+          "note": "MariaDB: this is an application-coordinated transaction. Check the guarded UPDATE affected one row before sending INSERT; roll back on any failure."
+        },
+        "sqlite": {
+          "code": "PRAGMA foreign_keys = ON;\nBEGIN IMMEDIATE;\nUPDATE Course\nSET seats_available = seats_available - 1\nWHERE course_code = 'DB101' AND seats_available > 0;\n-- Application: check rowcount / changes() = 1.\n-- Otherwise ROLLBACK and stop before the INSERT.\nINSERT INTO Enrolment (student_id, course_code, mark)\nVALUES (104, 'DB101', NULL);\nCOMMIT;",
+          "note": "SQLite: this is an application-coordinated transaction. Check the guarded UPDATE affected one row before sending INSERT; roll back on any failure."
+        },
+        "oracle": {
+          "code": "BEGIN\n  UPDATE Course\n  SET seats_available = seats_available - 1\n  WHERE course_code = 'DB101' AND seats_available > 0;\n\n  IF SQL%ROWCOUNT = 0 THEN\n    RAISE_APPLICATION_ERROR(-20001, 'No seat available');\n  END IF;\n\n  INSERT INTO Enrolment (student_id, course_code, mark)\n  VALUES (104, 'DB101', NULL);\n  COMMIT;\nEXCEPTION\n  WHEN OTHERS THEN\n    ROLLBACK;\n    RAISE;\nEND;\n/",
+          "note": "Oracle PL/SQL: checks SQL%ROWCOUNT and rolls back on errors. Run as a script in SQL*Plus or SQL Developer; / submits the block and is not part of an API statement."
+        },
+        "sqlserver": {
+          "code": "SET XACT_ABORT ON;\nBEGIN TRY\n  BEGIN TRANSACTION;\n  UPDATE Course\n  SET seats_available = seats_available - 1\n  WHERE course_code = 'DB101' AND seats_available > 0;\n\n  IF @@ROWCOUNT = 0\n    THROW 50001, 'No seat available', 1;\n\n  INSERT INTO Enrolment (student_id, course_code, mark)\n  VALUES (104, 'DB101', NULL);\n  COMMIT TRANSACTION;\nEND TRY\nBEGIN CATCH\n  IF @@TRANCOUNT > 0 ROLLBACK TRANSACTION;\n  THROW;\nEND CATCH;",
+          "note": "SQL Server 2012+: checks @@ROWCOUNT and uses TRY/CATCH with XACT_ABORT to handle errors and roll back the unit."
+        }
+      }
     },
     {
       "title": "8. Recovery, write-ahead logging, and commit",
@@ -434,18 +460,11 @@
     {
       "title": "9. Worked SELECT: build the data and predict the result",
       "paragraphs": [
-        "Use a fresh scratch database for this self-contained dataset. The key and CHECK syntax used here is supported by PostgreSQL and SQLite, but their execution plans and administrative commands differ. The course seat count denotes remaining seats, not the number already enrolled. NULL means a mark has not been recorded; it is not zero.",
-        "Create the tables and rows below before running the query. In SQLite, enable foreign-key enforcement for the connection with PRAGMA foreign_keys = ON before testing the referential-integrity cases. PostgreSQL enforces declared foreign keys without that SQLite-specific command.",
-        "The downloadable script contains the setup and the SELECT. It is ordinary SQL for a local database client. Editing a code block on this page changes the displayed example; it does not execute SQL or create a database."
+        "Use a fresh scratch database for this self-contained dataset. The code selector supplies an explicit version for PostgreSQL, Oracle, MySQL, MariaDB, SQLite, or SQL Server. The tables represent the same facts, while types, constraint declarations, INSERT forms, and client batch separators follow the selected DBMS.",
+        "The course seat count denotes remaining seats, not the number already enrolled. NULL means a mark has not been recorded; it is not zero. The SQLite setup enables foreign-key enforcement for its connection. The MySQL and MariaDB setups use InnoDB and explicit FOREIGN KEY clauses rather than relying on inline REFERENCES syntax.",
+        "Download SQL for the selected DBMS from the code block. The complete structure lab includes both setup and the SELECT below. Editing the displayed code changes a local draft; it does not create a database or execute the SQL."
       ],
-      "code": "CREATE TABLE Student (\n  student_id INTEGER PRIMARY KEY,\n  name VARCHAR(80) NOT NULL,\n  programme VARCHAR(20) NOT NULL\n);\nCREATE TABLE Course (\n  course_code VARCHAR(10) PRIMARY KEY,\n  title VARCHAR(100) NOT NULL,\n  seats_available INTEGER NOT NULL CHECK (seats_available >= 0)\n);\nCREATE TABLE Enrolment (\n  student_id INTEGER REFERENCES Student(student_id),\n  course_code VARCHAR(10) REFERENCES Course(course_code),\n  mark INTEGER CHECK (mark BETWEEN 0 AND 100),\n  PRIMARY KEY (student_id, course_code)\n);\nINSERT INTO Student VALUES\n  (101, 'Asha', 'MCA'), (102, 'Ravi', 'MCA'),\n  (103, 'Mira', 'MBA'), (104, 'Neha', 'MCA');\nINSERT INTO Course VALUES\n  ('DB101', 'Database Systems', 2),\n  ('CS101', 'C Programming', 5);\nINSERT INTO Enrolment VALUES\n  (101, 'DB101', 82), (102, 'DB101', 88),\n  (103, 'DB101', NULL), (103, 'CS101', 91);",
-      "links": [
-        {
-          "href": "/examples/dbms-structure-lab.sql",
-          "label": "Download the complete scratch-database SQL example",
-          "download": "dbms-structure-lab.sql"
-        }
-      ],
+      "code": "CREATE TABLE Student (\n  student_id INTEGER PRIMARY KEY,\n  name VARCHAR(80) NOT NULL,\n  programme VARCHAR(20) NOT NULL\n);\n\nCREATE TABLE Course (\n  course_code VARCHAR(10) PRIMARY KEY,\n  title VARCHAR(100) NOT NULL,\n  seats_available INTEGER NOT NULL CHECK (seats_available >= 0)\n);\n\nCREATE TABLE Enrolment (\n  student_id INTEGER NOT NULL,\n  course_code VARCHAR(10) NOT NULL,\n  mark INTEGER CHECK (mark BETWEEN 0 AND 100),\n  PRIMARY KEY (student_id, course_code),\n  FOREIGN KEY (student_id) REFERENCES Student(student_id),\n  FOREIGN KEY (course_code) REFERENCES Course(course_code)\n);\n\nINSERT INTO Student VALUES\n  (101, 'Asha', 'MCA'),\n  (102, 'Ravi', 'MCA'),\n  (103, 'Mira', 'MBA'),\n  (104, 'Neha', 'MCA');\n\nINSERT INTO Course VALUES\n  ('DB101', 'Database Systems', 2),\n  ('CS101', 'C Programming', 5);\n\nINSERT INTO Enrolment VALUES\n  (101, 'DB101', 82),\n  (102, 'DB101', 88),\n  (103, 'DB101', NULL),\n  (103, 'CS101', 91);",
       "subsections": [
         {
           "title": "The query and its exact output",
@@ -469,6 +488,32 @@
                 "88"
               ]
             ]
+          },
+          "sqlVariants": {
+            "postgresql": {
+              "code": "SELECT s.name, e.mark\nFROM Student AS s\nJOIN Enrolment AS e ON e.student_id = s.student_id\nWHERE e.course_code = 'DB101' AND e.mark >= 80\nORDER BY s.name;",
+              "note": "This SELECT returns Asha with 82 and Ravi with 88 after the matching setup."
+            },
+            "oracle": {
+              "code": "SELECT s.name, e.mark\nFROM Student s\nJOIN Enrolment e ON e.student_id = s.student_id\nWHERE e.course_code = 'DB101' AND e.mark >= 80\nORDER BY s.name;",
+              "note": "Oracle: omit AS for table aliases; the requested rows are unchanged."
+            },
+            "mysql": {
+              "code": "SELECT s.name, e.mark\nFROM Student AS s\nJOIN Enrolment AS e ON e.student_id = s.student_id\nWHERE e.course_code = 'DB101' AND e.mark >= 80\nORDER BY s.name;",
+              "note": "This SELECT returns Asha with 82 and Ravi with 88 after the matching setup."
+            },
+            "mariadb": {
+              "code": "SELECT s.name, e.mark\nFROM Student AS s\nJOIN Enrolment AS e ON e.student_id = s.student_id\nWHERE e.course_code = 'DB101' AND e.mark >= 80\nORDER BY s.name;",
+              "note": "This SELECT returns Asha with 82 and Ravi with 88 after the matching setup."
+            },
+            "sqlite": {
+              "code": "SELECT s.name, e.mark\nFROM Student AS s\nJOIN Enrolment AS e ON e.student_id = s.student_id\nWHERE e.course_code = 'DB101' AND e.mark >= 80\nORDER BY s.name;",
+              "note": "This SELECT returns Asha with 82 and Ravi with 88 after the matching setup."
+            },
+            "sqlserver": {
+              "code": "SELECT s.name, e.mark\nFROM Student AS s\nJOIN Enrolment AS e ON e.student_id = s.student_id\nWHERE e.course_code = 'DB101' AND e.mark >= 80\nORDER BY s.name;",
+              "note": "This SELECT returns Asha with 82 and Ravi with 88 after the matching setup."
+            }
           }
         },
         {
@@ -527,7 +572,57 @@
             ]
           }
         }
-      ]
+      ],
+      "sqlVariants": {
+        "postgresql": {
+          "code": "CREATE TABLE Student (\n  student_id INTEGER PRIMARY KEY,\n  name VARCHAR(80) NOT NULL,\n  programme VARCHAR(20) NOT NULL\n);\n\nCREATE TABLE Course (\n  course_code VARCHAR(10) PRIMARY KEY,\n  title VARCHAR(100) NOT NULL,\n  seats_available INTEGER NOT NULL CHECK (seats_available >= 0)\n);\n\nCREATE TABLE Enrolment (\n  student_id INTEGER NOT NULL,\n  course_code VARCHAR(10) NOT NULL,\n  mark INTEGER CHECK (mark BETWEEN 0 AND 100),\n  PRIMARY KEY (student_id, course_code),\n  FOREIGN KEY (student_id) REFERENCES Student(student_id),\n  FOREIGN KEY (course_code) REFERENCES Course(course_code)\n);\n\nINSERT INTO Student VALUES\n  (101, 'Asha', 'MCA'),\n  (102, 'Ravi', 'MCA'),\n  (103, 'Mira', 'MBA'),\n  (104, 'Neha', 'MCA');\n\nINSERT INTO Course VALUES\n  ('DB101', 'Database Systems', 2),\n  ('CS101', 'C Programming', 5);\n\nINSERT INTO Enrolment VALUES\n  (101, 'DB101', 82),\n  (102, 'DB101', 88),\n  (103, 'DB101', NULL),\n  (103, 'CS101', 91);",
+          "note": "PostgreSQL: standard multi-row INSERTs and explicit foreign-key constraints.",
+          "download": {
+            "href": "/examples/dbms-structure-lab-postgresql.sql",
+            "filename": "dbms-structure-lab-postgresql.sql"
+          }
+        },
+        "oracle": {
+          "code": "CREATE TABLE Student (\n  student_id NUMBER(10) PRIMARY KEY,\n  name VARCHAR2(80) NOT NULL,\n  programme VARCHAR2(20) NOT NULL\n);\n\nCREATE TABLE Course (\n  course_code VARCHAR2(10) PRIMARY KEY,\n  title VARCHAR2(100) NOT NULL,\n  seats_available NUMBER(10) NOT NULL CHECK (seats_available >= 0)\n);\n\nCREATE TABLE Enrolment (\n  student_id NUMBER(10) NOT NULL,\n  course_code VARCHAR2(10) NOT NULL,\n  mark NUMBER(10) CHECK (mark BETWEEN 0 AND 100),\n  PRIMARY KEY (student_id, course_code),\n  FOREIGN KEY (student_id) REFERENCES Student(student_id),\n  FOREIGN KEY (course_code) REFERENCES Course(course_code)\n);\n\nINSERT INTO Student VALUES (101, 'Asha', 'MCA');\nINSERT INTO Student VALUES (102, 'Ravi', 'MCA');\nINSERT INTO Student VALUES (103, 'Mira', 'MBA');\nINSERT INTO Student VALUES (104, 'Neha', 'MCA');\n\nINSERT INTO Course VALUES ('DB101', 'Database Systems', 2);\nINSERT INTO Course VALUES ('CS101', 'C Programming', 5);\n\nINSERT INTO Enrolment VALUES (101, 'DB101', 82);\nINSERT INTO Enrolment VALUES (102, 'DB101', 88);\nINSERT INTO Enrolment VALUES (103, 'DB101', NULL);\nINSERT INTO Enrolment VALUES (103, 'CS101', 91);\n\nCOMMIT;",
+          "note": "Oracle 19c-compatible: NUMBER/VARCHAR2 types, individual INSERT statements, and COMMIT for the sample data.",
+          "download": {
+            "href": "/examples/dbms-structure-lab-oracle.sql",
+            "filename": "dbms-structure-lab-oracle.sql"
+          }
+        },
+        "mysql": {
+          "code": "CREATE TABLE Student (\n  student_id INTEGER PRIMARY KEY,\n  name VARCHAR(80) NOT NULL,\n  programme VARCHAR(20) NOT NULL\n) ENGINE=InnoDB;\n\nCREATE TABLE Course (\n  course_code VARCHAR(10) PRIMARY KEY,\n  title VARCHAR(100) NOT NULL,\n  seats_available INTEGER NOT NULL CHECK (seats_available >= 0)\n) ENGINE=InnoDB;\n\nCREATE TABLE Enrolment (\n  student_id INTEGER NOT NULL,\n  course_code VARCHAR(10) NOT NULL,\n  mark INTEGER CHECK (mark BETWEEN 0 AND 100),\n  PRIMARY KEY (student_id, course_code),\n  FOREIGN KEY (student_id) REFERENCES Student(student_id),\n  FOREIGN KEY (course_code) REFERENCES Course(course_code)\n) ENGINE=InnoDB;\n\nINSERT INTO Student VALUES\n  (101, 'Asha', 'MCA'),\n  (102, 'Ravi', 'MCA'),\n  (103, 'Mira', 'MBA'),\n  (104, 'Neha', 'MCA');\n\nINSERT INTO Course VALUES\n  ('DB101', 'Database Systems', 2),\n  ('CS101', 'C Programming', 5);\n\nINSERT INTO Enrolment VALUES\n  (101, 'DB101', 82),\n  (102, 'DB101', 88),\n  (103, 'DB101', NULL),\n  (103, 'CS101', 91);",
+          "note": "MySQL 8.0.16+: InnoDB tables, explicit foreign keys, and enforced CHECK constraints.",
+          "download": {
+            "href": "/examples/dbms-structure-lab-mysql.sql",
+            "filename": "dbms-structure-lab-mysql.sql"
+          }
+        },
+        "mariadb": {
+          "code": "CREATE TABLE Student (\n  student_id INTEGER PRIMARY KEY,\n  name VARCHAR(80) NOT NULL,\n  programme VARCHAR(20) NOT NULL\n) ENGINE=InnoDB;\n\nCREATE TABLE Course (\n  course_code VARCHAR(10) PRIMARY KEY,\n  title VARCHAR(100) NOT NULL,\n  seats_available INTEGER NOT NULL CHECK (seats_available >= 0)\n) ENGINE=InnoDB;\n\nCREATE TABLE Enrolment (\n  student_id INTEGER NOT NULL,\n  course_code VARCHAR(10) NOT NULL,\n  mark INTEGER CHECK (mark BETWEEN 0 AND 100),\n  PRIMARY KEY (student_id, course_code),\n  FOREIGN KEY (student_id) REFERENCES Student(student_id),\n  FOREIGN KEY (course_code) REFERENCES Course(course_code)\n) ENGINE=InnoDB;\n\nINSERT INTO Student VALUES\n  (101, 'Asha', 'MCA'),\n  (102, 'Ravi', 'MCA'),\n  (103, 'Mira', 'MBA'),\n  (104, 'Neha', 'MCA');\n\nINSERT INTO Course VALUES\n  ('DB101', 'Database Systems', 2),\n  ('CS101', 'C Programming', 5);\n\nINSERT INTO Enrolment VALUES\n  (101, 'DB101', 82),\n  (102, 'DB101', 88),\n  (103, 'DB101', NULL),\n  (103, 'CS101', 91);",
+          "note": "MariaDB 10.6+: InnoDB tables, explicit foreign keys, and CHECK constraints.",
+          "download": {
+            "href": "/examples/dbms-structure-lab-mariadb.sql",
+            "filename": "dbms-structure-lab-mariadb.sql"
+          }
+        },
+        "sqlite": {
+          "code": "PRAGMA foreign_keys = ON;\n\nCREATE TABLE Student (\n  student_id INTEGER PRIMARY KEY,\n  name VARCHAR(80) NOT NULL,\n  programme VARCHAR(20) NOT NULL\n);\n\nCREATE TABLE Course (\n  course_code VARCHAR(10) PRIMARY KEY,\n  title VARCHAR(100) NOT NULL,\n  seats_available INTEGER NOT NULL CHECK (seats_available >= 0)\n);\n\nCREATE TABLE Enrolment (\n  student_id INTEGER NOT NULL,\n  course_code VARCHAR(10) NOT NULL,\n  mark INTEGER CHECK (mark BETWEEN 0 AND 100),\n  PRIMARY KEY (student_id, course_code),\n  FOREIGN KEY (student_id) REFERENCES Student(student_id),\n  FOREIGN KEY (course_code) REFERENCES Course(course_code)\n);\n\nINSERT INTO Student VALUES\n  (101, 'Asha', 'MCA'),\n  (102, 'Ravi', 'MCA'),\n  (103, 'Mira', 'MBA'),\n  (104, 'Neha', 'MCA');\n\nINSERT INTO Course VALUES\n  ('DB101', 'Database Systems', 2),\n  ('CS101', 'C Programming', 5);\n\nINSERT INTO Enrolment VALUES\n  (101, 'DB101', 82),\n  (102, 'DB101', 88),\n  (103, 'DB101', NULL),\n  (103, 'CS101', 91);",
+          "note": "SQLite: enables foreign keys for this connection. Declared VARCHAR lengths and NUMERIC precision are not enforced like PostgreSQL types.",
+          "download": {
+            "href": "/examples/dbms-structure-lab-sqlite.sql",
+            "filename": "dbms-structure-lab-sqlite.sql"
+          }
+        },
+        "sqlserver": {
+          "code": "CREATE TABLE Student (\n  student_id INTEGER PRIMARY KEY,\n  name VARCHAR(80) NOT NULL,\n  programme VARCHAR(20) NOT NULL\n);\n\nCREATE TABLE Course (\n  course_code VARCHAR(10) PRIMARY KEY,\n  title VARCHAR(100) NOT NULL,\n  seats_available INTEGER NOT NULL CHECK (seats_available >= 0)\n);\n\nCREATE TABLE Enrolment (\n  student_id INTEGER NOT NULL,\n  course_code VARCHAR(10) NOT NULL,\n  mark INTEGER NULL CHECK (mark BETWEEN 0 AND 100),\n  PRIMARY KEY (student_id, course_code),\n  FOREIGN KEY (student_id) REFERENCES Student(student_id),\n  FOREIGN KEY (course_code) REFERENCES Course(course_code)\n);\n\nINSERT INTO Student VALUES\n  (101, 'Asha', 'MCA'),\n  (102, 'Ravi', 'MCA'),\n  (103, 'Mira', 'MBA'),\n  (104, 'Neha', 'MCA');\n\nINSERT INTO Course VALUES\n  ('DB101', 'Database Systems', 2),\n  ('CS101', 'C Programming', 5);\n\nINSERT INTO Enrolment VALUES\n  (101, 'DB101', 82),\n  (102, 'DB101', 88),\n  (103, 'DB101', NULL),\n  (103, 'CS101', 91);",
+          "note": "SQL Server: explicit foreign keys. Run batches marked GO in SSMS or sqlcmd; GO is a client separator.",
+          "download": {
+            "href": "/examples/dbms-structure-lab-sqlserver.sql",
+            "filename": "dbms-structure-lab-sqlserver.sql"
+          }
+        }
+      }
     },
     {
       "title": "10. Read a physical operator tree",
@@ -688,14 +783,40 @@
         {
           "title": "Observe an actual plan",
           "paragraphs": [
-            "For PostgreSQL, the following command requests a plan without estimated cost numbers. It does not execute the SELECT. Read the scan, join, filter, and sort information that your engine actually returns; do not expect one predetermined operator tree for a four-row sample.",
-            "For SQLite, use EXPLAIN QUERY PLAN before the SELECT instead of PostgreSQL options. Its output uses SQLite-specific terminology. Two engines producing the same result can expose different compilation and execution arrangements."
+            "Select the same DBMS used for the setup to inspect its estimated plan. PostgreSQL uses EXPLAIN options, Oracle uses EXPLAIN PLAN and DBMS_XPLAN, MySQL and MariaDB use EXPLAIN, SQLite uses EXPLAIN QUERY PLAN, and SQL Server exposes SHOWPLAN through separate client batches. The note above the selected code states its requirements.",
+            "Read the scan, join, filter, and sort information your engine returns. Do not expect one fixed tree for a tiny dataset. Two engines can return the same rows through different plans. Commands that collect actual execution observations are different from estimated-plan inspection and can execute the statement."
           ],
           "code": "EXPLAIN (COSTS OFF)\nSELECT s.name, e.mark\nFROM Student AS s\nJOIN Enrolment AS e ON e.student_id = s.student_id\nWHERE e.course_code = 'DB101' AND e.mark >= 80\nORDER BY s.name;",
           "example": [
             "Observe the chosen access and join strategies. Then add CREATE INDEX enrolment_course_mark ON Enrolment(course_code, mark) and inspect the plan again. A small table may still use the same scan; that is a valid result.",
-            "EXPLAIN ANALYZE is different: in PostgreSQL it runs the statement and reports observations in addition to the plan. Do not apply it to data-changing statements while assuming that plan inspection is read-only."
-          ]
+            "PostgreSQL EXPLAIN ANALYZE runs the statement and reports observations. Other engines have their own actual-plan tools and requirements. Do not assume that a command collecting actual observations is read-only for a data-changing statement."
+          ],
+          "sqlVariants": {
+            "postgresql": {
+              "code": "EXPLAIN (COSTS OFF)\nSELECT s.name, e.mark\nFROM Student AS s\nJOIN Enrolment AS e ON e.student_id = s.student_id\nWHERE e.course_code = 'DB101' AND e.mark >= 80\nORDER BY s.name;",
+              "note": "PostgreSQL: shows an estimated plan without running the SELECT. EXPLAIN ANALYZE would execute it."
+            },
+            "oracle": {
+              "code": "EXPLAIN PLAN FOR\nSELECT s.name, e.mark\nFROM Student s\nJOIN Enrolment e ON e.student_id = s.student_id\nWHERE e.course_code = 'DB101' AND e.mark >= 80\nORDER BY s.name;\n\nSELECT *\nFROM TABLE(DBMS_XPLAN.DISPLAY(NULL, NULL, 'BASIC'));",
+              "note": "Oracle: records an estimated plan and displays it with DBMS_XPLAN. Requires plan-table access and the relevant privileges."
+            },
+            "mysql": {
+              "code": "EXPLAIN\nSELECT s.name, e.mark\nFROM Student AS s\nJOIN Enrolment AS e ON e.student_id = s.student_id\nWHERE e.course_code = 'DB101' AND e.mark >= 80\nORDER BY s.name;",
+              "note": "MySQL: EXPLAIN describes the selected strategy without executing this SELECT."
+            },
+            "mariadb": {
+              "code": "EXPLAIN\nSELECT s.name, e.mark\nFROM Student AS s\nJOIN Enrolment AS e ON e.student_id = s.student_id\nWHERE e.course_code = 'DB101' AND e.mark >= 80\nORDER BY s.name;",
+              "note": "MariaDB: EXPLAIN describes the selected strategy without executing this SELECT."
+            },
+            "sqlite": {
+              "code": "EXPLAIN QUERY PLAN\nSELECT s.name, e.mark\nFROM Student AS s\nJOIN Enrolment AS e ON e.student_id = s.student_id\nWHERE e.course_code = 'DB101' AND e.mark >= 80\nORDER BY s.name;",
+              "note": "SQLite: returns its own high-level query-plan descriptions; PostgreSQL EXPLAIN options do not apply."
+            },
+            "sqlserver": {
+              "code": "SET SHOWPLAN_TEXT ON;\nGO\nSELECT s.name, e.mark\nFROM Student AS s\nJOIN Enrolment AS e ON e.student_id = s.student_id\nWHERE e.course_code = 'DB101' AND e.mark >= 80\nORDER BY s.name;\nGO\nSET SHOWPLAN_TEXT OFF;\nGO",
+              "note": "SQL Server: run in SSMS or sqlcmd. Each SHOWPLAN setting is its own batch; GO is a client separator. Statements are not executed while SHOWPLAN_TEXT is on."
+            }
+          }
         },
         {
           "title": "Change a predicate and predict the rows",
@@ -918,6 +1039,30 @@
     {
       "title": "PostgreSQL: plan execution",
       "url": "https://www.postgresql.org/docs/current/executor.html"
+    },
+    {
+      "title": "Oracle: INSERT and supported forms",
+      "url": "https://docs.oracle.com/en/database/oracle/oracle-database/19/sqlrf/INSERT.html"
+    },
+    {
+      "title": "Oracle: DBMS_XPLAN plan display",
+      "url": "https://docs.oracle.com/en/database/oracle/oracle-database/19/arpls/DBMS_XPLAN.html"
+    },
+    {
+      "title": "MySQL: explicit foreign keys",
+      "url": "https://dev.mysql.com/doc/refman/8.4/en/create-table-foreign-keys.html"
+    },
+    {
+      "title": "MariaDB: EXPLAIN",
+      "url": "https://mariadb.com/docs/server/reference/sql-statements/administrative-sql-statements/analyze-and-explain-statements/explain"
+    },
+    {
+      "title": "SQLite: EXPLAIN QUERY PLAN",
+      "url": "https://www.sqlite.org/eqp.html"
+    },
+    {
+      "title": "SQL Server: SHOWPLAN_TEXT and batch requirements",
+      "url": "https://learn.microsoft.com/en-us/sql/t-sql/statements/set-showplan-text-transact-sql?view=sql-server-ver17"
     }
   ],
   "next": {

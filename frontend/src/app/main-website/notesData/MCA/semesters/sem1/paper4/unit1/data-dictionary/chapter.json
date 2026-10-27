@@ -39,14 +39,40 @@
     {
       "title": "4. Worked metadata inspection",
       "paragraphs": [
-        "The SQL information_schema provides standardised metadata views in supporting systems. The example lists columns of the unquoted student table in the public schema in PostgreSQL. Unquoted identifiers are folded to lowercase there. Other DBMSs use different default namespaces and identifier rules.",
+        "Metadata inspection uses the selected DBMS catalogue. PostgreSQL, MySQL, MariaDB, and SQL Server expose INFORMATION_SCHEMA views with different namespace conventions; Oracle uses USER_TAB_COLUMNS; SQLite uses PRAGMA table_info. The selector supplies the appropriate query and explains its result fields.",
         "The returned rows describe columns, not student records. Visibility can depend on the current user permissions, so an empty result can mean the wrong namespace, different case, an absent object, or insufficient metadata visibility."
       ],
       "code": "SELECT column_name, data_type, is_nullable\nFROM information_schema.columns\nWHERE table_schema = 'public'\n  AND table_name = 'student'\nORDER BY ordinal_position;",
       "example": [
         "For a Student table with student_id INTEGER PRIMARY KEY and name VARCHAR(80) NOT NULL, expect column metadata for student_id and name, with their types and required-value status.",
         "This query cannot tell you Asha's mark. It tells you how the database describes the columns through which business facts are represented."
-      ]
+      ],
+      "sqlVariants": {
+        "postgresql": {
+          "code": "SELECT column_name, data_type, is_nullable\nFROM information_schema.columns\nWHERE table_schema = 'public'\n  AND table_name = 'student'\nORDER BY ordinal_position;",
+          "note": "PostgreSQL: inspects the unquoted student table in public. Adjust the schema filter if needed."
+        },
+        "oracle": {
+          "code": "SELECT column_name, data_type,\n       CASE nullable WHEN 'Y' THEN 'YES' ELSE 'NO' END AS is_nullable\nFROM user_tab_columns\nWHERE table_name = 'STUDENT'\nORDER BY column_id;",
+          "note": "Oracle: USER_TAB_COLUMNS describes objects owned by the current user. Unquoted Student is stored as STUDENT in the dictionary."
+        },
+        "sqlite": {
+          "code": "PRAGMA table_info('Student');",
+          "note": "SQLite: returns cid, name, type, notnull, dflt_value, and pk. The notnull value is a declaration flag; inspect pk as well."
+        },
+        "sqlserver": {
+          "code": "SELECT COLUMN_NAME, DATA_TYPE, IS_NULLABLE\nFROM INFORMATION_SCHEMA.COLUMNS\nWHERE TABLE_SCHEMA = SCHEMA_NAME()\n  AND TABLE_NAME = 'Student'\nORDER BY ORDINAL_POSITION;",
+          "note": "SQL Server: inspects Student in the current user default schema. Set TABLE_SCHEMA explicitly when the table uses another schema."
+        },
+        "mysql": {
+          "code": "SELECT COLUMN_NAME, DATA_TYPE, IS_NULLABLE\nFROM INFORMATION_SCHEMA.COLUMNS\nWHERE TABLE_SCHEMA = DATABASE()\n  AND LOWER(TABLE_NAME) = 'student'\nORDER BY ORDINAL_POSITION;",
+          "note": "MySQL: select the database containing Student first. DATABASE() filters to the currently selected database."
+        },
+        "mariadb": {
+          "code": "SELECT COLUMN_NAME, DATA_TYPE, IS_NULLABLE\nFROM INFORMATION_SCHEMA.COLUMNS\nWHERE TABLE_SCHEMA = DATABASE()\n  AND LOWER(TABLE_NAME) = 'student'\nORDER BY ORDINAL_POSITION;",
+          "note": "MariaDB: select the database containing Student first. DATABASE() filters to the currently selected database."
+        }
+      }
     },
     {
       "title": "5. Statistics, privacy, and documentation",
@@ -105,6 +131,14 @@
     {
       "title": "PostgreSQL: information schema",
       "url": "https://www.postgresql.org/docs/current/information-schema.html"
+    },
+    {
+      "title": "Oracle: USER_TAB_COLUMNS",
+      "url": "https://docs.oracle.com/en/database/oracle/oracle-database/19/refrn/USER_TAB_COLUMNS.html"
+    },
+    {
+      "title": "SQLite: PRAGMA metadata",
+      "url": "https://www.sqlite.org/pragma.html"
     }
   ],
   "next": {

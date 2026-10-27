@@ -50,7 +50,33 @@
       "diagram": "compatibility-left-join",
       "diagramHeight": 790,
       "alt": "The inner join returns Asha only, while the left join on the same identity and contact inputs also returns Ravi with a NULL phone.",
-      "caption": "Compare the output rows, not just the column names. Silently losing students would break the earlier interface."
+      "caption": "Compare the output rows, not just the column names. Silently losing students would break the earlier interface.",
+      "sqlVariants": {
+        "postgresql": {
+          "code": "CREATE VIEW Student AS\nSELECT i.student_id, i.name, c.phone\nFROM StudentIdentity AS i\nLEFT JOIN StudentContact AS c\n  ON c.student_id = i.student_id;",
+          "note": "Create StudentIdentity and StudentContact first; StudentContact.student_id must be unique."
+        },
+        "oracle": {
+          "code": "CREATE VIEW Student AS\nSELECT i.student_id, i.name, c.phone\nFROM StudentIdentity i\nLEFT JOIN StudentContact c\n  ON c.student_id = i.student_id;",
+          "note": "Oracle: table aliases omit AS. Create StudentIdentity and StudentContact first."
+        },
+        "mysql": {
+          "code": "CREATE VIEW Student AS\nSELECT i.student_id, i.name, c.phone\nFROM StudentIdentity AS i\nLEFT JOIN StudentContact AS c\n  ON c.student_id = i.student_id;",
+          "note": "Create StudentIdentity and StudentContact first; StudentContact.student_id must be unique."
+        },
+        "mariadb": {
+          "code": "CREATE VIEW Student AS\nSELECT i.student_id, i.name, c.phone\nFROM StudentIdentity AS i\nLEFT JOIN StudentContact AS c\n  ON c.student_id = i.student_id;",
+          "note": "Create StudentIdentity and StudentContact first; StudentContact.student_id must be unique."
+        },
+        "sqlite": {
+          "code": "CREATE VIEW Student AS\nSELECT i.student_id, i.name, c.phone\nFROM StudentIdentity AS i\nLEFT JOIN StudentContact AS c\n  ON c.student_id = i.student_id;",
+          "note": "Create StudentIdentity and StudentContact first; StudentContact.student_id must be unique."
+        },
+        "sqlserver": {
+          "code": "CREATE VIEW Student AS\nSELECT i.student_id, i.name, c.phone\nFROM StudentIdentity AS i\nLEFT JOIN StudentContact AS c\n  ON c.student_id = i.student_id;",
+          "note": "Create StudentIdentity and StudentContact first; StudentContact.student_id must be unique. A SQL Server CREATE VIEW must be submitted as its own first-in-batch statement."
+        }
+      }
     },
     {
       "title": "5. Comparison and limits",
