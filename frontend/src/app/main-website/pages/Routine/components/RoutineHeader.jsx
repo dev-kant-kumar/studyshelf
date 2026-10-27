@@ -1,12 +1,11 @@
 import { Link } from 'react-router-dom'
-import { ArrowUpRight, Download, Users, BookOpen, Calendar } from 'lucide-react'
+import { ArrowUpRight, Users, BookOpen, Calendar } from 'lucide-react'
 import { eyebrow, muted, focus } from '@/ui/classes'
 
 export default function RoutineHeader({
   routineCourses,
   course,
   semester,
-  routine,
   onChange,
 }) {
   return (
@@ -25,10 +24,10 @@ export default function RoutineHeader({
           </p>
         </div>
 
-        <div className="flex w-full flex-wrap items-center gap-2 sm:w-auto">
+        <div className="grid grid-cols-2 gap-2 sm:flex sm:items-center">
           <Link
             to="/holidays"
-            className={`inline-flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-line bg-surface px-3 py-2 text-xs font-semibold text-ink transition-colors hover:border-brand hover:text-brand dark:border-night-line dark:bg-night-surface dark:text-night-ink dark:hover:border-night-brand dark:hover:text-night-brand sm:flex-initial sm:py-1.5 ${focus}`}
+            className={`inline-flex items-center justify-center gap-1.5 rounded-lg border border-line bg-surface px-3 py-2 text-xs font-semibold text-ink transition-colors hover:border-brand hover:text-brand dark:border-night-line dark:bg-night-surface dark:text-night-ink dark:hover:border-night-brand dark:hover:text-night-brand sm:py-1.5 ${focus}`}
           >
             <Calendar size={14} aria-hidden="true" />
             <span>Holiday calendar</span>
@@ -37,23 +36,12 @@ export default function RoutineHeader({
 
           <Link
             to="/professors"
-            className={`inline-flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-line bg-surface px-3 py-2 text-xs font-semibold text-ink transition-colors hover:border-brand hover:text-brand dark:border-night-line dark:bg-night-surface dark:text-night-ink dark:hover:border-night-brand dark:hover:text-night-brand sm:flex-initial sm:py-1.5 ${focus}`}
+            className={`inline-flex items-center justify-center gap-1.5 rounded-lg border border-line bg-surface px-3 py-2 text-xs font-semibold text-ink transition-colors hover:border-brand hover:text-brand dark:border-night-line dark:bg-night-surface dark:text-night-ink dark:hover:border-night-brand dark:hover:text-night-brand sm:py-1.5 ${focus}`}
           >
             <Users size={14} aria-hidden="true" />
             <span>Faculty directory</span>
             <ArrowUpRight size={13} aria-hidden="true" />
           </Link>
-
-          {routine?.source?.href && (
-            <a
-              href={routine.source.href}
-              download="mca-sem1-routine.png"
-              className={`inline-flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-line bg-surface px-3 py-2 text-xs font-semibold text-ink transition-colors hover:border-brand hover:text-brand dark:border-night-line dark:bg-night-surface dark:text-night-ink dark:hover:border-night-brand dark:hover:text-night-brand sm:flex-initial sm:py-1.5 ${focus}`}
-            >
-              <Download size={14} aria-hidden="true" />
-              <span>Official scan</span>
-            </a>
-          )}
         </div>
       </div>
 

@@ -76,7 +76,6 @@ export default function Routine() {
         routineCourses={routineCourses}
         course={course}
         semester={semester}
-        routine={routine}
         onChange={change}
       />
 
