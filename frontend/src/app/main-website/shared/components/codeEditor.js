@@ -1,29 +1,41 @@
 import { basicSetup } from 'codemirror'
-import { EditorState } from '@codemirror/state'
-import { EditorView } from '@codemirror/view'
-import { cpp } from '@codemirror/lang-cpp'
-import { HighlightStyle, StreamLanguage, indentUnit, syntaxHighlighting } from '@codemirror/language'
+import { Compartment, EditorState } from '@codemirror/state'
+import { EditorView, ViewPlugin } from '@codemirror/view'
+import { HighlightStyle, indentUnit, syntaxHighlighting } from '@codemirror/language'
 import { tags } from '@lezer/highlight'
-import { shell } from '@codemirror/legacy-modes/mode/shell'
+import { resolveEditorLanguage } from './editorLanguages'
 
 export function createCodeEditor(parent, code, language, helpId, onChange) {
-  const name = language.toLowerCase()
-  const syntax = ['c', 'cpp', 'c++'].includes(name) ? cpp() : ['shell', 'bash', 'sh'].includes(name) ? StreamLanguage.define(shell) : []
+  const description = resolveEditorLanguage(language)
+  const syntax = new Compartment()
+  const loadLanguage = description ? ViewPlugin.define(view => {
+    let active = true
+    description.load().then(support => {
+      if (active) view.dispatch({ effects: syntax.reconfigure(support) })
+    }).catch(() => {
+      // Keep editing and copying available if a language chunk cannot load.
+    })
+    return { destroy() { active = false } }
+  }) : []
   return new EditorView({
     parent,
     state: EditorState.create({
       doc: code,
       extensions: [
         basicSetup,
-        syntax,
+        syntax.of(description?.support || []),
+        loadLanguage,
         syntaxHighlighting(HighlightStyle.define([
           { tag: tags.keyword, color: 'var(--editor-keyword)' },
+          { tag: [tags.tagName, tags.annotation, tags.heading], color: 'var(--editor-keyword)' },
           { tag: [tags.typeName, tags.standard(tags.typeName)], color: 'var(--editor-type)' },
+          { tag: [tags.attributeName, tags.className, tags.namespace], color: 'var(--editor-type)' },
           { tag: [tags.string, tags.character, tags.escape], color: 'var(--editor-string)' },
           { tag: [tags.number, tags.bool, tags.null], color: 'var(--editor-number)' },
           { tag: [tags.comment], color: 'var(--editor-muted)', fontStyle: 'italic' },
           { tag: [tags.meta, tags.processingInstruction], color: 'var(--editor-keyword)' },
           { tag: [tags.function(tags.variableName), tags.function(tags.definition(tags.variableName))], color: 'var(--editor-function)' },
+          { tag: [tags.propertyName, tags.labelName], color: 'var(--editor-function)' },
           { tag: [tags.operator, tags.punctuation], color: 'var(--editor-fg)' },
         ])),
         indentUnit.of('    '),

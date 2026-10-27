@@ -102,6 +102,8 @@ The one-time extraction script refuses to overwrite a populated syllabus.js so r
 
 ## Checks
 
+Shared code blocks resolve language names, aliases, filenames/extensions, and common MIME labels through the CodeMirror language catalogue. Grammars load on demand and are cached by the language description; destroying an editor cancels applying late grammar results. Plain-text and unrecognised educational labels remain plain text. Use accurate labels such as `c`, `sql`, `postgresql`, `js`, `tsx`, `python`, `bash`, `html`, or `json`; no per-chapter highlighter registration is needed. The language tests load every bundled grammar and check representative syntax tokens, including the SQL regression.
+
 From frontend: `npm run test`, `npm run build`, `npm run lint`. Catalogue tests cover imported counts, published note propagation, metadata edits, draft exclusion, missing files, and invalid/duplicate IDs.
 
 The public frontend includes themes, saved notes, reading preferences, search, and reader layouts. A development-only reader fixture at /dev/reader allows layout checks without publishing notes. Prerendering/server rendering and publishing services remain separate launch work.
