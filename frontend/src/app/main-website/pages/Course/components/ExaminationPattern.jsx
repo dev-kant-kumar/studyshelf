@@ -18,13 +18,13 @@ export default function ExaminationPattern({ course }) {
         </p>
       </div>
 
-      <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <div className={`${panel} p-5`}>
+      <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-4">
+        <div className={`${panel} p-4 sm:p-5`}>
           <div className="flex items-center gap-2 text-brand dark:text-night-brand">
             <FileText size={18} aria-hidden="true" />
             <h3 className="font-semibold text-ink dark:text-night-ink">External Exam</h3>
           </div>
-          <p className="mt-3 font-display text-2xl font-semibold text-ink dark:text-night-ink">
+          <p className="mt-2.5 font-display text-xl font-semibold text-ink dark:text-night-ink sm:mt-3 sm:text-2xl">
             70 Marks
           </p>
           <p className={`mt-1 text-xs leading-relaxed ${muted}`}>
@@ -32,12 +32,12 @@ export default function ExaminationPattern({ course }) {
           </p>
         </div>
 
-        <div className={`${panel} p-5`}>
+        <div className={`${panel} p-4 sm:p-5`}>
           <div className="flex items-center gap-2 text-brand dark:text-night-brand">
             <Award size={18} aria-hidden="true" />
             <h3 className="font-semibold text-ink dark:text-night-ink">Internal Sessional</h3>
           </div>
-          <p className="mt-3 font-display text-2xl font-semibold text-ink dark:text-night-ink">
+          <p className="mt-2.5 font-display text-xl font-semibold text-ink dark:text-night-ink sm:mt-3 sm:text-2xl">
             30 Marks
           </p>
           <p className={`mt-1 text-xs leading-relaxed ${muted}`}>
@@ -45,12 +45,12 @@ export default function ExaminationPattern({ course }) {
           </p>
         </div>
 
-        <div className={`${panel} p-5`}>
+        <div className={`${panel} p-4 sm:p-5`}>
           <div className="flex items-center gap-2 text-brand dark:text-night-brand">
             <CheckCircle2 size={18} aria-hidden="true" />
             <h3 className="font-semibold text-ink dark:text-night-ink">Passing Standard</h3>
           </div>
-          <p className="mt-3 font-display text-2xl font-semibold text-ink dark:text-night-ink">
+          <p className="mt-2.5 font-display text-xl font-semibold text-ink dark:text-night-ink sm:mt-3 sm:text-2xl">
             40% Theory / 50% Lab
           </p>
           <p className={`mt-1 text-xs leading-relaxed ${muted}`}>
@@ -58,16 +58,16 @@ export default function ExaminationPattern({ course }) {
           </p>
         </div>
 
-        <div className={`${panel} p-5`}>
+        <div className={`${panel} p-4 sm:p-5`}>
           <div className="flex items-center gap-2 text-brand dark:text-night-brand">
             <Clock size={18} aria-hidden="true" />
-            <h3 className="font-semibold text-ink dark:text-night-ink">Program Duration</h3>
+            <h3 className="font-semibold text-ink dark:text-night-ink">Exam Duration</h3>
           </div>
-          <p className="mt-3 font-display text-2xl font-semibold text-ink dark:text-night-ink">
-            {isMca ? '2 Years (4 Sem)' : '3 Years (6 Sem)'}
+          <p className="mt-2.5 font-display text-xl font-semibold text-ink dark:text-night-ink sm:mt-3 sm:text-2xl">
+            3 Hours
           </p>
           <p className={`mt-1 text-xs leading-relaxed ${muted}`}>
-            Semester-based curriculum with cumulative SGPA and CGPA grading on the 10-point scale.
+            Allocated duration for all end-semester theory examinations across regular and elective papers.
           </p>
         </div>
       </div>

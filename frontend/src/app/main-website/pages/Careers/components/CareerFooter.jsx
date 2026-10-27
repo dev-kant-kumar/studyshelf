@@ -19,9 +19,9 @@ const references = [
 
 export default function CareerFooter() {
   return (
-    <section className="mt-12 grid gap-6 border-t border-line pt-10 dark:border-night-line sm:grid-cols-2">
+    <section className="mt-12 grid grid-cols-1 gap-5 border-t border-line pt-10 dark:border-night-line sm:grid-cols-2 sm:gap-6">
       {/* Ready to Build Card */}
-      <div className="flex flex-col justify-between rounded-xl border border-line bg-surface p-6 shadow-xs dark:border-night-line dark:bg-night-surface">
+      <div className="flex flex-col justify-between rounded-xl border border-line bg-surface p-4.5 shadow-xs dark:border-night-line dark:bg-night-surface sm:p-6">
         <div>
           <div className="flex items-center gap-2">
             <span className="flex size-7 items-center justify-center rounded-md bg-selected text-brand dark:bg-night-selected dark:text-night-brand">

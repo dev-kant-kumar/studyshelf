@@ -9,19 +9,19 @@ export default function StaffCard({ person }) {
     <article className="h-full">
       <Link
         to={professorHref(person.id)}
-        className={`group flex h-full items-center justify-between rounded-xl border border-line bg-surface p-4 shadow-xs transition-all hover:border-brand hover:shadow-md dark:border-night-line dark:bg-night-surface dark:hover:border-night-brand sm:p-5 ${focus}`}
+        className={`group flex h-full items-center justify-between gap-3 rounded-xl border border-line bg-surface p-3.5 shadow-xs transition-all hover:border-brand hover:shadow-md dark:border-night-line dark:bg-night-surface dark:hover:border-night-brand sm:gap-4 sm:p-5 ${focus}`}
       >
-        <div className="flex items-center gap-3.5">
-          <ProfessorPhoto person={person} />
-          <div>
+        <div className="flex min-w-0 items-center gap-3 sm:gap-3.5">
+          <ProfessorPhoto person={person} compact />
+          <div className="min-w-0">
             <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-subtle dark:text-night-subtle">
-              <Users size={12} aria-hidden="true" />
-              <span>{person.designation}</span>
+              <Users size={12} aria-hidden="true" className="shrink-0" />
+              <span className="truncate">{person.designation}</span>
             </span>
-            <h3 className="font-display text-base font-bold text-ink transition-colors group-hover:text-brand dark:text-night-ink dark:group-hover:text-night-brand">
+            <h3 className="truncate font-display text-sm font-bold text-ink transition-colors group-hover:text-brand dark:text-night-ink dark:group-hover:text-night-brand sm:text-base">
               {person.name}
             </h3>
-            <p className="mt-0.5 text-xs text-subtle dark:text-night-subtle">
+            <p className="truncate text-[11px] text-subtle dark:text-night-subtle sm:text-xs">
               Department of Computer Applications
             </p>
           </div>

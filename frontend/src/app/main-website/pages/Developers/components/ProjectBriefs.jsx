@@ -59,11 +59,11 @@ export default function ProjectBriefs() {
         </p>
       </div>
 
-      <div className="mt-6 grid gap-5 lg:grid-cols-3">
+      <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3">
         {projects.map(project => (
           <article
             key={project.title}
-            className="flex flex-col justify-between rounded-xl border border-line bg-surface p-6 shadow-xs dark:border-night-line dark:bg-night-surface"
+            className="flex flex-col justify-between rounded-xl border border-line bg-surface p-4.5 shadow-xs dark:border-night-line dark:bg-night-surface sm:p-6"
           >
             <div>
               {/* Header Badges */}

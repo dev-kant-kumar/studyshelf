@@ -54,12 +54,12 @@ export default function DeveloperShowcase() {
         Connect university theory with production engineering workflows. Step-by-step milestones with concrete projects and locally saved progress tracking.
       </p>
 
-      <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-4">
         {tracks.map(track => (
           <Link
             key={track.href}
             to={track.href}
-            className={`${panel} group flex flex-col justify-between p-5 transition-colors hover:border-brand dark:hover:border-night-brand motion-reduce:transition-none sm:p-6 ${focus}`}
+            className={`${panel} group flex flex-col justify-between p-4.5 transition-colors hover:border-brand dark:hover:border-night-brand motion-reduce:transition-none sm:p-6 ${focus}`}
           >
             <div>
               <div className="flex items-center justify-between">

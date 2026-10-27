@@ -60,13 +60,13 @@ export default function RoadmapGrid() {
         </div>
       </div>
 
-      <div className="mt-6 grid gap-5 md:grid-cols-2">
+      <div className="mt-6 grid grid-cols-1 gap-4 sm:gap-5 md:grid-cols-2">
         {roadmapsList.map(roadmap => {
           const Icon = roadmap.icon
           return (
             <article
               key={roadmap.slug}
-              className="flex flex-col justify-between rounded-xl border border-line bg-surface p-6 shadow-xs transition-shadow hover:shadow-md dark:border-night-line dark:bg-night-surface"
+              className="flex flex-col justify-between rounded-xl border border-line bg-surface p-4.5 shadow-xs transition-shadow hover:shadow-md dark:border-night-line dark:bg-night-surface sm:p-6"
             >
               <div>
                 {/* Header Category & Badge */}

@@ -29,13 +29,13 @@ export default function CareerStrategy() {
       aria-label="How to choose a career path"
       className="scroll-mt-20 py-8"
     >
-      <div className="grid gap-4 sm:grid-cols-3">
+      <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-3 sm:gap-4">
         {steps.map(step => {
           const Icon = step.icon
           return (
             <div
               key={step.num}
-              className="rounded-xl border border-line bg-surface p-5 shadow-xs dark:border-night-line dark:bg-night-surface"
+              className="rounded-xl border border-line bg-surface p-4 shadow-xs dark:border-night-line dark:bg-night-surface sm:p-5"
             >
               <div className="flex items-center justify-between">
                 <span className="flex size-7 items-center justify-center rounded-md bg-selected font-mono text-xs font-bold text-brand dark:bg-night-selected dark:text-night-brand">

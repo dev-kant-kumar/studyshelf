@@ -174,7 +174,7 @@ export default function Professors() {
             </span>
           </div>
 
-          <div className="grid gap-5 md:grid-cols-2">
+          <div className="grid grid-cols-1 gap-4 sm:gap-5 md:grid-cols-2">
             {results
               .filter(person => (person.category ?? 'faculty') === 'faculty')
               .map(person => (
@@ -186,9 +186,9 @@ export default function Professors() {
 
       {/* Staff Section */}
       {(category === 'all' || category === 'staff') && (
-        <section className="mt-12" aria-label="Departmental staff">
+        <section className="mt-10 sm:mt-12" aria-label="Departmental staff">
           <div className="mb-4 flex items-baseline justify-between">
-            <h2 className="font-display text-2xl font-bold text-ink dark:text-night-ink">
+            <h2 className="font-display text-xl font-bold text-ink dark:text-night-ink sm:text-2xl">
               Departmental staff
             </h2>
             <span className="font-mono text-xs text-subtle dark:text-night-subtle">
@@ -196,7 +196,7 @@ export default function Professors() {
             </span>
           </div>
 
-          <div className="grid gap-4 sm:grid-cols-2">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4">
             {results
               .filter(person => person.category === 'staff')
               .map(person => (

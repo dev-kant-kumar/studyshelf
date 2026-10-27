@@ -25,17 +25,17 @@ export default function FacultyHero() {
       </div>
 
       {/* 4-Card Metric Strip */}
-      <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-4">
+      <div className="mt-6 grid grid-cols-2 gap-2.5 sm:mt-8 sm:grid-cols-4 sm:gap-3">
         {stats.map(({ label, value, icon: Icon }) => (
           <div
             key={label}
-            className="flex items-center gap-3 rounded-xl border border-line bg-surface p-4 shadow-xs dark:border-night-line dark:bg-night-surface"
+            className="flex items-center gap-2.5 rounded-xl border border-line bg-surface p-3 shadow-xs dark:border-night-line dark:bg-night-surface sm:gap-3 sm:p-4"
           >
-            <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-selected text-brand dark:bg-night-selected dark:text-night-brand">
-              <Icon size={18} aria-hidden="true" />
+            <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-selected text-brand dark:bg-night-selected dark:text-night-brand sm:size-9">
+              <Icon size={17} aria-hidden="true" />
             </span>
             <div className="min-w-0">
-              <p className="font-display text-lg font-bold text-ink dark:text-night-ink">
+              <p className="font-display text-base font-bold text-ink dark:text-night-ink sm:text-lg">
                 {value}
               </p>
               <p className="truncate text-xs font-medium text-subtle dark:text-night-subtle">

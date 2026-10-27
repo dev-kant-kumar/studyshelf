@@ -49,13 +49,13 @@ export default function LearningFeatures() {
           </p>
         </div>
 
-        <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-4">
           {features.map((item, index) => {
             const Icon = item.icon
             return (
               <div
                 key={index}
-                className={`${panel} flex flex-col justify-between p-6 transition-colors hover:border-brand/60 dark:hover:border-night-brand/60`}
+                className={`${panel} flex flex-col justify-between p-5 transition-colors hover:border-brand/60 dark:hover:border-night-brand/60 sm:p-6`}
               >
                 <div>
                   <span className="flex size-10 items-center justify-center rounded-lg bg-selected text-brand dark:bg-night-selected dark:text-night-brand">

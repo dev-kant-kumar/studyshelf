@@ -52,7 +52,7 @@ export default function Vbu() {
         <section className="border-t border-line pt-7 dark:border-night-line">
           <h2 className="text-2xl font-semibold">Studying at a college under VBU?</h2>
           <p className={`mt-4 leading-7 ${muted}`}>Studying at Annada, St. Columba's, Markham, or another college under VBU? Find explanations, worked examples, and revision questions for the topics in your syllabus.</p>
-          <ul className="mt-5 grid gap-3 sm:grid-cols-2">{colleges.map(college => <CollegeEntry key={college.name} college={college} />)}</ul>
+          <ul className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2">{colleges.map(college => <CollegeEntry key={college.name} college={college} />)}</ul>
           <p className={`mt-5 text-sm leading-6 ${muted}`}>Match your subject and unit to the available topics, then save useful chapters for revision.</p>
           <Link className={`${link} mt-4 inline-block`} to="/search">Find a study topic</Link>
         </section>

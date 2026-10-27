@@ -50,8 +50,8 @@ export default function Professor() {
       />
 
       {/* Profile Header Banner */}
-      <header className="rounded-xl border border-line bg-surface p-6 shadow-xs sm:p-8 dark:border-night-line dark:bg-night-surface">
-        <div className="flex flex-col gap-6 sm:flex-row sm:items-center">
+      <header className="rounded-xl border border-line bg-surface p-4 shadow-xs sm:p-8 dark:border-night-line dark:bg-night-surface">
+        <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:gap-6">
           <ProfessorPhoto person={person} large />
 
           <div className="min-w-0 flex-1">
@@ -120,7 +120,7 @@ export default function Professor() {
           {!isStaff ? (
             <section
               aria-labelledby="academic-details"
-              className="rounded-xl border border-line bg-surface p-6 shadow-xs sm:p-8 dark:border-night-line dark:bg-night-surface"
+              className="rounded-xl border border-line bg-surface p-4 shadow-xs sm:p-8 dark:border-night-line dark:bg-night-surface"
             >
               <div className="flex items-center gap-2 border-b border-line pb-4 dark:border-night-line">
                 <GraduationCap size={18} className="text-brand dark:text-night-brand" aria-hidden="true" />

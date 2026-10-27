@@ -45,13 +45,13 @@ export default function PracticalSteps() {
         </p>
       </div>
 
-      <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="mt-6 grid grid-cols-1 gap-3.5 sm:grid-cols-2 sm:gap-4 lg:grid-cols-4">
         {steps.map(step => {
           const Icon = step.icon
           return (
             <article
               key={step.num}
-              className="flex flex-col justify-between rounded-xl border border-line bg-surface p-5 shadow-xs dark:border-night-line dark:bg-night-surface"
+              className="flex flex-col justify-between rounded-xl border border-line bg-surface p-4 shadow-xs dark:border-night-line dark:bg-night-surface sm:p-5"
             >
               <div>
                 {/* Step badge & icon */}

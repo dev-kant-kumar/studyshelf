@@ -56,71 +56,71 @@ export default function Course() {
 
       {/* Course Summary Metrics */}
       {course.semesters.length > 0 && (
-        <div className="mb-8">
+        <div className="mb-6 sm:mb-8">
           <CourseStats course={course} />
         </div>
       )}
 
       {/* Student Action & Companion Hub */}
-      <div className="mb-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="mb-10 grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
         <Link
           to={`/routine?course=${course.id}&semester=1`}
-          className={`${panel} group flex items-center justify-between gap-4 p-5 transition-colors hover:border-brand dark:hover:border-night-brand motion-reduce:transition-none ${focus}`}
+          className={`${panel} group flex items-center justify-between gap-3 p-4 transition-colors hover:border-brand dark:hover:border-night-brand motion-reduce:transition-none sm:gap-4 sm:p-5 ${focus}`}
         >
-          <div className="flex items-center gap-3">
+          <div className="flex min-w-0 items-center gap-3">
             <span className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-selected text-brand dark:bg-night-selected dark:text-night-brand">
               <Clock size={19} aria-hidden="true" />
             </span>
-            <div>
-              <span className="block font-semibold text-ink group-hover:text-brand dark:text-night-ink dark:group-hover:text-night-brand">
+            <div className="min-w-0">
+              <span className="block truncate font-semibold text-ink group-hover:text-brand dark:text-night-ink dark:group-hover:text-night-brand">
                 Class Timetable
               </span>
-              <span className={`mt-0.5 block text-xs ${muted}`}>
+              <span className={`mt-0.5 block truncate text-xs ${muted}`}>
                 {isMca ? 'Live IST class routine for Semester 1' : 'Timetable & period tracker'}
               </span>
             </div>
           </div>
-          <ArrowRight size={17} className="text-subtle transition-transform group-hover:translate-x-0.5 group-hover:text-brand dark:text-night-subtle dark:group-hover:text-night-brand" aria-hidden="true" />
+          <ArrowRight size={17} className="shrink-0 text-subtle transition-transform group-hover:translate-x-0.5 group-hover:text-brand dark:text-night-subtle dark:group-hover:text-night-brand" aria-hidden="true" />
         </Link>
 
         <Link
           to="/professors"
-          className={`${panel} group flex items-center justify-between gap-4 p-5 transition-colors hover:border-brand dark:hover:border-night-brand motion-reduce:transition-none ${focus}`}
+          className={`${panel} group flex items-center justify-between gap-3 p-4 transition-colors hover:border-brand dark:hover:border-night-brand motion-reduce:transition-none sm:gap-4 sm:p-5 ${focus}`}
         >
-          <div className="flex items-center gap-3">
+          <div className="flex min-w-0 items-center gap-3">
             <span className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-selected text-brand dark:bg-night-selected dark:text-night-brand">
               <Users size={19} aria-hidden="true" />
             </span>
-            <div>
-              <span className="block font-semibold text-ink group-hover:text-brand dark:text-night-ink dark:group-hover:text-night-brand">
+            <div className="min-w-0">
+              <span className="block truncate font-semibold text-ink group-hover:text-brand dark:text-night-ink dark:group-hover:text-night-brand">
                 Faculty Directory
               </span>
-              <span className={`mt-0.5 block text-xs ${muted}`}>
+              <span className={`mt-0.5 block truncate text-xs ${muted}`}>
                 Department professors and advisors
               </span>
             </div>
           </div>
-          <ArrowRight size={17} className="text-subtle transition-transform group-hover:translate-x-0.5 group-hover:text-brand dark:text-night-subtle dark:group-hover:text-night-brand" aria-hidden="true" />
+          <ArrowRight size={17} className="shrink-0 text-subtle transition-transform group-hover:translate-x-0.5 group-hover:text-brand dark:text-night-subtle dark:group-hover:text-night-brand" aria-hidden="true" />
         </Link>
 
         <Link
           to="/vbu"
-          className={`${panel} group flex items-center justify-between gap-4 p-5 transition-colors hover:border-brand dark:hover:border-night-brand motion-reduce:transition-none sm:col-span-2 lg:col-span-1 ${focus}`}
+          className={`${panel} group flex items-center justify-between gap-3 p-4 transition-colors hover:border-brand dark:hover:border-night-brand motion-reduce:transition-none sm:col-span-2 sm:gap-4 sm:p-5 lg:col-span-1 ${focus}`}
         >
-          <div className="flex items-center gap-3">
+          <div className="flex min-w-0 items-center gap-3">
             <span className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-selected text-brand dark:bg-night-selected dark:text-night-brand">
               <Compass size={19} aria-hidden="true" />
             </span>
-            <div>
-              <span className="block font-semibold text-ink group-hover:text-brand dark:text-night-ink dark:group-hover:text-night-brand">
+            <div className="min-w-0">
+              <span className="block truncate font-semibold text-ink group-hover:text-brand dark:text-night-ink dark:group-hover:text-night-brand">
                 VBU Academic Guide
               </span>
-              <span className={`mt-0.5 block text-xs ${muted}`}>
+              <span className={`mt-0.5 block truncate text-xs ${muted}`}>
                 CBCS passing rules and practical guidelines
               </span>
             </div>
           </div>
-          <ArrowRight size={17} className="text-subtle transition-transform group-hover:translate-x-0.5 group-hover:text-brand dark:text-night-subtle dark:group-hover:text-night-brand" aria-hidden="true" />
+          <ArrowRight size={17} className="shrink-0 text-subtle transition-transform group-hover:translate-x-0.5 group-hover:text-brand dark:text-night-subtle dark:group-hover:text-night-brand" aria-hidden="true" />
         </Link>
       </div>
 
@@ -141,7 +141,7 @@ export default function Course() {
         </div>
 
         {course.semesters.length > 0 ? (
-          <div className="grid gap-5 sm:grid-cols-2">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5">
             {course.semesters.map(semester => (
               <SemesterCard key={semester.id} semester={semester} />
             ))}

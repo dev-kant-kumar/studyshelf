@@ -59,12 +59,12 @@ export default function CourseCareerPaths({ course }) {
         Align your semester study with industry engineering standards. Step-by-step milestones with reproducible project builds.
       </p>
 
-      <div className="mt-6 grid gap-5 sm:grid-cols-2">
+      <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5">
         {tracks.map(track => (
           <Link
             key={track.href}
             to={track.href}
-            className={`${panel} group flex flex-col justify-between p-5 transition-colors hover:border-brand dark:hover:border-night-brand motion-reduce:transition-none sm:p-6 ${focus}`}
+            className={`${panel} group flex flex-col justify-between p-4 transition-colors hover:border-brand dark:hover:border-night-brand motion-reduce:transition-none sm:p-6 ${focus}`}
           >
             <div>
               <div className="flex items-center gap-2 text-brand dark:text-night-brand">
@@ -73,13 +73,17 @@ export default function CourseCareerPaths({ course }) {
                   {track.title}
                 </h3>
               </div>
-              <p className={`mt-2 text-xs leading-relaxed ${muted}`}>
+              <p className={`mt-3 text-xs leading-relaxed ${muted}`}>
                 {track.description}
               </p>
             </div>
-            <div className="mt-4 flex items-center gap-1.5 border-t border-line pt-3 text-xs font-semibold text-brand dark:border-night-line dark:text-night-brand">
-              <span>View roadmap</span>
-              <ArrowRight size={13} className="transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
+            <div className="mt-5 flex items-center gap-1.5 text-xs font-semibold text-brand dark:text-night-brand">
+              <span>View Roadmap</span>
+              <ArrowRight
+                size={14}
+                className="transition-transform group-hover:translate-x-1 motion-reduce:transform-none"
+                aria-hidden="true"
+              />
             </div>
           </Link>
         ))}

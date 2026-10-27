@@ -11,11 +11,11 @@ export default function FacultyCard({ person }) {
     <article className="h-full">
       <Link
         to={professorHref(person.id)}
-        className={`group flex h-full flex-col justify-between rounded-xl border border-line bg-surface p-5 shadow-xs transition-all hover:border-brand hover:shadow-md dark:border-night-line dark:bg-night-surface dark:hover:border-night-brand sm:p-6 ${focus}`}
+        className={`group flex h-full flex-col justify-between rounded-xl border border-line bg-surface p-4 shadow-xs transition-all hover:border-brand hover:shadow-md dark:border-night-line dark:bg-night-surface dark:hover:border-night-brand sm:p-6 ${focus}`}
       >
         <div>
           {/* Top Row: Photo & Basic Details */}
-          <div className="flex items-start gap-4">
+          <div className="flex items-start gap-3 sm:gap-4">
             <ProfessorPhoto person={person} />
             <div className="min-w-0 flex-1">
               <span className="inline-block rounded-md bg-soft px-2 py-0.5 text-[11px] font-semibold text-subtle dark:bg-night-soft dark:text-night-subtle">
