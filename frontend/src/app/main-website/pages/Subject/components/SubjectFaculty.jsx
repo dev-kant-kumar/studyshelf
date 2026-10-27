@@ -34,31 +34,31 @@ export default function SubjectFaculty({ course, semester, paper }) {
 
   if (assignedProfessors.length > 0) {
     return (
-      <div className={`${panel} mb-8 p-5 sm:p-6`}>
-        <div className="flex items-center justify-between gap-4">
-          <div className="flex items-center gap-2 text-brand dark:text-night-brand">
-            <Users size={18} aria-hidden="true" />
-            <h3 className="font-semibold text-ink dark:text-night-ink">
+      <div className={`${panel} mb-6 p-4 sm:mb-8 sm:p-6`}>
+        <div className="flex flex-wrap items-center justify-between gap-2 sm:gap-4">
+          <div className="flex min-w-0 items-center gap-2 text-brand dark:text-night-brand">
+            <Users size={18} aria-hidden="true" className="shrink-0" />
+            <h3 className="truncate text-sm font-semibold text-ink dark:text-night-ink sm:text-base">
               Department Faculty for this Course
             </h3>
           </div>
           <Link
             to="/professors"
-            className={`text-xs font-semibold text-brand hover:underline dark:text-night-brand ${focus}`}
+            className={`shrink-0 text-xs font-semibold text-brand hover:underline dark:text-night-brand ${focus}`}
           >
             All faculty & staff
           </Link>
         </div>
 
-        <div className="mt-4 grid gap-4 sm:grid-cols-2">
+        <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4">
           {assignedProfessors.map(prof => (
             <Link
               key={prof.id}
               to={professorHref(prof.id)}
-              className="group flex items-center gap-3.5 rounded-lg border border-line bg-soft/30 p-3 transition-colors hover:border-brand/60 hover:bg-surface dark:border-night-line dark:bg-night-soft/20 dark:hover:border-night-brand/60 dark:hover:bg-night-surface"
+              className="group flex min-w-0 items-center gap-3 rounded-lg border border-line bg-soft/30 p-2.5 transition-colors hover:border-brand/60 hover:bg-surface dark:border-night-line dark:bg-night-soft/20 dark:hover:border-night-brand/60 dark:hover:bg-night-surface sm:gap-3.5 sm:p-3"
             >
               <div className="shrink-0">
-                <ProfessorPhoto person={prof} />
+                <ProfessorPhoto person={prof} compact />
               </div>
               <div className="min-w-0 flex-1">
                 <h4 className="truncate text-sm font-semibold text-ink group-hover:text-brand dark:text-night-ink dark:group-hover:text-night-brand">
@@ -81,13 +81,13 @@ export default function SubjectFaculty({ course, semester, paper }) {
   }
 
   return (
-    <div className={`${panel} mb-8 flex flex-col justify-between gap-3 p-4 sm:flex-row sm:items-center sm:p-5`}>
-      <div className="flex items-center gap-3">
+    <div className={`${panel} mb-6 flex flex-col justify-between gap-3 p-4 sm:mb-8 sm:flex-row sm:items-center sm:p-5`}>
+      <div className="flex min-w-0 items-center gap-3">
         <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-selected text-brand dark:bg-night-selected dark:text-night-brand">
           <Users size={17} aria-hidden="true" />
         </span>
-        <div>
-          <span className="block text-sm font-semibold text-ink dark:text-night-ink">
+        <div className="min-w-0">
+          <span className="block truncate text-sm font-semibold text-ink dark:text-night-ink">
             Faculty Consultation & Mentorship
           </span>
           <span className={`block text-xs ${muted}`}>
@@ -97,7 +97,7 @@ export default function SubjectFaculty({ course, semester, paper }) {
       </div>
       <Link
         to="/professors"
-        className={`inline-flex items-center gap-1.5 text-xs font-semibold text-brand hover:underline dark:text-night-brand ${focus}`}
+        className={`inline-flex shrink-0 items-center gap-1.5 text-xs font-semibold text-brand hover:underline dark:text-night-brand ${focus}`}
       >
         <span>View faculty directory</span>
         <ArrowRight size={13} aria-hidden="true" />

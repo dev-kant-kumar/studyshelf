@@ -2,7 +2,10 @@ import { Award, FileText, CheckCircle2, BookOpen } from 'lucide-react'
 import { panel, muted } from '@/ui/classes'
 
 export default function SubjectStats({ paper }) {
-  const isLab = paper.kind === 'sessional' || paper.kind === 'practical' || (paper.title && paper.title.toLowerCase().includes('lab'))
+  const isLab =
+    paper.kind === 'sessional' ||
+    paper.kind === 'practical' ||
+    (paper.title && paper.title.toLowerCase().includes('lab'))
   const totalMarks = paper.marks ?? 100
   const examMarks = paper.examMarks ?? (isLab ? 50 : 70)
   const internalMarks = totalMarks - examMarks > 0 ? totalMarks - examMarks : 30
@@ -36,22 +39,22 @@ export default function SubjectStats({ paper }) {
   ]
 
   return (
-    <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+    <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
       {stats.map((stat, idx) => {
         const Icon = stat.icon
         return (
-          <div key={idx} className={`${panel} flex flex-col justify-between p-4 sm:p-5`}>
-            <div className="flex items-center justify-between">
-              <span className={`text-xs font-semibold uppercase tracking-wider ${muted}`}>
+          <div key={idx} className={`${panel} flex flex-col justify-between p-3.5 sm:p-5`}>
+            <div className="flex items-center justify-between gap-1.5">
+              <span className={`text-[11px] font-semibold uppercase tracking-wider ${muted} sm:text-xs`}>
                 {stat.label}
               </span>
-              <Icon size={17} className="text-brand dark:text-night-brand" aria-hidden="true" />
+              <Icon size={16} className="shrink-0 text-brand dark:text-night-brand sm:size-[17px]" aria-hidden="true" />
             </div>
-            <div className="mt-3">
-              <p className="font-display text-2xl font-semibold text-ink dark:text-night-ink">
+            <div className="mt-2.5 sm:mt-3">
+              <p className="font-display text-xl font-semibold text-ink dark:text-night-ink sm:text-2xl">
                 {stat.value}
               </p>
-              <p className={`mt-0.5 text-xs ${muted}`}>{stat.detail}</p>
+              <p className={`mt-0.5 text-xs leading-snug ${muted}`}>{stat.detail}</p>
             </div>
           </div>
         )

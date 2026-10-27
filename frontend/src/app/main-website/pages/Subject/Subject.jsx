@@ -72,9 +72,9 @@ function SubjectContent({ course, semester, paper, hash }) {
       />
 
       {/* Subject Header */}
-      <div className="mb-8 flex items-center justify-between gap-6 [&>div]:mb-0">
+      <div className="mb-6 flex flex-col items-start justify-between gap-6 sm:mb-8 sm:flex-row sm:items-center [&>div]:mb-0">
         <PageIntro eyebrow={paper.code ?? paper.id.toUpperCase()} title={paper.title}>
-          <div className={`mt-3 flex flex-wrap items-center gap-3 text-sm ${muted}`}>
+          <div className={`mt-3 flex flex-wrap items-center gap-2 text-xs sm:gap-3 sm:text-sm ${muted}`}>
             <KindBadge kind={paper.kind} group={paper.electiveGroup} />
             {paper.credits != null && <span>{paper.credits} credits</span>}
             {paper.marks != null && <span>· {paper.marks} total marks</span>}
@@ -102,7 +102,7 @@ function SubjectContent({ course, semester, paper, hash }) {
       </div>
 
       {/* Paper Metric Badges */}
-      <div className="mb-8">
+      <div className="mb-6 sm:mb-8">
         <SubjectStats paper={paper} />
       </div>
 
@@ -110,7 +110,7 @@ function SubjectContent({ course, semester, paper, hash }) {
       <SubjectFaculty course={course} semester={semester} paper={paper} />
 
       {paper.sourceNote && (
-        <aside aria-label="Source clarification" className={`${panel} mb-6 p-5`}>
+        <aside aria-label="Source clarification" className={`${panel} mb-6 p-4 sm:p-5`}>
           <h2 className="font-semibold text-ink dark:text-night-ink">
             A note about the supplied syllabus
           </h2>
@@ -119,10 +119,10 @@ function SubjectContent({ course, semester, paper, hash }) {
       )}
 
       {/* Units & Syllabus Navigation */}
-      <div className="grid items-start gap-8 lg:grid-cols-[240px_minmax(0,1fr)]">
+      <div className="grid items-start gap-6 lg:gap-8 lg:grid-cols-[240px_minmax(0,1fr)]">
         {/* Sticky Sidebar Navigation */}
         <aside className="lg:sticky lg:top-24">
-          <nav aria-label="Subject units navigation" className={`${panel} p-5`}>
+          <nav aria-label="Subject units navigation" className={`${panel} p-4 sm:p-5`}>
             <p className={`${eyebrow} mb-3 flex items-center gap-2`}>
               <List size={15} aria-hidden="true" />
               <span>Syllabus Units</span>
@@ -191,7 +191,7 @@ function SubjectContent({ course, semester, paper, hash }) {
           <div className="mt-4">
             <Link
               to={`/routine?course=${course.id}&semester=${semester.number}`}
-              className={`${panel} block p-4 text-xs font-semibold text-subtle transition-colors hover:border-brand hover:text-brand dark:text-night-subtle dark:hover:border-night-brand dark:hover:text-night-brand ${focus}`}
+              className={`${panel} block p-3.5 text-xs font-semibold text-subtle transition-colors hover:border-brand hover:text-brand dark:text-night-subtle dark:hover:border-night-brand dark:hover:text-night-brand sm:p-4 ${focus}`}
             >
               <span>View Semester {semester.number} Routine</span>
             </Link>
@@ -201,7 +201,7 @@ function SubjectContent({ course, semester, paper, hash }) {
         {/* Main Content Area */}
         <div className="min-w-0">
           {paper.noteCount === 0 && (
-            <div className={`${panel} mb-6 flex items-start gap-3.5 p-5`}>
+            <div className={`${panel} mb-6 flex items-start gap-3.5 p-4 sm:p-5`}>
               <BookOpen size={20} className="mt-0.5 shrink-0 text-brand dark:text-night-brand" aria-hidden="true" />
               <div>
                 <h2 className="font-semibold text-ink dark:text-night-ink">
@@ -215,7 +215,7 @@ function SubjectContent({ course, semester, paper, hash }) {
           )}
 
           {paper.units.length > 0 ? (
-            <div className="space-y-5">
+            <div className="space-y-4 sm:space-y-5">
               {paper.units.map(unit => {
                 const open = openUnits.includes(unit.id)
                 const topics = unit.topicCoverage ?? []
@@ -231,13 +231,13 @@ function SubjectContent({ course, semester, paper, hash }) {
                         aria-expanded={open}
                         aria-controls={`${unit.id}-content`}
                         onClick={() => toggleUnit(unit.id)}
-                        className={`flex w-full items-start justify-between gap-4 p-5 text-left transition-colors sm:p-6 ${focus}`}
+                        className={`flex w-full items-start justify-between gap-3 p-4 text-left transition-colors sm:gap-4 sm:p-6 ${focus}`}
                       >
                         <span className="min-w-0">
                           <span className={`block ${eyebrow}`}>
                             Unit {String(unit.number).padStart(2, '0')}
                           </span>
-                          <span className="mt-2 block font-display text-xl font-semibold leading-snug text-ink dark:text-night-ink">
+                          <span className="mt-2 block font-display text-lg font-semibold leading-snug text-ink dark:text-night-ink sm:text-xl">
                             {unit.title}
                           </span>
                           <span className={`mt-2 block text-xs font-normal ${muted}`}>
@@ -258,11 +258,11 @@ function SubjectContent({ course, semester, paper, hash }) {
                       aria-labelledby={`${unit.id}-heading`}
                       id={`${unit.id}-content`}
                       hidden={!open}
-                      className="border-t border-line px-5 pb-5 dark:border-night-line sm:px-6 sm:pb-6 print:block"
+                      className="border-t border-line px-4 pb-4 dark:border-night-line sm:px-6 sm:pb-6 print:block"
                     >
                       {!topics.length && unit.syllabusText && (
                         <>
-                          <h3 className="mt-5 text-xs font-semibold uppercase tracking-wider text-brand dark:text-night-brand">
+                          <h3 className="mt-4 text-xs font-semibold uppercase tracking-wider text-brand dark:text-night-brand sm:mt-5">
                             Official Syllabus Topics
                           </h3>
                           <p className={`mt-2 text-sm leading-relaxed ${muted}`}>
@@ -272,7 +272,7 @@ function SubjectContent({ course, semester, paper, hash }) {
                       )}
 
                       {unit.notes.length > 0 ? (
-                        <div className="mt-5">
+                        <div className="mt-4 sm:mt-5">
                           <NoteLinks notes={unit.notes} />
                         </div>
                       ) : (
@@ -283,7 +283,7 @@ function SubjectContent({ course, semester, paper, hash }) {
 
                       {upcoming.length > 0 && (
                         <>
-                          <h3 className="mt-6 text-xs font-semibold uppercase tracking-wider text-subtle dark:text-night-subtle">
+                          <h3 className="mt-5 text-xs font-semibold uppercase tracking-wider text-subtle dark:text-night-subtle sm:mt-6">
                             Topics in this Unit Checklist
                           </h3>
                           <ul className={`mt-2 space-y-1.5 text-xs ${muted}`}>
@@ -308,10 +308,10 @@ function SubjectContent({ course, semester, paper, hash }) {
               })}
             </div>
           ) : paper.practicalText ? (
-            <section className={`${panel} p-6 sm:p-7`}>
+            <section className={`${panel} p-5 sm:p-7`}>
               <div className="flex items-center gap-2 text-brand dark:text-night-brand">
                 <Layers size={20} aria-hidden="true" />
-                <h2 className="font-display text-xl font-semibold text-ink dark:text-night-ink">
+                <h2 className="font-display text-lg font-semibold text-ink dark:text-night-ink sm:text-xl">
                   Practical Laboratory Curriculum
                 </h2>
               </div>
