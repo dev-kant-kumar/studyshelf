@@ -1,44 +1,128 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
-import { ArrowRight, Search, Compass } from 'lucide-react'
 import CatalogueLayout from '../../layouts/CatalogueLayout'
 import DocumentHead from '../../shared/components/DocumentHead'
 import Breadcrumbs from '../../shared/components/Breadcrumbs'
-import Illustration from '../../shared/components/Illustration'
-import { careerIllustrations } from './careerIllustrations'
 import { careerFields, careerGroups, filterCareerFields } from './careerFields'
-import Dropdown from '@/ui/Dropdown'
-import Drawer from '@/ui/Drawer'
-import { panel, muted, focus, eyebrow, link, secondary } from '@/ui/classes'
+import CareersHero from './components/CareersHero'
+import CareerStrategy from './components/CareerStrategy'
+import CareerFilters from './components/CareerFilters'
+import CareerCard from './components/CareerCard'
+import CareerDetailDrawer from './components/CareerDetailDrawer'
+import CareerFooter from './components/CareerFooter'
+import { muted, focus } from '@/ui/classes'
 
 export default function Careers() {
   const [query, setQuery] = useState('')
   const [group, setGroup] = useState('all')
   const [selected, setSelected] = useState(null)
-  const categoryId = value => `category-${value.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`
+
   const visible = filterCareerFields(query, group)
-  function reset() { setQuery(''); setGroup('all') }
-  return <><CatalogueLayout>
-    <DocumentHead title="Career Explorer for BCA & MCA Students" description="Explore 16 technology career fields for BCA and MCA students. Compare roles, skills, prerequisites, starter projects and available developer roadmaps." path="/careers" />
-    <Breadcrumbs items={[{ label: 'Career Explorer' }]} />
-    <header className="grid gap-8 border-b border-line pb-10 dark:border-night-line lg:grid-cols-[1.35fr_0.65fr]">
-      <div><p className={eyebrow}>Career Explorer / BCA and MCA</p><h1 tabIndex={-1} className="mt-4 max-w-3xl font-display text-4xl font-medium leading-tight sm:text-5xl">Find the work<br />you want to learn.</h1><p className={`mt-5 max-w-2xl text-lg leading-relaxed ${muted}`}>Explore software, data, design, security and the systems behind them. Understand what people do, what you need to learn, and a small project you can try before choosing a path.</p><a className={`${link} mt-6 inline-flex min-h-11 items-center gap-2 font-semibold`} href="#fields">Explore the career fields <ArrowRight size={18} aria-hidden="true" /></a></div>
-      <aside className={`${panel} self-start p-6`}><Compass size={28} className="text-brand dark:text-night-brand" aria-hidden="true" /><h2 className="mt-4 font-display text-xl">A field first. A stack second.</h2><p className={`mt-3 text-sm leading-relaxed ${muted}`}>Backend development is a role. Java, Python and Node.js are different technology tracks within it. Start with the kind of problems you enjoy solving.</p><p className={`mt-3 text-sm leading-relaxed ${muted}`}>Use this as a starting map. Job titles overlap, and employers set their own degree, portfolio and experience requirements.</p></aside>
-    </header>
-    <section className="grid gap-6 py-8 sm:grid-cols-3" aria-label="How to choose a path">{[['01', 'Explore the work', 'Read the roles and starting skills. Notice which daily problems interest you.'], ['02', 'Try a small project', 'Use the starter project to test your interest before committing to a long roadmap.'], ['03', 'Choose one path', 'Build the foundations, follow an available roadmap, and review what you can demonstrate.']].map(([number, title, description]) => <div key={number}><p className="font-mono text-sm text-brand dark:text-night-brand">{number}</p><h2 className="mt-2 font-semibold">{title}</h2><p className={`mt-2 text-sm leading-relaxed ${muted}`}>{description}</p></div>)}</section>
-    <section id="fields" aria-labelledby="fields-heading" className="scroll-mt-24 border-t border-line pt-8 dark:border-night-line"><div className="flex flex-wrap items-end justify-between gap-4"><div><p className={eyebrow}>Explore your options</p><h2 id="fields-heading" className="mt-2 font-display text-3xl">Different ways to work in technology.</h2></div><p role="status" className={`text-sm ${muted}`}>{visible.length} of {careerFields.length} fields</p></div>
-      <div className={`${panel} mt-6 grid gap-4 p-5 sm:grid-cols-[1fr_1fr_auto]`}><label><span className="text-sm font-semibold">Search roles or skills</span><div className="relative mt-2"><Search size={18} className="absolute top-3.5 left-3" aria-hidden="true" /><input type="search" value={query} onChange={event => setQuery(event.target.value)} placeholder="Try SQL, design or security" className={`min-h-11 w-full rounded-lg border border-outline bg-surface py-2 pr-3 pl-10 text-sm outline-none focus:border-brand focus:ring-1 focus:ring-brand dark:border-night-outline dark:bg-night-surface dark:focus:border-night-brand dark:focus:ring-night-brand`} /></div></label><div><label htmlFor="career-interest" className="text-sm font-semibold">What interests you?</label><Dropdown id="career-interest" label="What interests you?" className="mt-2 w-full" focusClassName="outline-none focus-visible:border-brand focus-visible:ring-1 focus-visible:ring-brand dark:focus-visible:border-night-brand dark:focus-visible:ring-night-brand" value={group} onChange={setGroup} options={[{ value: 'all', label: 'All interests' }, ...careerGroups.map(value => ({ value, label: value }))]} /></div><button type="button" onClick={reset} className={`${secondary} self-end`}>Clear filters</button></div>
-      <nav aria-label="Career categories" className="mt-6 flex flex-wrap gap-2">{careerGroups.filter(category => visible.some(field => field.group === category)).map(category => <a key={category} href={`#${categoryId(category)}`} className={`inline-flex min-h-10 items-center rounded-full border border-line bg-surface px-4 py-2 text-sm hover:border-brand hover:text-brand dark:border-night-line dark:bg-night-surface dark:hover:border-night-brand dark:hover:text-night-brand ${focus}`}>{category}</a>)}</nav>
-      <div className="mt-10 space-y-12">{careerGroups.map(category => {
-        const fields = visible.filter(field => field.group === category)
-        if (!fields.length) return null
-        return <section key={category} id={categoryId(category)} aria-labelledby={`${categoryId(category)}-heading`} className="scroll-mt-24"><div className="mb-5 flex items-baseline gap-3"><h3 id={`${categoryId(category)}-heading`} className="font-display text-2xl">{category}</h3><span className={`text-sm ${muted}`}>{fields.length} {fields.length === 1 ? 'field' : 'fields'}</span></div><div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{fields.map(field => <article key={field.id} id={field.id} className="scroll-mt-24"><button type="button" onClick={() => setSelected(field)} aria-haspopup="dialog" aria-label={`Explore ${field.name}`} className={`${panel} group flex h-full w-full flex-col p-6 text-left transition-colors hover:border-brand dark:hover:border-night-brand motion-reduce:transition-none ${focus}`}><div className="mb-5 flex h-44 w-full items-center justify-center rounded-lg bg-soft/50 dark:bg-night-soft/50"><Illustration name={careerIllustrations[field.id]} sizes="(min-width: 1024px) 240px, (min-width: 640px) 280px, 260px" className="w-full max-w-[240px] [&_img]:max-h-40" /></div><h4 className="w-full text-center font-display text-xl leading-snug group-hover:text-brand dark:group-hover:text-night-brand">{field.name}</h4></button></article>)}</div></section>
-      })}</div>
-      {!visible.length && <div className="py-12"><h3 className="font-display text-2xl">No matching fields.</h3><p className={`mt-3 ${muted}`}>Try a broader skill or clear the interest filter.</p><button className={`${secondary} mt-4`} onClick={reset} type="button">Show all fields</button></div>}
-    </section>
-    <section className="mt-10 grid gap-6 border-t border-line pt-8 dark:border-night-line sm:grid-cols-2"><div><h2 className="font-display text-2xl">Ready to start building?</h2><p className={`mt-3 leading-relaxed ${muted}`}>Developer Shelf has practical roadmaps and student project briefs. Detailed roadmaps currently cover frontend and Node.js, Python and Java backend development.</p><Link className={`${link} mt-4 inline-flex min-h-11 items-center gap-2`} to="/developers">Explore Developer Shelf <ArrowRight size={17} aria-hidden="true" /></Link></div><div><h2 className="font-display text-2xl">About this career map</h2><p className={`mt-3 text-sm leading-relaxed ${muted}`}>These fields group related work; they are not a ranking of salaries, vacancies or placement chances. Freelancing is a way of working, and industries such as healthcare and finance are contexts where these skills can be applied.</p><ul className="mt-3 space-y-2 text-sm"><li><a className={link} href="https://www.ncs.gov.in/Documents/National%20Classification%20of%20Occupations%20_Vol%20II-A-%202015.pdf">India National Classification of Occupations (PDF)</a></li><li><a className={link} href="https://www.bls.gov/ooh/computer-and-information-technology/home.htm">Computer and IT occupation families</a></li><li><a className={link} href="https://www.nqr.gov.in/">India National Qualification Register</a></li></ul></div></section>
-  </CatalogueLayout>
-  <Drawer open={Boolean(selected)} onClose={() => setSelected(null)} title={selected?.name ?? 'Career details'} widthClassName="w-full sm:w-[min(90vw,640px)]">
-    {selected && <div className="space-y-7"><div><p className={eyebrow}>{selected.group}</p><p className={`mt-3 leading-relaxed ${muted}`}>{selected.summary}</p></div><section><h3 className="font-semibold">Roles to explore</h3><ul className={`mt-3 grid gap-2 text-sm sm:grid-cols-2 ${muted}`}>{selected.roles.map(role => <li key={role} className="rounded-lg bg-soft px-3 py-2 dark:bg-night-soft">{role}</li>)}</ul></section><section><h3 className="font-semibold">Skills you will use</h3><ul className="mt-3 flex flex-wrap gap-2">{selected.skills.map(skill => <li key={skill} className="rounded-full border border-line px-3 py-1.5 text-sm dark:border-night-line">{skill}</li>)}</ul></section><section className="border-t border-line pt-6 dark:border-night-line"><h3 className="font-semibold">Where to start</h3><p className={`mt-3 text-sm leading-relaxed ${muted}`}>{selected.start}</p></section><section className="rounded-xl bg-soft p-5 dark:bg-night-soft"><h3 className="font-semibold">Try this project</h3><p className={`mt-3 text-sm leading-relaxed ${muted}`}>{selected.project}</p></section><section><h3 className="font-semibold">Experience and specialisation</h3><p className={`mt-3 text-sm leading-relaxed ${muted}`}>{selected.later}</p></section>{selected.roadmaps && <nav aria-label={`${selected.name} roadmaps`} className="border-t border-line pt-6 dark:border-night-line"><h3 className="font-semibold">Available learning paths</h3><ul className="mt-3 space-y-1">{selected.roadmaps.map(([label, href]) => <li key={href}><Link onClick={() => setSelected(null)} className={`${link} inline-flex min-h-11 items-center gap-2 text-sm`} to={href}>{label} roadmap <ArrowRight size={16} aria-hidden="true" /></Link></li>)}</ul></nav>}</div>}
-  </Drawer></>
+
+  const reset = () => {
+    setQuery('')
+    setGroup('all')
+  }
+
+  const categoryId = value => `category-${value.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`
+
+  return (
+    <>
+      <CatalogueLayout>
+        <DocumentHead
+          title="Career Explorer for BCA & MCA Students - 16 Tech Paths"
+          description="Explore 16 technology career fields for BCA and MCA students. Compare job roles, core technical skills, starter capstone projects, and direct developer roadmaps."
+          path="/careers"
+        />
+
+        <Breadcrumbs items={[{ label: 'Career Explorer' }]} />
+
+        {/* Hero with Jump Actions & Strategy Card */}
+        <CareersHero />
+
+        {/* 3-Step Practical Methodology */}
+        <CareerStrategy />
+
+        {/* Search, Group Filter Pills & Live Count */}
+        <div id="fields" className="scroll-mt-20">
+          <CareerFilters
+            query={query}
+            setQuery={setQuery}
+            group={group}
+            setGroup={setGroup}
+            careerGroups={careerGroups}
+            careerFields={careerFields}
+            visibleCount={visible.length}
+            reset={reset}
+          />
+
+          {/* Grouped Career Fields Grid */}
+          <div className="mt-8 space-y-10">
+            {careerGroups.map(category => {
+              const fields = visible.filter(field => field.group === category)
+              if (!fields.length) return null
+
+              return (
+                <section
+                  key={category}
+                  id={categoryId(category)}
+                  aria-labelledby={`${categoryId(category)}-heading`}
+                  className="scroll-mt-24"
+                >
+                  <div className="mb-4 flex items-baseline gap-2.5">
+                    <h3
+                      id={`${categoryId(category)}-heading`}
+                      className="font-display text-xl font-bold text-ink dark:text-night-ink"
+                    >
+                      {category}
+                    </h3>
+                    <span className="font-mono text-xs text-subtle dark:text-night-subtle">
+                      ({fields.length} {fields.length === 1 ? 'field' : 'fields'})
+                    </span>
+                  </div>
+
+                  <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                    {fields.map(field => (
+                      <CareerCard
+                        key={field.id}
+                        field={field}
+                        onSelect={setSelected}
+                      />
+                    ))}
+                  </div>
+                </section>
+              )
+            })}
+          </div>
+
+          {/* Empty Search Results */}
+          {!visible.length && (
+            <div className="rounded-xl border border-line bg-surface p-8 text-center dark:border-night-line dark:bg-night-surface">
+              <h3 className="font-display text-xl font-bold text-ink dark:text-night-ink">
+                No matching career fields found
+              </h3>
+              <p className={`mt-2 text-xs ${muted}`}>
+                No fields matched "{query}". Try searching for broader terms like "SQL", "Security", or "Python".
+              </p>
+              <button
+                type="button"
+                onClick={reset}
+                className={`mt-4 inline-flex items-center gap-1.5 rounded-lg bg-brand px-4 py-2 text-xs font-semibold text-on-brand transition-opacity hover:opacity-95 dark:bg-night-brand dark:text-night-on-brand ${focus}`}
+              >
+                Clear all filters
+              </button>
+            </div>
+          )}
+        </div>
+
+        {/* Ready to build & Official Framework References */}
+        <CareerFooter />
+      </CatalogueLayout>
+
+      {/* Slide-Over Career Detail Drawer */}
+      <CareerDetailDrawer
+        selected={selected}
+        onClose={() => setSelected(null)}
+      />
+    </>
+  )
 }

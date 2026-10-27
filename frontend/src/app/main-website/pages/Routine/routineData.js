@@ -53,10 +53,18 @@ export function sessionStatus(session, minutes) {
 }
 
 export function sessionLabel(routine, session) {
-  const paperId = routine.papers?.[session.subject]?.[session.kind]
-  const semester = routine.course === 'mca' && mcaSyllabus.semesters.find(item => item.number === routine.semester)
+  const paperId =
+    routine.papers?.[session.subject]?.[session.kind] ??
+    routine.papers?.[session.subject]?.class
+  const semester =
+    routine.course === 'mca' &&
+    mcaSyllabus.semesters.find(item => item.number === routine.semester)
   const paper = semester?.papers.find(item => item.id === paperId)
-  return paper ? `Paper ${paper.id.replace('paper', '')} · ${paper.title.replace(/\s+/g, ' ').trim()}` : subjects[session.subject] ?? 'Session'
+  if (paper) {
+    const code = paper.code ? paper.code + ' · ' : ''
+    return code + paper.title.replace(/\s+/g, ' ').trim()
+  }
+  return subjects[session.subject] ?? 'Session'
 }
 
 export function formatDuration(minutes) {
@@ -65,4 +73,9 @@ export function formatDuration(minutes) {
 }
 export function dayDuration(sessions) {
   return sessions.reduce((total, session) => total + (session.kind === 'break' ? 0 : minutesOf(session.end) - minutesOf(session.start)), 0)
+}
+
+export function formatClassTime(time) {
+  const [hours, minutes] = time.split(':').map(Number)
+  return `${hours % 12 || 12}:${String(minutes).padStart(2, '0')} ${hours >= 12 ? 'PM' : 'AM'}`
 }

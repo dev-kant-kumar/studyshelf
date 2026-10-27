@@ -1,6 +1,6 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { mcaSemesterOne, getRoutine, teachers, subjects, minutesOf, formatDuration, dayDuration, sessionLabel, sessionStatus, getIndiaClock } from '../src/app/main-website/pages/Routine/routineData.js'
+import { mcaSemesterOne, getRoutine, teachers, subjects, minutesOf, formatClassTime, formatDuration, dayDuration, sessionLabel, sessionStatus, getIndiaClock } from '../src/app/main-website/pages/Routine/routineData.js'
 import { getProfessor } from '../src/app/main-website/pages/Professors/facultyData.js'
 
 test('transcribed routine covers each period without overlaps, gaps, or broken staff references', () => {
@@ -58,10 +58,10 @@ test('session boundaries switch from upcoming to now to finished', () => {
 
 test('readable routine labels use syllabus paper numbers and full titles, including labs', () => {
   const routine = mcaSemesterOne
-  assert.equal(sessionLabel(routine, routine.days.Tuesday[0]), 'Paper 4 · Database Management System')
-  assert.equal(sessionLabel(routine, routine.days.Tuesday[1]), 'Paper 2 · Data Structures through C')
-  assert.equal(sessionLabel(routine, routine.days.Monday[0]), 'Paper 9 · Database Management System Lab')
-  assert.equal(sessionLabel(routine, routine.days.Friday[1]), 'Paper 8 · Data Structures Lab')
+  assert.equal(sessionLabel(routine, routine.days.Tuesday[0]), 'MCA C1004 · Database Management System')
+  assert.equal(sessionLabel(routine, routine.days.Tuesday[1]), 'MCA C1002 · Data Structures through C')
+  assert.equal(sessionLabel(routine, routine.days.Monday[0]), 'MCA P1009 · Database Management System Lab')
+  assert.equal(sessionLabel(routine, routine.days.Friday[1]), 'MCA P1008 · Data Structures Lab')
   assert.equal(sessionLabel(routine, routine.days.Monday[3]), 'Library')
 })
 
@@ -74,4 +74,13 @@ test('duration totals count merged labs once and exclude recess', () => {
   assert.equal(formatDuration(90), '1 hour 30 min')
   assert.equal(formatDuration(30), '30 min')
   assert.equal(formatDuration(0), '0 min')
+})
+
+
+test('class timing displays AM and PM correctly across noon and midnight', () => {
+  assert.equal(formatClassTime('00:00'), '12:00 AM')
+  assert.equal(formatClassTime('10:30'), '10:30 AM')
+  assert.equal(formatClassTime('12:30'), '12:30 PM')
+  assert.equal(formatClassTime('14:00'), '2:00 PM')
+  assert.equal(formatClassTime('16:00'), '4:00 PM')
 })
