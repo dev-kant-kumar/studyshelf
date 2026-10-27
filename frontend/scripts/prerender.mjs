@@ -43,7 +43,7 @@ try {
       asset.setAttribute('src', `data:image/svg+xml;base64,${data.toString('base64')}`)
     }
     const robots = document.querySelector('meta[name="robots"]')?.getAttribute('content')
-    const metadata = Array.from(document.querySelectorAll('title, meta, link, script[type="application/ld+json"]')).map(element => {
+    const metadata = Array.from(document.querySelectorAll('title, meta, link, script[type="application/ld+json"]')).filter(element => !element.closest('svg')).map(element => {
       element.setAttribute('data-static-head', '')
       const tag = element.outerHTML
       element.remove()

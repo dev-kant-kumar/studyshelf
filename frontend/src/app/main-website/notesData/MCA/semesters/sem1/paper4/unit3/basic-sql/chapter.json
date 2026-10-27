@@ -1,0 +1,169 @@
+{
+  "id": "basic-sql",
+  "title": "Basic SQL: selecting and changing rows",
+  "summary": "Write SELECT, INSERT, UPDATE, and DELETE with precise predicates and predictable results.",
+  "topics": [
+    "basic-sql"
+  ],
+  "intro": "A SQL statement is a request with a defined target and scope. Learn to read a query as a sequence of relational decisions and a data-changing command as a set of affected rows, not an implicit loop over a screen.",
+  "outcomes": [
+    "Construct projection, filtering, aliases, and ordering.",
+    "Predict rows before executing a data change.",
+    "Use a transaction to inspect and undo a practice change."
+  ],
+  "sections": [
+    {
+      "title": "1. SELECT lists and predicates",
+      "paragraphs": [
+        "SELECT chooses output expressions; FROM identifies the input; WHERE keeps only rows for which the predicate is TRUE. Choosing columns is projection. Choosing rows is selection. SELECT name does not make names unique; DISTINCT removes duplicates from the projected result.",
+        "Combine conditions with AND, OR, and NOT. Parentheses state the intended grouping instead of relying on operator precedence. BETWEEN includes both endpoints. LIKE uses % for any sequence and _ for one character; case sensitivity depends on collation and DBMS configuration."
+      ],
+      "code": "SELECT student_id, name\nFROM U3Student\nWHERE programme = 'MCA' AND student_id >= 102\nORDER BY student_id;",
+      "sqlVariants": {
+        "postgresql": {
+          "code": "SELECT student_id, name\nFROM U3Student\nWHERE programme = 'MCA' AND student_id >= 102\nORDER BY student_id;",
+          "note": "Run after the shared Unit 3 setup in a scratch database."
+        },
+        "oracle": {
+          "code": "SELECT student_id, name\nFROM U3Student\nWHERE programme = 'MCA' AND student_id >= 102\nORDER BY student_id;",
+          "note": "Run after the shared Unit 3 setup in a scratch database."
+        },
+        "mysql": {
+          "code": "SELECT student_id, name\nFROM U3Student\nWHERE programme = 'MCA' AND student_id >= 102\nORDER BY student_id;",
+          "note": "Run after the shared Unit 3 setup in a scratch database."
+        },
+        "mariadb": {
+          "code": "SELECT student_id, name\nFROM U3Student\nWHERE programme = 'MCA' AND student_id >= 102\nORDER BY student_id;",
+          "note": "Run after the shared Unit 3 setup in a scratch database."
+        },
+        "sqlite": {
+          "code": "SELECT student_id, name\nFROM U3Student\nWHERE programme = 'MCA' AND student_id >= 102\nORDER BY student_id;",
+          "note": "Run after the shared Unit 3 setup in a scratch database."
+        },
+        "sqlserver": {
+          "code": "SELECT student_id, name\nFROM U3Student\nWHERE programme = 'MCA' AND student_id >= 102\nORDER BY student_id;",
+          "note": "Run after the shared Unit 3 setup in a scratch database."
+        }
+      },
+      "example": [
+        "The programme condition excludes Mira. The numeric condition excludes Asha. Ravi (102) and Neha (104) remain in that explicit order. Removing ORDER BY preserves membership, but not the promised display order."
+      ]
+    },
+    {
+      "title": "2. Expressions, aliases, and stable ordering",
+      "paragraphs": [
+        "An expression can compute a displayed value without changing a stored column. AS gives a result column a useful name. Use single quotes for character literals. Identifier quoting is a different feature and differs across products. Avoid relying on quoted mixed-case names in these examples.",
+        "A deterministic top-N query needs an ORDER BY that breaks ties, such as mark descending followed by student_id. A row limit without ordering is not a request for the best students. PostgreSQL/MySQL/SQLite use LIMIT, SQL Server commonly uses TOP or OFFSET/FETCH, and Oracle supports FETCH FIRST in modern releases. See the advanced chapter for a version-conscious alternative."
+      ]
+    },
+    {
+      "title": "3. INSERT supplies complete facts",
+      "paragraphs": [
+        "Specify column names so that the statement does not accidentally depend on table-column order. Omitting a column applies its default or permitted NULL behaviour. It does not copy a value from the preceding row. INSERT INTO U3Student (student_id, name) VALUES (105, 'Isha') uses the MCA default for programme and leaves email NULL.",
+        "A statement can fail because of a duplicate key, missing required value, invalid reference, or range violation. Check the error and transaction state. An invalid statement does not imply that all earlier successful statements were automatically undone."
+      ]
+    },
+    {
+      "title": "4. UPDATE and DELETE act on qualifying sets",
+      "paragraphs": [
+        "Before UPDATE or DELETE, run SELECT with the same WHERE clause and inspect the candidate keys. UPDATE without WHERE can change every row. DELETE without WHERE can remove every row subject to constraints. DELETE removes rows; DROP TABLE removes the object; TRUNCATE is a distinct operation with engine-specific rules.",
+        "This reversible exercise sets Ravi's mark to 90, checks it, then rolls back. Run as one controlled session, not through a client that silently commits every statement."
+      ],
+      "code": "BEGIN;\nUPDATE U3Enrolment SET mark = 90\nWHERE student_id = 102 AND course_code = 'DB101';\nSELECT mark FROM U3Enrolment\nWHERE student_id = 102 AND course_code = 'DB101';\nROLLBACK;",
+      "sqlVariants": {
+        "postgresql": {
+          "code": "BEGIN;\nUPDATE U3Enrolment SET mark = 90\nWHERE student_id = 102 AND course_code = 'DB101';\nSELECT mark FROM U3Enrolment\nWHERE student_id = 102 AND course_code = 'DB101';\nROLLBACK;",
+          "note": "Run after the shared Unit 3 setup in a scratch database."
+        },
+        "oracle": {
+          "code": "UPDATE U3Enrolment SET mark = 90\nWHERE student_id = 102 AND course_code = 'DB101';\nSELECT mark FROM U3Enrolment\nWHERE student_id = 102 AND course_code = 'DB101';\nROLLBACK;",
+          "note": "Oracle: DML starts transaction work; no SQL BEGIN command is used. Disable client auto-commit."
+        },
+        "mysql": {
+          "code": "START TRANSACTION;\nUPDATE U3Enrolment SET mark = 90\nWHERE student_id = 102 AND course_code = 'DB101';\nSELECT mark FROM U3Enrolment WHERE student_id = 102 AND course_code = 'DB101';\nROLLBACK;",
+          "note": "MySQL: run in one InnoDB connection."
+        },
+        "mariadb": {
+          "code": "START TRANSACTION;\nUPDATE U3Enrolment SET mark = 90\nWHERE student_id = 102 AND course_code = 'DB101';\nSELECT mark FROM U3Enrolment WHERE student_id = 102 AND course_code = 'DB101';\nROLLBACK;",
+          "note": "MariaDB: run in one InnoDB connection."
+        },
+        "sqlite": {
+          "code": "BEGIN;\nUPDATE U3Enrolment SET mark = 90\nWHERE student_id = 102 AND course_code = 'DB101';\nSELECT mark FROM U3Enrolment\nWHERE student_id = 102 AND course_code = 'DB101';\nROLLBACK;",
+          "note": "Run after the shared Unit 3 setup in a scratch database."
+        },
+        "sqlserver": {
+          "code": "BEGIN TRANSACTION;\nUPDATE U3Enrolment SET mark = 90\nWHERE student_id = 102 AND course_code = 'DB101';\nSELECT mark FROM U3Enrolment WHERE student_id = 102 AND course_code = 'DB101';\nROLLBACK;",
+          "note": "SQL Server: BEGIN TRANSACTION starts the transaction; BEGIN alone only starts a statement block."
+        }
+      },
+      "example": [
+        "The in-transaction SELECT returns 90. After ROLLBACK, the same SELECT returns the baseline 88. No other enrolment should change. This is a controlled demonstration, not a recommendation to leave application transactions open."
+      ]
+    },
+    {
+      "title": "5. Exercise: distinguish membership from formatting",
+      "paragraphs": [
+        "Change the filter to programme = 'MCA' OR student_id >= 102. All four students qualify, because Mira satisfies the second condition. Add parentheses around alternatives before combining another condition.",
+        "A query returning the right rows by accident on four records may still be wrong. Test a row satisfying only one side of OR, a row with NULL, an empty result, and a tie in an ordering column. Those inputs reveal the intended rule."
+      ]
+    }
+  ],
+  "revision": [
+    "Separate rows selected from columns projected.",
+    "Predict the exact UPDATE target keys and verify affected-row counts.",
+    "Explain why a rollback exercise needs one connection and controlled auto-commit."
+  ],
+  "questions": [
+    {
+      "id": "basic-sql-projection",
+      "question": "Does SELECT name eliminate duplicate names?",
+      "answer": [
+        "No. SQL normally preserves duplicate result rows. SELECT DISTINCT name removes duplicate projected names, but does not prove that different students with the same name are the same entity."
+      ],
+      "level": "easy",
+      "tags": [
+        "Concept check"
+      ]
+    },
+    {
+      "id": "basic-sql-scope",
+      "question": "How would you safely change only Ravi's DB101 mark?",
+      "answer": [
+        "Use the composite identifying predicate student_id = 102 AND course_code = 'DB101'. Inspect the candidate row first, execute the UPDATE in the intended transaction, and check that exactly one row was affected."
+      ],
+      "level": "medium",
+      "tags": [
+        "Practical"
+      ]
+    },
+    {
+      "id": "basic-sql-rollback",
+      "question": "Why might ROLLBACK not restore an earlier practice change?",
+      "answer": [
+        "The client may have committed it, a later DDL command may have caused an implicit commit, or the change may have happened in another connection. Transaction boundaries are real session behaviour, not implied by the order of examples on a page."
+      ],
+      "level": "hard",
+      "tags": [
+        "Concept check"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "title": "PostgreSQL: SELECT reference",
+      "url": "https://www.postgresql.org/docs/current/sql-select.html"
+    },
+    {
+      "title": "PostgreSQL: table expressions and logical query stages",
+      "url": "https://www.postgresql.org/docs/current/queries-table-expressions.html"
+    },
+    {
+      "title": "PostgreSQL: declarative constraints",
+      "url": "https://www.postgresql.org/docs/current/ddl-constraints.html"
+    }
+  ],
+  "next": {
+    "id": "advanced-sql",
+    "title": "Advanced SQL: joins, CTEs, and window functions"
+  }
+}

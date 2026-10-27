@@ -1,0 +1,140 @@
+{
+  "id": "views",
+  "title": "SQL views: interfaces, updates, and access",
+  "summary": "Create views, trace their results, and explain update and security boundaries.",
+  "topics": [
+    "views"
+  ],
+  "intro": "An ordinary view names a stored query definition. It can become a useful interface, but does not automatically become a stored copy of rows, a performance cache, or a complete security boundary.",
+  "outcomes": [
+    "Create filtered and grouped view definitions.",
+    "Predict view results after a visible base-table change.",
+    "Distinguish updateability, CHECK OPTION, materialization, and privileges."
+  ],
+  "sections": [
+    {
+      "title": "1. Define the interface",
+      "paragraphs": [
+        "A view exposes columns and rows selected by a query. Consumers can query its name similarly to a table, but the underlying work still depends on its definition and plan. A grouped course summary has one output row per course, not one per enrolment.",
+        "Run CREATE VIEW once after setup. Repeating it without dropping or replacing the existing object is expected to fail. Product-specific CREATE OR REPLACE or CREATE OR ALTER forms are not interchangeable."
+      ],
+      "code": "CREATE VIEW U3CourseSummary AS\nSELECT c.course_code, COUNT(e.student_id) AS enrolled\nFROM U3Course c\nLEFT JOIN U3Enrolment e ON e.course_code = c.course_code\nGROUP BY c.course_code;\n\nSELECT course_code, enrolled\nFROM U3CourseSummary\nORDER BY course_code;",
+      "sqlVariants": {
+        "postgresql": {
+          "code": "CREATE VIEW U3CourseSummary AS\nSELECT c.course_code, COUNT(e.student_id) AS enrolled\nFROM U3Course c\nLEFT JOIN U3Enrolment e ON e.course_code = c.course_code\nGROUP BY c.course_code;\n\nSELECT course_code, enrolled\nFROM U3CourseSummary\nORDER BY course_code;",
+          "note": "Run after the shared Unit 3 setup in a scratch database."
+        },
+        "oracle": {
+          "code": "CREATE VIEW U3CourseSummary AS\nSELECT c.course_code, COUNT(e.student_id) AS enrolled\nFROM U3Course c\nLEFT JOIN U3Enrolment e ON e.course_code = c.course_code\nGROUP BY c.course_code;\n\nSELECT course_code, enrolled\nFROM U3CourseSummary\nORDER BY course_code;",
+          "note": "Run after the shared Unit 3 setup in a scratch database."
+        },
+        "mysql": {
+          "code": "CREATE VIEW U3CourseSummary AS\nSELECT c.course_code, COUNT(e.student_id) AS enrolled\nFROM U3Course c\nLEFT JOIN U3Enrolment e ON e.course_code = c.course_code\nGROUP BY c.course_code;\n\nSELECT course_code, enrolled\nFROM U3CourseSummary\nORDER BY course_code;",
+          "note": "Run after the shared Unit 3 setup in a scratch database."
+        },
+        "mariadb": {
+          "code": "CREATE VIEW U3CourseSummary AS\nSELECT c.course_code, COUNT(e.student_id) AS enrolled\nFROM U3Course c\nLEFT JOIN U3Enrolment e ON e.course_code = c.course_code\nGROUP BY c.course_code;\n\nSELECT course_code, enrolled\nFROM U3CourseSummary\nORDER BY course_code;",
+          "note": "Run after the shared Unit 3 setup in a scratch database."
+        },
+        "sqlite": {
+          "code": "CREATE VIEW U3CourseSummary AS\nSELECT c.course_code, COUNT(e.student_id) AS enrolled\nFROM U3Course c\nLEFT JOIN U3Enrolment e ON e.course_code = c.course_code\nGROUP BY c.course_code;\n\nSELECT course_code, enrolled\nFROM U3CourseSummary\nORDER BY course_code;",
+          "note": "Run after the shared Unit 3 setup in a scratch database."
+        },
+        "sqlserver": {
+          "code": "GO\nCREATE VIEW U3CourseSummary AS\nSELECT c.course_code, COUNT(e.student_id) AS enrolled\nFROM U3Course c\nLEFT JOIN U3Enrolment e ON e.course_code = c.course_code\nGROUP BY c.course_code;\nGO\n\nSELECT course_code, enrolled\nFROM U3CourseSummary\nORDER BY course_code;",
+          "note": "SQL Server: CREATE VIEW must begin its batch. GO is an SSMS/sqlcmd separator, not API SQL."
+        }
+      }
+    },
+    {
+      "title": "2. Trace the definition to its rows",
+      "paragraphs": [
+        "U3CourseSummary starts from Course, preserves AI101 with an outer join, and counts actual child matches. If a new AI101 enrolment is committed and visible to the reader, a subsequent ordinary-view query shows its count as one without a separate refresh.",
+        "The returned rows can still reflect transaction snapshots. Another session's uncommitted INSERT is not guaranteed to become visible merely because a view was queried. An ordinary view is not a mechanism for bypassing transaction visibility."
+      ],
+      "diagram": "view",
+      "diagramHeight": 600,
+      "alt": "Base course and enrolment tables feed a stored view query definition. Query execution computes three summary rows. A materialized result is shown separately as stored rows requiring refresh.",
+      "caption": "Store a definition versus store a result. These two designs have different freshness and maintenance obligations."
+    },
+    {
+      "title": "3. Why a view may not be updateable",
+      "paragraphs": [
+        "A simple view over one table may support unambiguous changes. A grouped count cannot generally be translated into one unique base-table modification: setting enrolled to 7 does not specify which students to insert. Joins, DISTINCT, aggregates, and computed columns introduce product-specific restrictions.",
+        "Do not teach that every view is read-only or every view is updateable. Oracle and PostgreSQL have rules for automatically updateable cases and mechanisms such as INSTEAD OF triggers for selected alternatives. A trigger can implement an interface policy, but that policy must still be designed."
+      ]
+    },
+    {
+      "title": "4. CHECK OPTION protects the view predicate",
+      "paragraphs": [
+        "For an updateable MCA-only student view, an update that changes programme to MBA would make the row disappear from the view. WITH CHECK OPTION can reject a change made through the view that violates its defining condition. It does not automatically prevent the owner from editing the base table directly.",
+        "A view can expose selected columns instead of a private email field. Grant consumers access only through the intended interface and check the DBMS rules for view owner/invoker rights, functions, and underlying access. Hiding a column in a page while still granting unrestricted base-table SELECT is not access control."
+      ]
+    },
+    {
+      "title": "5. Materialized results and maintenance trade-offs",
+      "paragraphs": [
+        "A materialized view or other persisted summary stores result rows and needs a refresh strategy. It may reduce repeated expensive work but can be stale and consumes storage. Engines offer different features; do not call an ordinary view materialized because it has an index-friendly query.",
+        "Exercise: compare a live grouped view with a separately stored snapshot after inserting one AI101 enrolment. The ordinary view recomputes under its visibility rules; a manually stored snapshot stays unchanged until maintained. Explain the application's acceptable freshness before recommending either design."
+      ]
+    }
+  ],
+  "revision": [
+    "Explain the view result at its grain and derive AI101's zero count.",
+    "State the conditions for an unambiguous view update.",
+    "Distinguish predicate enforcement, access privileges, and cached results."
+  ],
+  "questions": [
+    {
+      "id": "views-storage",
+      "question": "Does CREATE VIEW copy the five enrolments?",
+      "answer": [
+        "An ordinary view stores a query definition, not an independent persisted copy of its result. Execution can still use working memory or temporary storage. A materialized result is a different object or design."
+      ],
+      "level": "easy",
+      "tags": [
+        "Concept check"
+      ]
+    },
+    {
+      "id": "views-update",
+      "question": "Why is changing a grouped count ambiguous?",
+      "answer": [
+        "The requested count does not identify which child rows should be added or removed. Several incompatible base-table changes could produce the same number, so a general automatic translation is unavailable."
+      ],
+      "level": "medium",
+      "tags": [
+        "Exam practice"
+      ]
+    },
+    {
+      "id": "views-security",
+      "question": "Is a view that omits email sufficient to keep email private?",
+      "answer": [
+        "Only if the access design prevents bypassing that interface and its execution semantics are appropriate. A user with direct base-table access can still read email. Review privileges and function/view execution rights."
+      ],
+      "level": "hard",
+      "tags": [
+        "Concept check"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "title": "PostgreSQL: table expressions and logical query stages",
+      "url": "https://www.postgresql.org/docs/current/queries-table-expressions.html"
+    },
+    {
+      "title": "PostgreSQL: declarative constraints",
+      "url": "https://www.postgresql.org/docs/current/ddl-constraints.html"
+    },
+    {
+      "title": "PostgreSQL: trigger functions",
+      "url": "https://www.postgresql.org/docs/current/plpgsql-trigger.html"
+    }
+  ],
+  "next": {
+    "id": "subqueries",
+    "title": "Subqueries, correlation, and existence"
+  }
+}

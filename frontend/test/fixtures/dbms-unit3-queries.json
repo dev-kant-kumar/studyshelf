@@ -1,0 +1,352 @@
+[
+  {
+    "name": "baseline",
+    "code": "SELECT student_id, course_code, mark\nFROM U3Enrolment\nORDER BY student_id, course_code;",
+    "variants": {
+      "postgresql": "SELECT student_id, course_code, mark\nFROM U3Enrolment\nORDER BY student_id, course_code;",
+      "oracle": "SELECT student_id, course_code, mark\nFROM U3Enrolment\nORDER BY student_id, course_code;",
+      "mysql": "SELECT student_id, course_code, mark\nFROM U3Enrolment\nORDER BY student_id, course_code;",
+      "mariadb": "SELECT student_id, course_code, mark\nFROM U3Enrolment\nORDER BY student_id, course_code;",
+      "sqlite": "SELECT student_id, course_code, mark\nFROM U3Enrolment\nORDER BY student_id, course_code;",
+      "sqlserver": "SELECT student_id, course_code, mark\nFROM U3Enrolment\nORDER BY student_id, course_code;"
+    },
+    "expected": [
+      [
+        101,
+        "CS101",
+        91
+      ],
+      [
+        101,
+        "DB101",
+        82
+      ],
+      [
+        102,
+        "DB101",
+        88
+      ],
+      [
+        103,
+        "CS101",
+        74
+      ],
+      [
+        103,
+        "DB101",
+        null
+      ]
+    ]
+  },
+  {
+    "name": "basic-filter",
+    "code": "SELECT student_id, name\nFROM U3Student\nWHERE programme = 'MCA' AND student_id >= 102\nORDER BY student_id;",
+    "variants": {
+      "postgresql": "SELECT student_id, name\nFROM U3Student\nWHERE programme = 'MCA' AND student_id >= 102\nORDER BY student_id;",
+      "oracle": "SELECT student_id, name\nFROM U3Student\nWHERE programme = 'MCA' AND student_id >= 102\nORDER BY student_id;",
+      "mysql": "SELECT student_id, name\nFROM U3Student\nWHERE programme = 'MCA' AND student_id >= 102\nORDER BY student_id;",
+      "mariadb": "SELECT student_id, name\nFROM U3Student\nWHERE programme = 'MCA' AND student_id >= 102\nORDER BY student_id;",
+      "sqlite": "SELECT student_id, name\nFROM U3Student\nWHERE programme = 'MCA' AND student_id >= 102\nORDER BY student_id;",
+      "sqlserver": "SELECT student_id, name\nFROM U3Student\nWHERE programme = 'MCA' AND student_id >= 102\nORDER BY student_id;"
+    },
+    "expected": [
+      [
+        102,
+        "Ravi"
+      ],
+      [
+        104,
+        "Neha"
+      ]
+    ]
+  },
+  {
+    "name": "left-join-count",
+    "code": "SELECT c.course_code, COUNT(e.student_id) AS enrolled\nFROM U3Course c\nLEFT JOIN U3Enrolment e ON e.course_code = c.course_code\nGROUP BY c.course_code\nORDER BY c.course_code;",
+    "variants": {
+      "postgresql": "SELECT c.course_code, COUNT(e.student_id) AS enrolled\nFROM U3Course c\nLEFT JOIN U3Enrolment e ON e.course_code = c.course_code\nGROUP BY c.course_code\nORDER BY c.course_code;",
+      "oracle": "SELECT c.course_code, COUNT(e.student_id) AS enrolled\nFROM U3Course c\nLEFT JOIN U3Enrolment e ON e.course_code = c.course_code\nGROUP BY c.course_code\nORDER BY c.course_code;",
+      "mysql": "SELECT c.course_code, COUNT(e.student_id) AS enrolled\nFROM U3Course c\nLEFT JOIN U3Enrolment e ON e.course_code = c.course_code\nGROUP BY c.course_code\nORDER BY c.course_code;",
+      "mariadb": "SELECT c.course_code, COUNT(e.student_id) AS enrolled\nFROM U3Course c\nLEFT JOIN U3Enrolment e ON e.course_code = c.course_code\nGROUP BY c.course_code\nORDER BY c.course_code;",
+      "sqlite": "SELECT c.course_code, COUNT(e.student_id) AS enrolled\nFROM U3Course c\nLEFT JOIN U3Enrolment e ON e.course_code = c.course_code\nGROUP BY c.course_code\nORDER BY c.course_code;",
+      "sqlserver": "SELECT c.course_code, COUNT(e.student_id) AS enrolled\nFROM U3Course c\nLEFT JOIN U3Enrolment e ON e.course_code = c.course_code\nGROUP BY c.course_code\nORDER BY c.course_code;"
+    },
+    "expected": [
+      [
+        "AI101",
+        0
+      ],
+      [
+        "CS101",
+        2
+      ],
+      [
+        "DB101",
+        3
+      ]
+    ]
+  },
+  {
+    "name": "cte-mean",
+    "code": "WITH CourseMean AS (\n  SELECT course_code, AVG(mark) AS mean_mark\n  FROM U3Enrolment\n  GROUP BY course_code\n)\nSELECT course_code, mean_mark\nFROM CourseMean\nWHERE mean_mark >= 85\nORDER BY course_code;",
+    "variants": {
+      "postgresql": "WITH CourseMean AS (\n  SELECT course_code, AVG(mark) AS mean_mark\n  FROM U3Enrolment\n  GROUP BY course_code\n)\nSELECT course_code, mean_mark\nFROM CourseMean\nWHERE mean_mark >= 85\nORDER BY course_code;",
+      "oracle": "WITH CourseMean AS (\n  SELECT course_code, AVG(mark) AS mean_mark\n  FROM U3Enrolment\n  GROUP BY course_code\n)\nSELECT course_code, mean_mark\nFROM CourseMean\nWHERE mean_mark >= 85\nORDER BY course_code;",
+      "mysql": "WITH CourseMean AS (\n  SELECT course_code, AVG(mark) AS mean_mark\n  FROM U3Enrolment\n  GROUP BY course_code\n)\nSELECT course_code, mean_mark\nFROM CourseMean\nWHERE mean_mark >= 85\nORDER BY course_code;",
+      "mariadb": "WITH CourseMean AS (\n  SELECT course_code, AVG(mark) AS mean_mark\n  FROM U3Enrolment\n  GROUP BY course_code\n)\nSELECT course_code, mean_mark\nFROM CourseMean\nWHERE mean_mark >= 85\nORDER BY course_code;",
+      "sqlite": "WITH CourseMean AS (\n  SELECT course_code, AVG(mark) AS mean_mark\n  FROM U3Enrolment\n  GROUP BY course_code\n)\nSELECT course_code, mean_mark\nFROM CourseMean\nWHERE mean_mark >= 85\nORDER BY course_code;",
+      "sqlserver": "WITH CourseMean AS (\n  SELECT course_code, AVG(mark) AS mean_mark\n  FROM U3Enrolment\n  GROUP BY course_code\n)\nSELECT course_code, mean_mark\nFROM CourseMean\nWHERE mean_mark >= 85\nORDER BY course_code;"
+    },
+    "expected": [
+      [
+        "DB101",
+        85
+      ]
+    ]
+  },
+  {
+    "name": "window-rank",
+    "code": "SELECT course_code, student_id, mark,\n       ROW_NUMBER() OVER (\n         PARTITION BY course_code\n         ORDER BY CASE WHEN mark IS NULL THEN 1 ELSE 0 END,\n                  mark DESC, student_id\n       ) AS position\nFROM U3Enrolment\nORDER BY course_code, position;",
+    "variants": {
+      "postgresql": "SELECT course_code, student_id, mark,\n       ROW_NUMBER() OVER (\n         PARTITION BY course_code\n         ORDER BY CASE WHEN mark IS NULL THEN 1 ELSE 0 END,\n                  mark DESC, student_id\n       ) AS position\nFROM U3Enrolment\nORDER BY course_code, position;",
+      "oracle": "SELECT course_code, student_id, mark,\n       ROW_NUMBER() OVER (\n         PARTITION BY course_code\n         ORDER BY CASE WHEN mark IS NULL THEN 1 ELSE 0 END,\n                  mark DESC, student_id\n       ) AS position\nFROM U3Enrolment\nORDER BY course_code, position;",
+      "mysql": "SELECT course_code, student_id, mark,\n       ROW_NUMBER() OVER (\n         PARTITION BY course_code\n         ORDER BY CASE WHEN mark IS NULL THEN 1 ELSE 0 END,\n                  mark DESC, student_id\n       ) AS position\nFROM U3Enrolment\nORDER BY course_code, position;",
+      "mariadb": "SELECT course_code, student_id, mark,\n       ROW_NUMBER() OVER (\n         PARTITION BY course_code\n         ORDER BY CASE WHEN mark IS NULL THEN 1 ELSE 0 END,\n                  mark DESC, student_id\n       ) AS position\nFROM U3Enrolment\nORDER BY course_code, position;",
+      "sqlite": "SELECT course_code, student_id, mark,\n       ROW_NUMBER() OVER (\n         PARTITION BY course_code\n         ORDER BY CASE WHEN mark IS NULL THEN 1 ELSE 0 END,\n                  mark DESC, student_id\n       ) AS position\nFROM U3Enrolment\nORDER BY course_code, position;",
+      "sqlserver": "SELECT course_code, student_id, mark,\n       ROW_NUMBER() OVER (\n         PARTITION BY course_code\n         ORDER BY CASE WHEN mark IS NULL THEN 1 ELSE 0 END,\n                  mark DESC, student_id\n       ) AS position\nFROM U3Enrolment\nORDER BY course_code, position;"
+    },
+    "expected": [
+      [
+        "CS101",
+        101,
+        91,
+        1
+      ],
+      [
+        "CS101",
+        103,
+        74,
+        2
+      ],
+      [
+        "DB101",
+        102,
+        88,
+        1
+      ],
+      [
+        "DB101",
+        101,
+        82,
+        2
+      ],
+      [
+        "DB101",
+        103,
+        null,
+        3
+      ]
+    ]
+  },
+  {
+    "name": "set-difference",
+    "code": "SELECT student_id FROM U3Enrolment WHERE course_code = 'DB101'\nEXCEPT\nSELECT student_id FROM U3Enrolment WHERE course_code = 'CS101'\nORDER BY student_id;",
+    "variants": {
+      "postgresql": "SELECT student_id FROM U3Enrolment WHERE course_code = 'DB101'\nEXCEPT\nSELECT student_id FROM U3Enrolment WHERE course_code = 'CS101'\nORDER BY student_id;",
+      "oracle": "SELECT student_id FROM U3Enrolment WHERE course_code = 'DB101'\nMINUS\nSELECT student_id FROM U3Enrolment WHERE course_code = 'CS101'\nORDER BY student_id;",
+      "mysql": "SELECT student_id FROM U3Enrolment WHERE course_code = 'DB101'\nEXCEPT\nSELECT student_id FROM U3Enrolment WHERE course_code = 'CS101'\nORDER BY student_id;",
+      "mariadb": "SELECT student_id FROM U3Enrolment WHERE course_code = 'DB101'\nEXCEPT\nSELECT student_id FROM U3Enrolment WHERE course_code = 'CS101'\nORDER BY student_id;",
+      "sqlite": "SELECT student_id FROM U3Enrolment WHERE course_code = 'DB101'\nEXCEPT\nSELECT student_id FROM U3Enrolment WHERE course_code = 'CS101'\nORDER BY student_id;",
+      "sqlserver": "SELECT student_id FROM U3Enrolment WHERE course_code = 'DB101'\nEXCEPT\nSELECT student_id FROM U3Enrolment WHERE course_code = 'CS101'\nORDER BY student_id;"
+    },
+    "expected": [
+      [
+        102
+      ]
+    ]
+  },
+  {
+    "name": "aggregate-summary",
+    "code": "SELECT c.course_code, COUNT(e.student_id) AS enrolled,\n       COUNT(e.mark) AS marked, AVG(e.mark * 1.0) AS mean_mark\nFROM U3Course c\nLEFT JOIN U3Enrolment e ON e.course_code = c.course_code\nGROUP BY c.course_code\nORDER BY c.course_code;",
+    "variants": {
+      "postgresql": "SELECT c.course_code, COUNT(e.student_id) AS enrolled,\n       COUNT(e.mark) AS marked, AVG(e.mark * 1.0) AS mean_mark\nFROM U3Course c\nLEFT JOIN U3Enrolment e ON e.course_code = c.course_code\nGROUP BY c.course_code\nORDER BY c.course_code;",
+      "oracle": "SELECT c.course_code, COUNT(e.student_id) AS enrolled,\n       COUNT(e.mark) AS marked, AVG(e.mark * 1.0) AS mean_mark\nFROM U3Course c\nLEFT JOIN U3Enrolment e ON e.course_code = c.course_code\nGROUP BY c.course_code\nORDER BY c.course_code;",
+      "mysql": "SELECT c.course_code, COUNT(e.student_id) AS enrolled,\n       COUNT(e.mark) AS marked, AVG(e.mark * 1.0) AS mean_mark\nFROM U3Course c\nLEFT JOIN U3Enrolment e ON e.course_code = c.course_code\nGROUP BY c.course_code\nORDER BY c.course_code;",
+      "mariadb": "SELECT c.course_code, COUNT(e.student_id) AS enrolled,\n       COUNT(e.mark) AS marked, AVG(e.mark * 1.0) AS mean_mark\nFROM U3Course c\nLEFT JOIN U3Enrolment e ON e.course_code = c.course_code\nGROUP BY c.course_code\nORDER BY c.course_code;",
+      "sqlite": "SELECT c.course_code, COUNT(e.student_id) AS enrolled,\n       COUNT(e.mark) AS marked, AVG(e.mark * 1.0) AS mean_mark\nFROM U3Course c\nLEFT JOIN U3Enrolment e ON e.course_code = c.course_code\nGROUP BY c.course_code\nORDER BY c.course_code;",
+      "sqlserver": "SELECT c.course_code, COUNT(e.student_id) AS enrolled,\n       COUNT(e.mark) AS marked, AVG(e.mark * 1.0) AS mean_mark\nFROM U3Course c\nLEFT JOIN U3Enrolment e ON e.course_code = c.course_code\nGROUP BY c.course_code\nORDER BY c.course_code;"
+    },
+    "expected": [
+      [
+        "AI101",
+        0,
+        0,
+        null
+      ],
+      [
+        "CS101",
+        2,
+        2,
+        82.5
+      ],
+      [
+        "DB101",
+        3,
+        2,
+        85
+      ]
+    ]
+  },
+  {
+    "name": "having",
+    "code": "SELECT course_code, COUNT(*) AS enrolled, AVG(mark * 1.0) AS mean_mark\nFROM U3Enrolment\nGROUP BY course_code\nHAVING COUNT(*) >= 3\nORDER BY course_code;",
+    "variants": {
+      "postgresql": "SELECT course_code, COUNT(*) AS enrolled, AVG(mark * 1.0) AS mean_mark\nFROM U3Enrolment\nGROUP BY course_code\nHAVING COUNT(*) >= 3\nORDER BY course_code;",
+      "oracle": "SELECT course_code, COUNT(*) AS enrolled, AVG(mark * 1.0) AS mean_mark\nFROM U3Enrolment\nGROUP BY course_code\nHAVING COUNT(*) >= 3\nORDER BY course_code;",
+      "mysql": "SELECT course_code, COUNT(*) AS enrolled, AVG(mark * 1.0) AS mean_mark\nFROM U3Enrolment\nGROUP BY course_code\nHAVING COUNT(*) >= 3\nORDER BY course_code;",
+      "mariadb": "SELECT course_code, COUNT(*) AS enrolled, AVG(mark * 1.0) AS mean_mark\nFROM U3Enrolment\nGROUP BY course_code\nHAVING COUNT(*) >= 3\nORDER BY course_code;",
+      "sqlite": "SELECT course_code, COUNT(*) AS enrolled, AVG(mark * 1.0) AS mean_mark\nFROM U3Enrolment\nGROUP BY course_code\nHAVING COUNT(*) >= 3\nORDER BY course_code;",
+      "sqlserver": "SELECT course_code, COUNT(*) AS enrolled, AVG(mark * 1.0) AS mean_mark\nFROM U3Enrolment\nGROUP BY course_code\nHAVING COUNT(*) >= 3\nORDER BY course_code;"
+    },
+    "expected": [
+      [
+        "DB101",
+        3,
+        85
+      ]
+    ]
+  },
+  {
+    "name": "is-null",
+    "code": "SELECT student_id, name\nFROM U3Student\nWHERE email IS NULL\nORDER BY student_id;",
+    "variants": {
+      "postgresql": "SELECT student_id, name\nFROM U3Student\nWHERE email IS NULL\nORDER BY student_id;",
+      "oracle": "SELECT student_id, name\nFROM U3Student\nWHERE email IS NULL\nORDER BY student_id;",
+      "mysql": "SELECT student_id, name\nFROM U3Student\nWHERE email IS NULL\nORDER BY student_id;",
+      "mariadb": "SELECT student_id, name\nFROM U3Student\nWHERE email IS NULL\nORDER BY student_id;",
+      "sqlite": "SELECT student_id, name\nFROM U3Student\nWHERE email IS NULL\nORDER BY student_id;",
+      "sqlserver": "SELECT student_id, name\nFROM U3Student\nWHERE email IS NULL\nORDER BY student_id;"
+    },
+    "expected": [
+      [
+        102,
+        "Ravi"
+      ]
+    ]
+  },
+  {
+    "name": "not-in-null",
+    "code": "SELECT s.student_id, s.name\nFROM U3Student s\nWHERE s.student_id NOT IN (\n  SELECT e.mark FROM U3Enrolment e\n)\nORDER BY s.student_id;",
+    "variants": {
+      "postgresql": "SELECT s.student_id, s.name\nFROM U3Student s\nWHERE s.student_id NOT IN (\n  SELECT e.mark FROM U3Enrolment e\n)\nORDER BY s.student_id;",
+      "oracle": "SELECT s.student_id, s.name\nFROM U3Student s\nWHERE s.student_id NOT IN (\n  SELECT e.mark FROM U3Enrolment e\n)\nORDER BY s.student_id;",
+      "mysql": "SELECT s.student_id, s.name\nFROM U3Student s\nWHERE s.student_id NOT IN (\n  SELECT e.mark FROM U3Enrolment e\n)\nORDER BY s.student_id;",
+      "mariadb": "SELECT s.student_id, s.name\nFROM U3Student s\nWHERE s.student_id NOT IN (\n  SELECT e.mark FROM U3Enrolment e\n)\nORDER BY s.student_id;",
+      "sqlite": "SELECT s.student_id, s.name\nFROM U3Student s\nWHERE s.student_id NOT IN (\n  SELECT e.mark FROM U3Enrolment e\n)\nORDER BY s.student_id;",
+      "sqlserver": "SELECT s.student_id, s.name\nFROM U3Student s\nWHERE s.student_id NOT IN (\n  SELECT e.mark FROM U3Enrolment e\n)\nORDER BY s.student_id;"
+    },
+    "expected": []
+  },
+  {
+    "name": "not-exists",
+    "code": "SELECT s.student_id, s.name\nFROM U3Student s\nWHERE NOT EXISTS (\n  SELECT 1 FROM U3Enrolment e\n  WHERE e.student_id = s.student_id\n)\nORDER BY s.student_id;",
+    "variants": {
+      "postgresql": "SELECT s.student_id, s.name\nFROM U3Student s\nWHERE NOT EXISTS (\n  SELECT 1 FROM U3Enrolment e\n  WHERE e.student_id = s.student_id\n)\nORDER BY s.student_id;",
+      "oracle": "SELECT s.student_id, s.name\nFROM U3Student s\nWHERE NOT EXISTS (\n  SELECT 1 FROM U3Enrolment e\n  WHERE e.student_id = s.student_id\n)\nORDER BY s.student_id;",
+      "mysql": "SELECT s.student_id, s.name\nFROM U3Student s\nWHERE NOT EXISTS (\n  SELECT 1 FROM U3Enrolment e\n  WHERE e.student_id = s.student_id\n)\nORDER BY s.student_id;",
+      "mariadb": "SELECT s.student_id, s.name\nFROM U3Student s\nWHERE NOT EXISTS (\n  SELECT 1 FROM U3Enrolment e\n  WHERE e.student_id = s.student_id\n)\nORDER BY s.student_id;",
+      "sqlite": "SELECT s.student_id, s.name\nFROM U3Student s\nWHERE NOT EXISTS (\n  SELECT 1 FROM U3Enrolment e\n  WHERE e.student_id = s.student_id\n)\nORDER BY s.student_id;",
+      "sqlserver": "SELECT s.student_id, s.name\nFROM U3Student s\nWHERE NOT EXISTS (\n  SELECT 1 FROM U3Enrolment e\n  WHERE e.student_id = s.student_id\n)\nORDER BY s.student_id;"
+    },
+    "expected": [
+      [
+        104,
+        "Neha"
+      ]
+    ]
+  },
+  {
+    "name": "view-summary",
+    "code": "CREATE VIEW U3CourseSummary AS\nSELECT c.course_code, COUNT(e.student_id) AS enrolled\nFROM U3Course c\nLEFT JOIN U3Enrolment e ON e.course_code = c.course_code\nGROUP BY c.course_code;\n\nSELECT course_code, enrolled\nFROM U3CourseSummary\nORDER BY course_code;",
+    "variants": {
+      "postgresql": "CREATE VIEW U3CourseSummary AS\nSELECT c.course_code, COUNT(e.student_id) AS enrolled\nFROM U3Course c\nLEFT JOIN U3Enrolment e ON e.course_code = c.course_code\nGROUP BY c.course_code;\n\nSELECT course_code, enrolled\nFROM U3CourseSummary\nORDER BY course_code;",
+      "oracle": "CREATE VIEW U3CourseSummary AS\nSELECT c.course_code, COUNT(e.student_id) AS enrolled\nFROM U3Course c\nLEFT JOIN U3Enrolment e ON e.course_code = c.course_code\nGROUP BY c.course_code;\n\nSELECT course_code, enrolled\nFROM U3CourseSummary\nORDER BY course_code;",
+      "mysql": "CREATE VIEW U3CourseSummary AS\nSELECT c.course_code, COUNT(e.student_id) AS enrolled\nFROM U3Course c\nLEFT JOIN U3Enrolment e ON e.course_code = c.course_code\nGROUP BY c.course_code;\n\nSELECT course_code, enrolled\nFROM U3CourseSummary\nORDER BY course_code;",
+      "mariadb": "CREATE VIEW U3CourseSummary AS\nSELECT c.course_code, COUNT(e.student_id) AS enrolled\nFROM U3Course c\nLEFT JOIN U3Enrolment e ON e.course_code = c.course_code\nGROUP BY c.course_code;\n\nSELECT course_code, enrolled\nFROM U3CourseSummary\nORDER BY course_code;",
+      "sqlite": "CREATE VIEW U3CourseSummary AS\nSELECT c.course_code, COUNT(e.student_id) AS enrolled\nFROM U3Course c\nLEFT JOIN U3Enrolment e ON e.course_code = c.course_code\nGROUP BY c.course_code;\n\nSELECT course_code, enrolled\nFROM U3CourseSummary\nORDER BY course_code;",
+      "sqlserver": "GO\nCREATE VIEW U3CourseSummary AS\nSELECT c.course_code, COUNT(e.student_id) AS enrolled\nFROM U3Course c\nLEFT JOIN U3Enrolment e ON e.course_code = c.course_code\nGROUP BY c.course_code;\nGO\n\nSELECT course_code, enrolled\nFROM U3CourseSummary\nORDER BY course_code;"
+    },
+    "expected": [
+      [
+        "AI101",
+        0
+      ],
+      [
+        "CS101",
+        2
+      ],
+      [
+        "DB101",
+        3
+      ]
+    ]
+  },
+  {
+    "name": "correlated-mean",
+    "code": "SELECT e.student_id, e.mark\nFROM U3Enrolment e\nWHERE e.course_code = 'DB101'\n  AND e.mark > (\n    SELECT AVG(x.mark * 1.0) FROM U3Enrolment x\n    WHERE x.course_code = e.course_code\n  )\nORDER BY e.student_id;",
+    "variants": {
+      "postgresql": "SELECT e.student_id, e.mark\nFROM U3Enrolment e\nWHERE e.course_code = 'DB101'\n  AND e.mark > (\n    SELECT AVG(x.mark * 1.0) FROM U3Enrolment x\n    WHERE x.course_code = e.course_code\n  )\nORDER BY e.student_id;",
+      "oracle": "SELECT e.student_id, e.mark\nFROM U3Enrolment e\nWHERE e.course_code = 'DB101'\n  AND e.mark > (\n    SELECT AVG(x.mark * 1.0) FROM U3Enrolment x\n    WHERE x.course_code = e.course_code\n  )\nORDER BY e.student_id;",
+      "mysql": "SELECT e.student_id, e.mark\nFROM U3Enrolment e\nWHERE e.course_code = 'DB101'\n  AND e.mark > (\n    SELECT AVG(x.mark * 1.0) FROM U3Enrolment x\n    WHERE x.course_code = e.course_code\n  )\nORDER BY e.student_id;",
+      "mariadb": "SELECT e.student_id, e.mark\nFROM U3Enrolment e\nWHERE e.course_code = 'DB101'\n  AND e.mark > (\n    SELECT AVG(x.mark * 1.0) FROM U3Enrolment x\n    WHERE x.course_code = e.course_code\n  )\nORDER BY e.student_id;",
+      "sqlite": "SELECT e.student_id, e.mark\nFROM U3Enrolment e\nWHERE e.course_code = 'DB101'\n  AND e.mark > (\n    SELECT AVG(x.mark * 1.0) FROM U3Enrolment x\n    WHERE x.course_code = e.course_code\n  )\nORDER BY e.student_id;",
+      "sqlserver": "SELECT e.student_id, e.mark\nFROM U3Enrolment e\nWHERE e.course_code = 'DB101'\n  AND e.mark > (\n    SELECT AVG(x.mark * 1.0) FROM U3Enrolment x\n    WHERE x.course_code = e.course_code\n  )\nORDER BY e.student_id;"
+    },
+    "expected": [
+      [
+        102,
+        88
+      ]
+    ]
+  },
+  {
+    "name": "constraint-default",
+    "code": "CREATE TABLE U3RegistrationRule (\n  registration_id INTEGER NOT NULL,\n  student_id INTEGER NOT NULL,\n  reference_code VARCHAR(20) NOT NULL,\n  status VARCHAR(12) DEFAULT 'pending' NOT NULL,\n  CONSTRAINT u3_rule_pk PRIMARY KEY (registration_id),\n  CONSTRAINT u3_rule_ref_uq UNIQUE (reference_code),\n  CONSTRAINT u3_rule_student_fk FOREIGN KEY (student_id)\n    REFERENCES U3Student(student_id),\n  CONSTRAINT u3_rule_status_ck CHECK (status IN ('pending', 'confirmed'))\n);\nINSERT INTO U3RegistrationRule (registration_id, student_id, reference_code)\nVALUES (1, 101, 'R-101');\nSELECT registration_id, status FROM U3RegistrationRule;",
+    "variants": {
+      "postgresql": "CREATE TABLE U3RegistrationRule (\n  registration_id INTEGER NOT NULL,\n  student_id INTEGER NOT NULL,\n  reference_code VARCHAR(20) NOT NULL,\n  status VARCHAR(12) DEFAULT 'pending' NOT NULL,\n  CONSTRAINT u3_rule_pk PRIMARY KEY (registration_id),\n  CONSTRAINT u3_rule_ref_uq UNIQUE (reference_code),\n  CONSTRAINT u3_rule_student_fk FOREIGN KEY (student_id)\n    REFERENCES U3Student(student_id),\n  CONSTRAINT u3_rule_status_ck CHECK (status IN ('pending', 'confirmed'))\n);\nINSERT INTO U3RegistrationRule (registration_id, student_id, reference_code)\nVALUES (1, 101, 'R-101');\nSELECT registration_id, status FROM U3RegistrationRule;",
+      "oracle": "CREATE TABLE U3RegistrationRule (\n  registration_id NUMBER(10) NOT NULL,\n  student_id NUMBER(10) NOT NULL,\n  reference_code VARCHAR2(20) NOT NULL,\n  status VARCHAR2(12) DEFAULT 'pending' NOT NULL,\n  CONSTRAINT u3_rule_pk PRIMARY KEY (registration_id),\n  CONSTRAINT u3_rule_ref_uq UNIQUE (reference_code),\n  CONSTRAINT u3_rule_student_fk FOREIGN KEY (student_id)\n    REFERENCES U3Student(student_id),\n  CONSTRAINT u3_rule_status_ck CHECK (status IN ('pending', 'confirmed'))\n);\nINSERT INTO U3RegistrationRule (registration_id, student_id, reference_code)\nVALUES (1, 101, 'R-101');\nSELECT registration_id, status FROM U3RegistrationRule;",
+      "mysql": "CREATE TABLE U3RegistrationRule (\n  registration_id INTEGER NOT NULL,\n  student_id INTEGER NOT NULL,\n  reference_code VARCHAR(20) NOT NULL,\n  status VARCHAR(12) DEFAULT 'pending' NOT NULL,\n  CONSTRAINT u3_rule_pk PRIMARY KEY (registration_id),\n  CONSTRAINT u3_rule_ref_uq UNIQUE (reference_code),\n  CONSTRAINT u3_rule_student_fk FOREIGN KEY (student_id)\n    REFERENCES U3Student(student_id),\n  CONSTRAINT u3_rule_status_ck CHECK (status IN ('pending', 'confirmed'))\n) ENGINE=InnoDB;\nINSERT INTO U3RegistrationRule (registration_id, student_id, reference_code)\nVALUES (1, 101, 'R-101');\nSELECT registration_id, status FROM U3RegistrationRule;",
+      "mariadb": "CREATE TABLE U3RegistrationRule (\n  registration_id INTEGER NOT NULL,\n  student_id INTEGER NOT NULL,\n  reference_code VARCHAR(20) NOT NULL,\n  status VARCHAR(12) DEFAULT 'pending' NOT NULL,\n  CONSTRAINT u3_rule_pk PRIMARY KEY (registration_id),\n  CONSTRAINT u3_rule_ref_uq UNIQUE (reference_code),\n  CONSTRAINT u3_rule_student_fk FOREIGN KEY (student_id)\n    REFERENCES U3Student(student_id),\n  CONSTRAINT u3_rule_status_ck CHECK (status IN ('pending', 'confirmed'))\n) ENGINE=InnoDB;\nINSERT INTO U3RegistrationRule (registration_id, student_id, reference_code)\nVALUES (1, 101, 'R-101');\nSELECT registration_id, status FROM U3RegistrationRule;",
+      "sqlite": "CREATE TABLE U3RegistrationRule (\n  registration_id INTEGER NOT NULL,\n  student_id INTEGER NOT NULL,\n  reference_code VARCHAR(20) NOT NULL,\n  status VARCHAR(12) DEFAULT 'pending' NOT NULL,\n  CONSTRAINT u3_rule_pk PRIMARY KEY (registration_id),\n  CONSTRAINT u3_rule_ref_uq UNIQUE (reference_code),\n  CONSTRAINT u3_rule_student_fk FOREIGN KEY (student_id)\n    REFERENCES U3Student(student_id),\n  CONSTRAINT u3_rule_status_ck CHECK (status IN ('pending', 'confirmed'))\n);\nINSERT INTO U3RegistrationRule (registration_id, student_id, reference_code)\nVALUES (1, 101, 'R-101');\nSELECT registration_id, status FROM U3RegistrationRule;",
+      "sqlserver": "CREATE TABLE U3RegistrationRule (\n  registration_id INTEGER NOT NULL,\n  student_id INTEGER NOT NULL,\n  reference_code VARCHAR(20) NOT NULL,\n  status VARCHAR(12) DEFAULT 'pending' NOT NULL,\n  CONSTRAINT u3_rule_pk PRIMARY KEY (registration_id),\n  CONSTRAINT u3_rule_ref_uq UNIQUE (reference_code),\n  CONSTRAINT u3_rule_student_fk FOREIGN KEY (student_id)\n    REFERENCES U3Student(student_id),\n  CONSTRAINT u3_rule_status_ck CHECK (status IN ('pending', 'confirmed'))\n);\nINSERT INTO U3RegistrationRule (registration_id, student_id, reference_code)\nVALUES (1, 101, 'R-101');\nSELECT registration_id, status FROM U3RegistrationRule;"
+    },
+    "expected": [
+      [
+        1,
+        "pending"
+      ]
+    ]
+  },
+  {
+    "name": "index-result",
+    "code": "CREATE INDEX u3_enrol_course_mark\nON U3Enrolment(course_code, mark);\n\nSELECT student_id, mark\nFROM U3Enrolment\nWHERE course_code = 'DB101' AND mark >= 80\nORDER BY mark, student_id;",
+    "variants": {
+      "postgresql": "CREATE INDEX u3_enrol_course_mark\nON U3Enrolment(course_code, mark);\n\nSELECT student_id, mark\nFROM U3Enrolment\nWHERE course_code = 'DB101' AND mark >= 80\nORDER BY mark, student_id;",
+      "oracle": "CREATE INDEX u3_enrol_course_mark\nON U3Enrolment(course_code, mark);\n\nSELECT student_id, mark\nFROM U3Enrolment\nWHERE course_code = 'DB101' AND mark >= 80\nORDER BY mark, student_id;",
+      "mysql": "CREATE INDEX u3_enrol_course_mark\nON U3Enrolment(course_code, mark);\n\nSELECT student_id, mark\nFROM U3Enrolment\nWHERE course_code = 'DB101' AND mark >= 80\nORDER BY mark, student_id;",
+      "mariadb": "CREATE INDEX u3_enrol_course_mark\nON U3Enrolment(course_code, mark);\n\nSELECT student_id, mark\nFROM U3Enrolment\nWHERE course_code = 'DB101' AND mark >= 80\nORDER BY mark, student_id;",
+      "sqlite": "CREATE INDEX u3_enrol_course_mark\nON U3Enrolment(course_code, mark);\n\nSELECT student_id, mark\nFROM U3Enrolment\nWHERE course_code = 'DB101' AND mark >= 80\nORDER BY mark, student_id;",
+      "sqlserver": "CREATE INDEX u3_enrol_course_mark\nON U3Enrolment(course_code, mark);\n\nSELECT student_id, mark\nFROM U3Enrolment\nWHERE course_code = 'DB101' AND mark >= 80\nORDER BY mark, student_id;"
+    },
+    "expected": [
+      [
+        101,
+        82
+      ],
+      [
+        102,
+        88
+      ]
+    ]
+  }
+]

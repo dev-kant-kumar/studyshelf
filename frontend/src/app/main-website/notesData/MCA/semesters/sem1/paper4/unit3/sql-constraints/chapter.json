@@ -1,0 +1,168 @@
+{
+  "id": "sql-constraints",
+  "title": "SQL constraint types and schema evolution",
+  "summary": "Implement named PRIMARY KEY, FOREIGN KEY, UNIQUE, NOT NULL, CHECK, and default rules.",
+  "topics": [
+    "sql-constraints"
+  ],
+  "intro": "SQL constraint syntax turns integrity requirements into database objects. Naming and testing those objects makes a schema easier to diagnose and evolve than a collection of undocumented assumptions.",
+  "outcomes": [
+    "Choose the appropriate declarative constraint.",
+    "Explain column-level versus table-level definitions.",
+    "Plan a constraint change without ignoring existing data."
+  ],
+  "sections": [
+    {
+      "title": "1. Match each requirement to its mechanism",
+      "paragraphs": [
+        "PRIMARY KEY gives the designated required identity. UNIQUE enforces an alternative uniqueness rule. FOREIGN KEY validates references. NOT NULL requires a present value. CHECK rejects rows whose predicate is FALSE. DEFAULT supplies a value when the column is omitted or DEFAULT is requested; it is not a substitute for a constraint."
+      ],
+      "table": {
+        "caption": "Constraint choices",
+        "headers": [
+          "Requirement",
+          "Mechanism",
+          "Important limit"
+        ],
+        "rows": [
+          [
+            "Identity of a row",
+            "PRIMARY KEY",
+            "One designated key; may be composite"
+          ],
+          [
+            "Alternative reference code",
+            "UNIQUE + NOT NULL",
+            "Nullable uniqueness differs by engine"
+          ],
+          [
+            "Existing student",
+            "FOREIGN KEY",
+            "Add NOT NULL if required"
+          ],
+          [
+            "Recognized status",
+            "CHECK",
+            "UNKNOWN is not FALSE"
+          ],
+          [
+            "Initial workflow status",
+            "DEFAULT",
+            "Does not reject other values"
+          ]
+        ]
+      }
+    },
+    {
+      "title": "2. A named constraint is a diagnosable rule",
+      "paragraphs": [
+        "Table-level syntax is convenient for composite keys and named relationships. Column-level syntax can express simple rules. Use explicit table-level FOREIGN KEY clauses for portable teaching scripts rather than relying on inline REFERENCES forms that some engine versions ignore."
+      ],
+      "code": "CREATE TABLE U3RegistrationRule (\n  registration_id INTEGER NOT NULL,\n  student_id INTEGER NOT NULL,\n  reference_code VARCHAR(20) NOT NULL,\n  status VARCHAR(12) DEFAULT 'pending' NOT NULL,\n  CONSTRAINT u3_rule_pk PRIMARY KEY (registration_id),\n  CONSTRAINT u3_rule_ref_uq UNIQUE (reference_code),\n  CONSTRAINT u3_rule_student_fk FOREIGN KEY (student_id)\n    REFERENCES U3Student(student_id),\n  CONSTRAINT u3_rule_status_ck CHECK (status IN ('pending', 'confirmed'))\n);\nINSERT INTO U3RegistrationRule (registration_id, student_id, reference_code)\nVALUES (1, 101, 'R-101');\nSELECT registration_id, status FROM U3RegistrationRule;",
+      "sqlVariants": {
+        "postgresql": {
+          "code": "CREATE TABLE U3RegistrationRule (\n  registration_id INTEGER NOT NULL,\n  student_id INTEGER NOT NULL,\n  reference_code VARCHAR(20) NOT NULL,\n  status VARCHAR(12) DEFAULT 'pending' NOT NULL,\n  CONSTRAINT u3_rule_pk PRIMARY KEY (registration_id),\n  CONSTRAINT u3_rule_ref_uq UNIQUE (reference_code),\n  CONSTRAINT u3_rule_student_fk FOREIGN KEY (student_id)\n    REFERENCES U3Student(student_id),\n  CONSTRAINT u3_rule_status_ck CHECK (status IN ('pending', 'confirmed'))\n);\nINSERT INTO U3RegistrationRule (registration_id, student_id, reference_code)\nVALUES (1, 101, 'R-101');\nSELECT registration_id, status FROM U3RegistrationRule;",
+          "note": "Run after the shared Unit 3 setup in a scratch database."
+        },
+        "oracle": {
+          "code": "CREATE TABLE U3RegistrationRule (\n  registration_id NUMBER(10) NOT NULL,\n  student_id NUMBER(10) NOT NULL,\n  reference_code VARCHAR2(20) NOT NULL,\n  status VARCHAR2(12) DEFAULT 'pending' NOT NULL,\n  CONSTRAINT u3_rule_pk PRIMARY KEY (registration_id),\n  CONSTRAINT u3_rule_ref_uq UNIQUE (reference_code),\n  CONSTRAINT u3_rule_student_fk FOREIGN KEY (student_id)\n    REFERENCES U3Student(student_id),\n  CONSTRAINT u3_rule_status_ck CHECK (status IN ('pending', 'confirmed'))\n);\nINSERT INTO U3RegistrationRule (registration_id, student_id, reference_code)\nVALUES (1, 101, 'R-101');\nSELECT registration_id, status FROM U3RegistrationRule;",
+          "note": "Run after the shared Unit 3 setup in a scratch database."
+        },
+        "mysql": {
+          "code": "CREATE TABLE U3RegistrationRule (\n  registration_id INTEGER NOT NULL,\n  student_id INTEGER NOT NULL,\n  reference_code VARCHAR(20) NOT NULL,\n  status VARCHAR(12) DEFAULT 'pending' NOT NULL,\n  CONSTRAINT u3_rule_pk PRIMARY KEY (registration_id),\n  CONSTRAINT u3_rule_ref_uq UNIQUE (reference_code),\n  CONSTRAINT u3_rule_student_fk FOREIGN KEY (student_id)\n    REFERENCES U3Student(student_id),\n  CONSTRAINT u3_rule_status_ck CHECK (status IN ('pending', 'confirmed'))\n) ENGINE=InnoDB;\nINSERT INTO U3RegistrationRule (registration_id, student_id, reference_code)\nVALUES (1, 101, 'R-101');\nSELECT registration_id, status FROM U3RegistrationRule;",
+          "note": "Run after the shared Unit 3 setup in a scratch database."
+        },
+        "mariadb": {
+          "code": "CREATE TABLE U3RegistrationRule (\n  registration_id INTEGER NOT NULL,\n  student_id INTEGER NOT NULL,\n  reference_code VARCHAR(20) NOT NULL,\n  status VARCHAR(12) DEFAULT 'pending' NOT NULL,\n  CONSTRAINT u3_rule_pk PRIMARY KEY (registration_id),\n  CONSTRAINT u3_rule_ref_uq UNIQUE (reference_code),\n  CONSTRAINT u3_rule_student_fk FOREIGN KEY (student_id)\n    REFERENCES U3Student(student_id),\n  CONSTRAINT u3_rule_status_ck CHECK (status IN ('pending', 'confirmed'))\n) ENGINE=InnoDB;\nINSERT INTO U3RegistrationRule (registration_id, student_id, reference_code)\nVALUES (1, 101, 'R-101');\nSELECT registration_id, status FROM U3RegistrationRule;",
+          "note": "Run after the shared Unit 3 setup in a scratch database."
+        },
+        "sqlite": {
+          "code": "CREATE TABLE U3RegistrationRule (\n  registration_id INTEGER NOT NULL,\n  student_id INTEGER NOT NULL,\n  reference_code VARCHAR(20) NOT NULL,\n  status VARCHAR(12) DEFAULT 'pending' NOT NULL,\n  CONSTRAINT u3_rule_pk PRIMARY KEY (registration_id),\n  CONSTRAINT u3_rule_ref_uq UNIQUE (reference_code),\n  CONSTRAINT u3_rule_student_fk FOREIGN KEY (student_id)\n    REFERENCES U3Student(student_id),\n  CONSTRAINT u3_rule_status_ck CHECK (status IN ('pending', 'confirmed'))\n);\nINSERT INTO U3RegistrationRule (registration_id, student_id, reference_code)\nVALUES (1, 101, 'R-101');\nSELECT registration_id, status FROM U3RegistrationRule;",
+          "note": "Run after the shared Unit 3 setup in a scratch database."
+        },
+        "sqlserver": {
+          "code": "CREATE TABLE U3RegistrationRule (\n  registration_id INTEGER NOT NULL,\n  student_id INTEGER NOT NULL,\n  reference_code VARCHAR(20) NOT NULL,\n  status VARCHAR(12) DEFAULT 'pending' NOT NULL,\n  CONSTRAINT u3_rule_pk PRIMARY KEY (registration_id),\n  CONSTRAINT u3_rule_ref_uq UNIQUE (reference_code),\n  CONSTRAINT u3_rule_student_fk FOREIGN KEY (student_id)\n    REFERENCES U3Student(student_id),\n  CONSTRAINT u3_rule_status_ck CHECK (status IN ('pending', 'confirmed'))\n);\nINSERT INTO U3RegistrationRule (registration_id, student_id, reference_code)\nVALUES (1, 101, 'R-101');\nSELECT registration_id, status FROM U3RegistrationRule;",
+          "note": "Run after the shared Unit 3 setup in a scratch database."
+        }
+      },
+      "example": [
+        "The INSERT omits status, so the default produces pending. Explicit status = NULL would fail NOT NULL; status = 'finished' would fail CHECK; reference_code = 'R-101' on a second row would fail UNIQUE. Each error identifies a different broken rule."
+      ]
+    },
+    {
+      "title": "3. Key and NULL portability traps",
+      "paragraphs": [
+        "A PRIMARY KEY expresses both uniqueness and required identity, but SQLite has historical behaviours for some non-integer primary-key definitions. The shared fixture uses explicit NOT NULL key columns so the exercise does not rely on that exception.",
+        "UNIQUE with nullable columns has different NULL policies across engines and index options. For a portable required unique reference, declare both UNIQUE and NOT NULL. Do not claim that every product permits unlimited NULLs or exactly one NULL in a unique column."
+      ]
+    },
+    {
+      "title": "4. Add a constraint as a data migration",
+      "paragraphs": [
+        "A new rule must be checked against existing rows. Before requiring email, find NULL emails; Ravi is a known counterexample. Decide whether to collect the value, retain optionality, or redesign the rule. Inventing placeholder emails to satisfy a migration corrupts the meaning of the data.",
+        "ALTER TABLE syntax, validation options, lock behaviour, and online facilities vary. SQLite often requires a table-rebuild migration for constraint changes that other engines express directly. Design and test the migration for its real server instead of presenting one ALTER statement as universal."
+      ]
+    },
+    {
+      "title": "5. Choose a constraint before a trigger",
+      "paragraphs": [
+        "Declarative keys and checks describe invariants directly and integrate with the engine. A trigger adds hidden execution paths and may require concurrency reasoning. Prefer a simple CHECK to a trigger that merely rejects mark > 100, and prefer a foreign key to a trigger that looks for a parent.",
+        "Test both acceptance and rejection: pending and confirmed are valid; NULL and unrecognized status are invalid; a duplicate reference fails; an unknown student fails. A success-path insert alone does not establish that the schema enforces its intended boundary."
+      ]
+    }
+  ],
+  "revision": [
+    "Name constraints and distinguish defaults from rejection rules.",
+    "Test composite identity, alternative uniqueness, required values, and references.",
+    "Inspect existing rows before adding a stricter rule."
+  ],
+  "questions": [
+    {
+      "id": "sql-constraints-default",
+      "question": "Does DEFAULT pending prevent any other status?",
+      "answer": [
+        "No. DEFAULT supplies an omitted value. CHECK restricts the permitted status set, and NOT NULL prevents an explicitly missing value. All three serve different purposes."
+      ],
+      "level": "easy",
+      "tags": [
+        "Concept check"
+      ]
+    },
+    {
+      "id": "sql-constraints-unique-required",
+      "question": "Why combine UNIQUE and NOT NULL on reference_code?",
+      "answer": [
+        "The reference is both required and nonduplicated. UNIQUE alone does not consistently enforce requiredness across products because NULL handling varies."
+      ],
+      "level": "medium",
+      "tags": [
+        "Concept check"
+      ]
+    },
+    {
+      "id": "sql-constraints-migration",
+      "question": "Can a NOT NULL migration succeed on the baseline email column?",
+      "answer": [
+        "Not while Ravi's email remains NULL. First inspect and resolve the policy for existing rows. Changing constraints without a data plan may fail, block work, or encourage incorrect placeholder values."
+      ],
+      "level": "hard",
+      "tags": [
+        "Practical"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "title": "PostgreSQL: declarative constraints",
+      "url": "https://www.postgresql.org/docs/current/ddl-constraints.html"
+    },
+    {
+      "title": "PostgreSQL: comparisons, IN, and NOT IN",
+      "url": "https://www.postgresql.org/docs/current/functions-comparisons.html"
+    }
+  ],
+  "next": {
+    "id": "indexing",
+    "title": "Indexing and query-plan reasoning"
+  }
+}

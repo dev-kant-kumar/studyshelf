@@ -1,0 +1,166 @@
+{
+  "id": "stored-procedures",
+  "title": "Stored procedures, parameters, and exceptions",
+  "summary": "Build reusable server-side operations with clear input/output and transaction contracts.",
+  "topics": [
+    "stored-procedures"
+  ],
+  "intro": "A stored procedure names an operation that clients can invoke. Its usefulness comes from a clear contract: inputs, outputs, side effects, errors, privileges, and ownership of the transaction.",
+  "outcomes": [
+    "Read Oracle and PostgreSQL procedure definitions and calls.",
+    "Distinguish IN, OUT, and IN OUT parameters from function returns.",
+    "Specify error, privilege, and transaction boundaries."
+  ],
+  "sections": [
+    {
+      "title": "1. Separate interface from implementation",
+      "paragraphs": [
+        "IN parameters supply values, OUT parameters carry results, and IN OUT parameters do both under the language's rules. Local variables are private to an invocation. A procedure is generally called as an operation; a function returns a value and may be usable inside SQL subject to product restrictions.",
+        "A stored routine is not inherently faster than all equivalent application SQL. It can reduce round trips and centralize rules, but still needs good queries, appropriate privileges, and maintainable versioning. Compiling successfully proves syntax and object resolution at that stage, not that the business rule is correct."
+      ],
+      "diagram": "procedure",
+      "diagramHeight": 600,
+      "alt": "Caller supplies course DB101 to a procedure. The procedure validates the input, aggregates recorded marks, and assigns OUT value two. Invalid input raises an error through a separate path.",
+      "caption": "The contract includes both a result and a failure outcome. Caller transaction control remains outside this read-only example."
+    },
+    {
+      "title": "2. A complete parameterized operation",
+      "paragraphs": [
+        "The procedure counts recorded marks, not enrolments. DB101 therefore produces 2 even though it has 3 enrolments. It rejects a missing course-code input. Its deliberate contract returns zero for either an empty course or an unknown non-NULL code; if those must be distinguished, the interface needs an additional existence check and a specified consistency policy."
+      ],
+      "code": "CREATE PROCEDURE U3CountMarked(IN p_course VARCHAR, OUT p_marked BIGINT)\nLANGUAGE plpgsql AS $$\nBEGIN\n  IF p_course IS NULL THEN\n    RAISE EXCEPTION 'Course code is required';\n  END IF;\n  SELECT COUNT(mark) INTO p_marked FROM U3Enrolment\n  WHERE course_code = p_course;\nEND;\n$$;\nCALL U3CountMarked('DB101', NULL);",
+      "sqlVariants": {
+        "postgresql": {
+          "code": "CREATE PROCEDURE U3CountMarked(IN p_course VARCHAR, OUT p_marked BIGINT)\nLANGUAGE plpgsql AS $$\nBEGIN\n  IF p_course IS NULL THEN\n    RAISE EXCEPTION 'Course code is required';\n  END IF;\n  SELECT COUNT(mark) INTO p_marked FROM U3Enrolment\n  WHERE course_code = p_course;\nEND;\n$$;\nCALL U3CountMarked('DB101', NULL);",
+          "note": "Run once after setup. This routine reads data and does not COMMIT or ROLLBACK. PostgreSQL profile requires procedure OUT-parameter support (14+).",
+          "download": {
+            "href": "/examples/dbms-unit3/stored-procedures-postgresql.sql",
+            "filename": "unit3-stored-procedures-postgresql.sql"
+          }
+        },
+        "oracle": {
+          "code": "CREATE OR REPLACE PROCEDURE U3CountMarked(\n  p_course IN U3Course.course_code%TYPE,\n  p_marked OUT NUMBER\n) AS\nBEGIN\n  IF p_course IS NULL THEN\n    RAISE_APPLICATION_ERROR(-20001, 'Course code is required');\n  END IF;\n  SELECT COUNT(mark) INTO p_marked FROM U3Enrolment\n  WHERE course_code = p_course;\nEND;\n/\nSET SERVEROUTPUT ON\nDECLARE\n  v_marked NUMBER;\nBEGIN\n  U3CountMarked('DB101', v_marked);\n  DBMS_OUTPUT.PUT_LINE('Recorded marks: ' || v_marked);\nEND;\n/",
+          "note": "Oracle 19c: run as a script. SET SERVEROUTPUT ON and slash are SQL*Plus/SQL Developer client commands. The call prints Recorded marks: 2.",
+          "download": {
+            "href": "/examples/dbms-unit3/stored-procedures-oracle.sql",
+            "filename": "unit3-stored-procedures-oracle.sql"
+          }
+        },
+        "mysql": {
+          "code": "DELIMITER //\nCREATE PROCEDURE U3CountMarked(IN p_course VARCHAR(10), OUT p_marked BIGINT)\nBEGIN\n  IF p_course IS NULL THEN\n    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Course code is required';\n  END IF;\n  SELECT COUNT(mark) INTO p_marked FROM U3Enrolment\n  WHERE course_code = p_course;\nEND//\nDELIMITER ;\nCALL U3CountMarked('DB101', @marked);\nSELECT @marked AS recorded_marks;",
+          "note": "MySQL: run with mysql-client DELIMITER support. @marked is a session variable receiving the OUT value.",
+          "download": {
+            "href": "/examples/dbms-unit3/stored-procedures-mysql.sql",
+            "filename": "unit3-stored-procedures-mysql.sql"
+          }
+        },
+        "mariadb": {
+          "code": "DELIMITER //\nCREATE PROCEDURE U3CountMarked(IN p_course VARCHAR(10), OUT p_marked BIGINT)\nBEGIN\n  IF p_course IS NULL THEN\n    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Course code is required';\n  END IF;\n  SELECT COUNT(mark) INTO p_marked FROM U3Enrolment\n  WHERE course_code = p_course;\nEND//\nDELIMITER ;\nCALL U3CountMarked('DB101', @marked);\nSELECT @marked AS recorded_marks;",
+          "note": "MariaDB: mysql-style client script; procedure OUT value is copied to @marked.",
+          "download": {
+            "href": "/examples/dbms-unit3/stored-procedures-mariadb.sql",
+            "filename": "unit3-stored-procedures-mariadb.sql"
+          }
+        },
+        "sqlite": {
+          "code": "SELECT COUNT(mark) AS recorded_marks\nFROM U3Enrolment WHERE course_code = 'DB101';",
+          "note": "SQLite has no CREATE PROCEDURE language. This SELECT computes the result; expose it through an application function if an API operation is needed. It does not implement the stored procedure or its parameter validation.",
+          "download": {
+            "href": "/examples/dbms-unit3/stored-procedures-sqlite.sql",
+            "filename": "unit3-stored-procedures-sqlite.sql"
+          }
+        },
+        "sqlserver": {
+          "code": "GO\nCREATE PROCEDURE U3CountMarked\n  @course VARCHAR(10), @marked INTEGER OUTPUT\nAS\nBEGIN\n  SET NOCOUNT ON;\n  IF @course IS NULL\n    THROW 50001, 'Course code is required', 1;\n  SELECT @marked = COUNT(mark) FROM U3Enrolment\n  WHERE course_code = @course;\nEND;\nGO\nDECLARE @n INTEGER;\nEXEC U3CountMarked @course = 'DB101', @marked = @n OUTPUT;\nSELECT @n AS recorded_marks;",
+          "note": "SQL Server: CREATE PROCEDURE begins a new batch; GO is client-only. OUTPUT is specified in both the declaration and invocation.",
+          "download": {
+            "href": "/examples/dbms-unit3/stored-procedures-sqlserver.sql",
+            "filename": "unit3-stored-procedures-sqlserver.sql"
+          }
+        }
+      },
+      "example": [
+        "DB101 returns 2, CS101 returns 2, and AI101 returns 0. Supplying NULL raises the documented input error in procedural versions. These are three different input cases that a test should exercise."
+      ]
+    },
+    {
+      "title": "3. Variables, SELECT INTO, and exceptions",
+      "paragraphs": [
+        "Oracle PL/SQL SELECT ... INTO a variable normally requires exactly one row, raising NO_DATA_FOUND or TOO_MANY_ROWS for mismatches. An ungrouped COUNT aggregate still supplies one row with zero when no inputs match. Do not generalize that behaviour to every SELECT INTO form in every DBMS.",
+        "An exception handler should either resolve a known situation or report/rethrow it. WHEN OTHERS THEN NULL hides failures and can leave callers believing work succeeded. PostgreSQL EXCEPTION blocks create subtransaction behaviour that differs from Oracle handling; literal copying of block structure is not a transaction port."
+      ]
+    },
+    {
+      "title": "4. The transaction contract must be explicit",
+      "paragraphs": [
+        "This count procedure makes no changes and leaves transaction ownership to the caller. A write procedure should document whether its changes remain pending for a larger unit of work. A hidden COMMIT can prevent the caller from rolling back a related second operation.",
+        "Do not assume that an unhandled error in every product undoes all earlier statements in the session. Rollback obligations depend on the engine, statement, handler, and caller context. Nested procedure calls do not automatically create independent transactions."
+      ]
+    },
+    {
+      "title": "5. Security and integration",
+      "paragraphs": [
+        "Grant only the required execution rights. Definer-rights versus invoker-rights choices determine which identity supplies access inside a routine. Dynamic SQL can still be injectable even when packaged as a stored procedure; bind values and validate permitted identifiers.",
+        "Test the routine through the actual backend driver as well as a teaching client. OUT binding, result sets, client delimiters, schema resolution, and error propagation are integration details. Keep parameter names distinct from columns so WHERE course_code = p_course cannot accidentally become a tautology."
+      ]
+    }
+  ],
+  "revision": [
+    "State input, output, unknown-code, and NULL-input behaviour.",
+    "Keep client commands out of driver SQL.",
+    "Document errors, rights, and transaction ownership before reuse."
+  ],
+  "questions": [
+    {
+      "id": "stored-procedures-count-contract",
+      "question": "Why does U3CountMarked return two rather than three for DB101?",
+      "answer": [
+        "COUNT(mark) counts non-NULL marks. The procedure measures recorded assessments, not enrolments. Mira's DB101 enrolment is present but her mark is missing."
+      ],
+      "level": "easy",
+      "tags": [
+        "Concept check"
+      ]
+    },
+    {
+      "id": "stored-procedures-out-function",
+      "question": "Is an OUT parameter the same as a function RETURN?",
+      "answer": [
+        "No. An OUT parameter is part of the invocation interface and needs caller binding. A function has a returned value and product-specific rules for expression use. The concepts can convey similar information but use different call contracts."
+      ],
+      "level": "medium",
+      "tags": [
+        "Concept check"
+      ]
+    },
+    {
+      "id": "stored-procedures-hidden-commit",
+      "question": "Why is a COMMIT inside a reusable write procedure risky?",
+      "answer": [
+        "It may commit work that the caller intended to combine atomically with other statements, removing the caller's ability to undo the whole unit. Transaction ownership belongs in the documented interface rather than being an incidental body statement."
+      ],
+      "level": "hard",
+      "tags": [
+        "Interview practice"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "title": "Oracle 19c: PL/SQL subprograms",
+      "url": "https://docs.oracle.com/en/database/oracle/oracle-database/19/lnpls/plsql-subprograms.html"
+    },
+    {
+      "title": "PostgreSQL: CREATE PROCEDURE",
+      "url": "https://www.postgresql.org/docs/current/sql-createprocedure.html"
+    },
+    {
+      "title": "PostgreSQL: declarative constraints",
+      "url": "https://www.postgresql.org/docs/current/ddl-constraints.html"
+    }
+  ],
+  "next": {
+    "id": "triggers",
+    "title": "Triggers, audit trails, and hidden side effects"
+  }
+}

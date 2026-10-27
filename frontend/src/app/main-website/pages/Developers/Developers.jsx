@@ -27,6 +27,7 @@ export default function Developers() {
 
       {/* 4 Core Developer Roadmaps */}
       <RoadmapGrid />
+      <section className="my-8 rounded-xl border border-line p-6 dark:border-night-line"><h2 className="font-display text-2xl">SQL for backend engineers</h2><p className={`mt-3 ${muted}`}>Learn PostgreSQL with worked queries, actual browser results, diagrams, exercises, and labs for transactions, security, query plans, and recovery.</p><Link to="/developers/sql" className={`mt-4 inline-block text-brand underline underline-offset-4 dark:text-night-brand ${focus}`}>Open the SQL learning path</Link></section>
 
       {/* 4-Step Practical Methodology */}
       <PracticalSteps />

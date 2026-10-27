@@ -1,0 +1,142 @@
+{
+  "id": "integrity-constraints",
+  "title": "Entity, referential, and domain integrity",
+  "summary": "Translate identity, relationship, and value-domain rules into enforceable database conditions.",
+  "topics": [
+    "entity-integrity",
+    "referential-integrity",
+    "domain-constraints"
+  ],
+  "intro": "Integrity means the database state obeys its declared rules. Entity integrity concerns row identity, referential integrity concerns relationships, and domain integrity concerns permitted attribute values. These are requirements; SQL constraints are mechanisms for implementing them.",
+  "outcomes": [
+    "Explain entity, referential, and domain rules with counterexamples.",
+    "Distinguish conceptual rules from SQL syntax.",
+    "Choose deletion and missing-value policies deliberately."
+  ],
+  "sections": [
+    {
+      "title": "1. Entity integrity: identify each fact",
+      "paragraphs": [
+        "A primary key must uniquely identify a row and cannot contain NULL. In Enrolment the whole pair (student_id, course_code) is the identity. Student 101 may appear in DB101 and CS101, but a second (101, DB101) row would repeat the same fact.",
+        "A surrogate numeric key can simplify references, but does not automatically enforce the real-world uniqueness rule. If an enrolment used a generated enrolment_id, the student/course pair would still need an appropriate UNIQUE constraint when duplicates are forbidden."
+      ]
+    },
+    {
+      "title": "2. Referential integrity: a relationship needs a target",
+      "paragraphs": [
+        "Every non-NULL foreign-key reference must correspond to a permitted referenced key. The fixture requires both Enrolment foreign-key columns, so every enrolment has a student and a course. A foreign key is not automatically mandatory; a nullable foreign-key column may represent an optional relationship under the product's matching rules.",
+        "Deleting student 101 would orphan two enrolments under a restrict/no-action policy. ON DELETE CASCADE means deleting the parent also deletes its matching children; SET NULL needs nullable child columns and changes the meaning of the association. Choose the policy from the lifecycle of the facts rather than using cascade to make an error disappear."
+      ],
+      "diagram": "integrity",
+      "diagramHeight": 600,
+      "alt": "An enrolment write is checked against its composite identity, parent student/course keys, and mark value domain. A duplicate pair, unknown parent, and mark 120 are rejected for different reasons.",
+      "caption": "The three checks protect different invariants. Passing a mark range check cannot repair a missing student reference."
+    },
+    {
+      "title": "3. Domain integrity: allowed values and missingness",
+      "paragraphs": [
+        "A domain is the permitted set of attribute values and associated meaning. The mark is an integer from 0 to 100 when known. CHECK encodes the interval, while NOT NULL would make knowledge mandatory. The fixture deliberately leaves mark nullable.",
+        "Types alone do not encode every business rule: INTEGER does not mean valid grade, VARCHAR(20) does not mean recognized programme, and DATE does not mean a permitted registration date. SQLite's flexible typing and unenforced VARCHAR length require special attention; strict typing or explicit checks may be needed for stronger guarantees."
+      ]
+    },
+    {
+      "title": "4. Derive failures before running them",
+      "paragraphs": [
+        "The first statement repeats an existing identity. The second references a nonexistent student. The third proposes a mark outside the domain. Run each separately in a fresh fixture and handle the failed transaction according to your DBMS. The baseline rows should remain intact.",
+        "A requirement such as at most 60 enrolments per course is not enforced by CHECK(credits BETWEEN 1 AND 6). It is a cross-row invariant that needs an appropriate concurrency-safe design. Counting rows in application code without serialization can allow concurrent requests to both pass."
+      ],
+      "code": "-- Each statement below is expected to fail; run separately.\nINSERT INTO U3Enrolment VALUES (101, 'DB101', 50);\nINSERT INTO U3Enrolment VALUES (999, 'DB101', 50);\nUPDATE U3Enrolment SET mark = 120\nWHERE student_id = 101 AND course_code = 'DB101';",
+      "sqlVariants": {
+        "postgresql": {
+          "code": "-- Each statement below is expected to fail; run separately.\nINSERT INTO U3Enrolment VALUES (101, 'DB101', 50);\nINSERT INTO U3Enrolment VALUES (999, 'DB101', 50);\nUPDATE U3Enrolment SET mark = 120\nWHERE student_id = 101 AND course_code = 'DB101';",
+          "note": "Intentional error cases. SQLite requires PRAGMA foreign_keys = ON. PostgreSQL needs rollback after an error in an explicit transaction. Do not execute the block as a success-path script."
+        },
+        "oracle": {
+          "code": "-- Each statement below is expected to fail; run separately.\nINSERT INTO U3Enrolment VALUES (101, 'DB101', 50);\nINSERT INTO U3Enrolment VALUES (999, 'DB101', 50);\nUPDATE U3Enrolment SET mark = 120\nWHERE student_id = 101 AND course_code = 'DB101';",
+          "note": "Intentional error cases. SQLite requires PRAGMA foreign_keys = ON. PostgreSQL needs rollback after an error in an explicit transaction. Do not execute the block as a success-path script."
+        },
+        "mysql": {
+          "code": "-- Each statement below is expected to fail; run separately.\nINSERT INTO U3Enrolment VALUES (101, 'DB101', 50);\nINSERT INTO U3Enrolment VALUES (999, 'DB101', 50);\nUPDATE U3Enrolment SET mark = 120\nWHERE student_id = 101 AND course_code = 'DB101';",
+          "note": "Intentional error cases. SQLite requires PRAGMA foreign_keys = ON. PostgreSQL needs rollback after an error in an explicit transaction. Do not execute the block as a success-path script."
+        },
+        "mariadb": {
+          "code": "-- Each statement below is expected to fail; run separately.\nINSERT INTO U3Enrolment VALUES (101, 'DB101', 50);\nINSERT INTO U3Enrolment VALUES (999, 'DB101', 50);\nUPDATE U3Enrolment SET mark = 120\nWHERE student_id = 101 AND course_code = 'DB101';",
+          "note": "Intentional error cases. SQLite requires PRAGMA foreign_keys = ON. PostgreSQL needs rollback after an error in an explicit transaction. Do not execute the block as a success-path script."
+        },
+        "sqlite": {
+          "code": "-- Each statement below is expected to fail; run separately.\nINSERT INTO U3Enrolment VALUES (101, 'DB101', 50);\nINSERT INTO U3Enrolment VALUES (999, 'DB101', 50);\nUPDATE U3Enrolment SET mark = 120\nWHERE student_id = 101 AND course_code = 'DB101';",
+          "note": "Intentional error cases. SQLite requires PRAGMA foreign_keys = ON. PostgreSQL needs rollback after an error in an explicit transaction. Do not execute the block as a success-path script."
+        },
+        "sqlserver": {
+          "code": "-- Each statement below is expected to fail; run separately.\nINSERT INTO U3Enrolment VALUES (101, 'DB101', 50);\nINSERT INTO U3Enrolment VALUES (999, 'DB101', 50);\nUPDATE U3Enrolment SET mark = 120\nWHERE student_id = 101 AND course_code = 'DB101';",
+          "note": "Intentional error cases. SQLite requires PRAGMA foreign_keys = ON. PostgreSQL needs rollback after an error in an explicit transaction. Do not execute the block as a success-path script."
+        }
+      }
+    },
+    {
+      "title": "5. Constraints and validation cooperate",
+      "paragraphs": [
+        "The application can provide clear validation messages, but another client or concurrent request can bypass that check. Database constraints remain the common enforcement point for rules they can express. Constraints do not replace authorization or all business policies.",
+        "Do not label every data error an integrity violation of the same kind. A wrong-but-valid name may satisfy all declared constraints. A missing index can make a reference check slow without changing its logical obligation. Explain correctness and performance separately."
+      ]
+    }
+  ],
+  "revision": [
+    "Identify each invariant and the rejected counterexample.",
+    "Distinguish optional relationships from broken references.",
+    "Explain the consequences of parent deletion and concurrent cross-row checks."
+  ],
+  "questions": [
+    {
+      "id": "integrity-constraints-pair",
+      "question": "Does a composite primary key make each component individually unique?",
+      "answer": [
+        "No. It makes the combination unique. Asha can have several course rows, and DB101 can have several students. Both columns remain required as parts of the primary key."
+      ],
+      "level": "easy",
+      "tags": [
+        "Concept check"
+      ]
+    },
+    {
+      "id": "integrity-constraints-foreign-null",
+      "question": "Does FOREIGN KEY alone require an enrolment to have a student?",
+      "answer": [
+        "No. Mandatory participation also needs the relevant NOT NULL rule. Nullable references are often permitted and may represent an optional relationship. The fixture explicitly requires both child key columns."
+      ],
+      "level": "medium",
+      "tags": [
+        "Concept check"
+      ]
+    },
+    {
+      "id": "integrity-constraints-concurrency-rule",
+      "question": "Why can two application-side capacity checks both pass?",
+      "answer": [
+        "Both transactions can observe the same pre-insert count and each decide one slot remains. Correct enforcement needs a suitable locking, isolation, or atomic allocation strategy, not merely repeating the SELECT in both requests."
+      ],
+      "level": "hard",
+      "tags": [
+        "Practical"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "title": "PostgreSQL: declarative constraints",
+      "url": "https://www.postgresql.org/docs/current/ddl-constraints.html"
+    },
+    {
+      "title": "PostgreSQL: comparisons, IN, and NOT IN",
+      "url": "https://www.postgresql.org/docs/current/functions-comparisons.html"
+    },
+    {
+      "title": "SQLite: trigger syntax and restrictions",
+      "url": "https://www.sqlite.org/lang_createtrigger.html"
+    }
+  ],
+  "next": {
+    "id": "sql-constraints",
+    "title": "SQL constraint types and schema evolution"
+  }
+}

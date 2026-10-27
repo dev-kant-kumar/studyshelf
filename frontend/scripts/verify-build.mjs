@@ -80,7 +80,7 @@ for (const file of pages) {
   }
   assert.equal(document.querySelectorAll('template[id^="B:"], div[hidden][id^="S:"]').length, 0, `${file}: no unresolved suspense segments`)
 
-  assert.equal(document.querySelectorAll('title').length, 1, `${file}: one page title`)
+  assert.equal(document.querySelectorAll('head > title').length, 1, `${file}: one page title`)
   assert.equal((html.match(/rel="canonical"/g) ?? []).length, 1, `${file}: one canonical URL`)
   assert.ok(!html.includes('�') && !html.includes('src="/src/'), `${file}: valid text and production assets`)
   assert.ok(html.includes('<h1'), `${file}: readable page heading before JavaScript`)

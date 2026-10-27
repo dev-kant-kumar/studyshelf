@@ -1,0 +1,223 @@
+{
+  "id": "null-values",
+  "title": "NULL values and three-valued logic",
+  "summary": "Use IS NULL, COALESCE, and existence checks without confusing unknown values with zero or empty text.",
+  "topics": [
+    "null-values"
+  ],
+  "intro": "NULL marks the absence of a known value. SQL predicates therefore need TRUE, FALSE, and UNKNOWN. This affects filters, joins, checks, aggregates, and anti-membership queries.",
+  "outcomes": [
+    "Evaluate simple predicates involving NULL.",
+    "Explain WHERE and CHECK treatment of UNKNOWN.",
+    "Avoid NOT IN failures caused by a NULL in the subquery."
+  ],
+  "sections": [
+    {
+      "title": "1. NULL is not an ordinary comparable value",
+      "paragraphs": [
+        "Use IS NULL or IS NOT NULL. The expression email = NULL is not a test for missing email: its result is UNKNOWN for every row. Arithmetic such as mark + 5 is NULL when mark is NULL. Replacing missing values with zero is a modelling decision, not a universal cleanup step.",
+        "In the fixture, only Ravi has NULL email. Oracle treats a zero-length character string as NULL, unlike several other DBMSs. Therefore a requirement distinguishing an empty string from a missing string needs particular care in Oracle."
+      ],
+      "code": "SELECT student_id, name\nFROM U3Student\nWHERE email IS NULL\nORDER BY student_id;",
+      "sqlVariants": {
+        "postgresql": {
+          "code": "SELECT student_id, name\nFROM U3Student\nWHERE email IS NULL\nORDER BY student_id;",
+          "note": "Run after the shared Unit 3 setup in a scratch database."
+        },
+        "oracle": {
+          "code": "SELECT student_id, name\nFROM U3Student\nWHERE email IS NULL\nORDER BY student_id;",
+          "note": "Run after the shared Unit 3 setup in a scratch database."
+        },
+        "mysql": {
+          "code": "SELECT student_id, name\nFROM U3Student\nWHERE email IS NULL\nORDER BY student_id;",
+          "note": "Run after the shared Unit 3 setup in a scratch database."
+        },
+        "mariadb": {
+          "code": "SELECT student_id, name\nFROM U3Student\nWHERE email IS NULL\nORDER BY student_id;",
+          "note": "Run after the shared Unit 3 setup in a scratch database."
+        },
+        "sqlite": {
+          "code": "SELECT student_id, name\nFROM U3Student\nWHERE email IS NULL\nORDER BY student_id;",
+          "note": "Run after the shared Unit 3 setup in a scratch database."
+        },
+        "sqlserver": {
+          "code": "SELECT student_id, name\nFROM U3Student\nWHERE email IS NULL\nORDER BY student_id;",
+          "note": "Run after the shared Unit 3 setup in a scratch database."
+        }
+      }
+    },
+    {
+      "title": "2. Three-valued decisions",
+      "paragraphs": [
+        "WHERE retains TRUE only; both FALSE and UNKNOWN are removed. NOT UNKNOWN remains UNKNOWN. TRUE AND UNKNOWN is UNKNOWN, FALSE AND UNKNOWN is FALSE, TRUE OR UNKNOWN is TRUE, and FALSE OR UNKNOWN is UNKNOWN. Do not use ordinary two-valued intuition to negate an uncertain comparison.",
+        "A CHECK constraint normally rejects FALSE but permits TRUE or UNKNOWN. CHECK(mark BETWEEN 0 AND 100) therefore permits a missing mark. Add NOT NULL if every row must have a recorded value. A column default supplies an omitted value; it does not automatically replace explicitly inserted NULL."
+      ],
+      "table": {
+        "caption": "Truth-table checkpoints",
+        "headers": [
+          "Expression",
+          "Result"
+        ],
+        "rows": [
+          [
+            "NULL = 80",
+            "UNKNOWN"
+          ],
+          [
+            "NULL IS NULL",
+            "TRUE"
+          ],
+          [
+            "NOT (NULL = 80)",
+            "UNKNOWN"
+          ],
+          [
+            "FALSE AND UNKNOWN",
+            "FALSE"
+          ],
+          [
+            "TRUE OR UNKNOWN",
+            "TRUE"
+          ]
+        ]
+      }
+    },
+    {
+      "title": "3. The NOT IN trap",
+      "paragraphs": [
+        "If the right-side list contains NULL, a value not equal to any known item still cannot be proved different from the unknown item. NOT IN may therefore produce UNKNOWN instead of TRUE. This frequently turns an intended anti-match query into an unexpectedly empty result."
+      ],
+      "code": "SELECT s.student_id, s.name\nFROM U3Student s\nWHERE s.student_id NOT IN (\n  SELECT e.mark FROM U3Enrolment e\n)\nORDER BY s.student_id;",
+      "sqlVariants": {
+        "postgresql": {
+          "code": "SELECT s.student_id, s.name\nFROM U3Student s\nWHERE s.student_id NOT IN (\n  SELECT e.mark FROM U3Enrolment e\n)\nORDER BY s.student_id;",
+          "note": "Run after the shared Unit 3 setup in a scratch database."
+        },
+        "oracle": {
+          "code": "SELECT s.student_id, s.name\nFROM U3Student s\nWHERE s.student_id NOT IN (\n  SELECT e.mark FROM U3Enrolment e\n)\nORDER BY s.student_id;",
+          "note": "Run after the shared Unit 3 setup in a scratch database."
+        },
+        "mysql": {
+          "code": "SELECT s.student_id, s.name\nFROM U3Student s\nWHERE s.student_id NOT IN (\n  SELECT e.mark FROM U3Enrolment e\n)\nORDER BY s.student_id;",
+          "note": "Run after the shared Unit 3 setup in a scratch database."
+        },
+        "mariadb": {
+          "code": "SELECT s.student_id, s.name\nFROM U3Student s\nWHERE s.student_id NOT IN (\n  SELECT e.mark FROM U3Enrolment e\n)\nORDER BY s.student_id;",
+          "note": "Run after the shared Unit 3 setup in a scratch database."
+        },
+        "sqlite": {
+          "code": "SELECT s.student_id, s.name\nFROM U3Student s\nWHERE s.student_id NOT IN (\n  SELECT e.mark FROM U3Enrolment e\n)\nORDER BY s.student_id;",
+          "note": "Run after the shared Unit 3 setup in a scratch database."
+        },
+        "sqlserver": {
+          "code": "SELECT s.student_id, s.name\nFROM U3Student s\nWHERE s.student_id NOT IN (\n  SELECT e.mark FROM U3Enrolment e\n)\nORDER BY s.student_id;",
+          "note": "Run after the shared Unit 3 setup in a scratch database."
+        }
+      },
+      "example": [
+        "This deliberately incorrect comparison uses student IDs against marks to isolate the logic. The list includes NULL. None of 101-104 equals a recorded mark, but each NOT IN result is UNKNOWN, so no rows pass. A realistic anti-enrolment query must compare student IDs with student IDs."
+      ]
+    },
+    {
+      "title": "4. Prefer a correctly correlated existence test",
+      "paragraphs": [
+        "NOT EXISTS asks whether a qualifying row is absent. Its Boolean result does not become UNKNOWN because a projected column is NULL. The correlation must still express the intended relationship; NOT EXISTS without it may test the whole table instead of each student."
+      ],
+      "code": "SELECT s.student_id, s.name\nFROM U3Student s\nWHERE NOT EXISTS (\n  SELECT 1 FROM U3Enrolment e\n  WHERE e.student_id = s.student_id\n)\nORDER BY s.student_id;",
+      "sqlVariants": {
+        "postgresql": {
+          "code": "SELECT s.student_id, s.name\nFROM U3Student s\nWHERE NOT EXISTS (\n  SELECT 1 FROM U3Enrolment e\n  WHERE e.student_id = s.student_id\n)\nORDER BY s.student_id;",
+          "note": "Run after the shared Unit 3 setup in a scratch database."
+        },
+        "oracle": {
+          "code": "SELECT s.student_id, s.name\nFROM U3Student s\nWHERE NOT EXISTS (\n  SELECT 1 FROM U3Enrolment e\n  WHERE e.student_id = s.student_id\n)\nORDER BY s.student_id;",
+          "note": "Run after the shared Unit 3 setup in a scratch database."
+        },
+        "mysql": {
+          "code": "SELECT s.student_id, s.name\nFROM U3Student s\nWHERE NOT EXISTS (\n  SELECT 1 FROM U3Enrolment e\n  WHERE e.student_id = s.student_id\n)\nORDER BY s.student_id;",
+          "note": "Run after the shared Unit 3 setup in a scratch database."
+        },
+        "mariadb": {
+          "code": "SELECT s.student_id, s.name\nFROM U3Student s\nWHERE NOT EXISTS (\n  SELECT 1 FROM U3Enrolment e\n  WHERE e.student_id = s.student_id\n)\nORDER BY s.student_id;",
+          "note": "Run after the shared Unit 3 setup in a scratch database."
+        },
+        "sqlite": {
+          "code": "SELECT s.student_id, s.name\nFROM U3Student s\nWHERE NOT EXISTS (\n  SELECT 1 FROM U3Enrolment e\n  WHERE e.student_id = s.student_id\n)\nORDER BY s.student_id;",
+          "note": "Run after the shared Unit 3 setup in a scratch database."
+        },
+        "sqlserver": {
+          "code": "SELECT s.student_id, s.name\nFROM U3Student s\nWHERE NOT EXISTS (\n  SELECT 1 FROM U3Enrolment e\n  WHERE e.student_id = s.student_id\n)\nORDER BY s.student_id;",
+          "note": "Run after the shared Unit 3 setup in a scratch database."
+        }
+      },
+      "example": [
+        "Neha alone has no enrolment. Mira does have enrolments, even though one mark is missing. Missing a mark does not mean missing an enrolment."
+      ]
+    },
+    {
+      "title": "5. Present missing data honestly",
+      "paragraphs": [
+        "COALESCE(email, 'not recorded') can provide a readable result label. COALESCE(mark, 0) instead changes a numeric input and can affect averages, ranks, and pass counts. Use CASE when the display needs more than the first non-NULL value.",
+        "NULLs group together under GROUP BY and are treated alike for DISTINCT elimination, even though an equality predicate between NULLs is UNKNOWN. Nullable UNIQUE rules differ across engines; do not rely on a single cross-DBMS assumption about how many missing emails a unique index permits."
+      ]
+    }
+  ],
+  "revision": [
+    "Use IS NULL and reason with UNKNOWN explicitly.",
+    "Distinguish missing row, missing value, and assessed zero.",
+    "Check NOT IN inputs and correlate NOT EXISTS to the correct key."
+  ],
+  "questions": [
+    {
+      "id": "null-values-eq-null",
+      "question": "Why does email = NULL not find Ravi?",
+      "answer": [
+        "The comparison evaluates to UNKNOWN, and WHERE retains only TRUE. email IS NULL is the missing-value predicate."
+      ],
+      "level": "easy",
+      "tags": [
+        "Concept check"
+      ]
+    },
+    {
+      "id": "null-values-check-null",
+      "question": "Why is the fixture's NULL mark permitted despite its range CHECK?",
+      "answer": [
+        "The range predicate becomes UNKNOWN for NULL. CHECK does not reject that outcome. The schema deliberately allows unrecorded marks; requiring a mark would also need NOT NULL."
+      ],
+      "level": "medium",
+      "tags": [
+        "Concept check"
+      ]
+    },
+    {
+      "id": "null-values-anti",
+      "question": "Does NOT EXISTS always mean the same thing as NOT IN?",
+      "answer": [
+        "Only under suitable conditions about keys, correlation, and NULL handling. NOT EXISTS tests absence of rows satisfying its predicate; NOT IN applies three-valued comparisons against values. Compare the actual predicates before substituting one for the other."
+      ],
+      "level": "hard",
+      "tags": [
+        "Concept check"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "title": "PostgreSQL: comparisons, IN, and NOT IN",
+      "url": "https://www.postgresql.org/docs/current/functions-comparisons.html"
+    },
+    {
+      "title": "PostgreSQL: declarative constraints",
+      "url": "https://www.postgresql.org/docs/current/ddl-constraints.html"
+    },
+    {
+      "title": "PostgreSQL: aggregate functions",
+      "url": "https://www.postgresql.org/docs/current/functions-aggregate.html"
+    }
+  ],
+  "next": {
+    "id": "views",
+    "title": "SQL views: interfaces, updates, and access"
+  }
+}

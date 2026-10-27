@@ -1,0 +1,179 @@
+{
+  "id": "indexing",
+  "title": "Indexing and query-plan reasoning",
+  "summary": "Explain ordered indexes, selectivity, composite keys, and the cost of maintaining access paths.",
+  "topics": [
+    "indexing"
+  ],
+  "intro": "An index is an auxiliary access structure. It can reduce work for some queries but consumes space and must be maintained on writes. Its existence is not a promise that every statement will use it.",
+  "outcomes": [
+    "Trace equality and range access through a composite index.",
+    "Explain covering access, selectivity, and write costs.",
+    "Compare estimated and measured plans without inventing timings."
+  ],
+  "sections": [
+    {
+      "title": "1. An ordered access path",
+      "paragraphs": [
+        "A B-tree family index maintains ordered search keys and references to table entries or engine-specific row locators. An equality or narrow range can avoid examining most unrelated records. The index stores an access structure, not a separately authoritative version of the business facts.",
+        "For (course_code, mark), keys are ordered first by course and then by mark within the course. Equality on DB101 identifies a contiguous course region; mark >= 80 narrows that region. A predicate on mark alone may not obtain the same efficient leading-key restriction, although some optimizers can use skip-scan or other strategies."
+      ],
+      "diagram": "index",
+      "diagramHeight": 600,
+      "alt": "A composite course_code and mark index groups CS101 and DB101 keys. The DB101 range from mark 80 onward reaches marks 82 and 88. Writes update both the base table and the index.",
+      "caption": "The illustration explains key order and range selection. It is not an engine-captured tree or timing result.",
+      "code": "CREATE INDEX u3_enrol_course_mark\nON U3Enrolment(course_code, mark);\n\nSELECT student_id, mark\nFROM U3Enrolment\nWHERE course_code = 'DB101' AND mark >= 80\nORDER BY mark, student_id;",
+      "sqlVariants": {
+        "postgresql": {
+          "code": "CREATE INDEX u3_enrol_course_mark\nON U3Enrolment(course_code, mark);\n\nSELECT student_id, mark\nFROM U3Enrolment\nWHERE course_code = 'DB101' AND mark >= 80\nORDER BY mark, student_id;",
+          "note": "Run after the shared Unit 3 setup in a scratch database."
+        },
+        "oracle": {
+          "code": "CREATE INDEX u3_enrol_course_mark\nON U3Enrolment(course_code, mark);\n\nSELECT student_id, mark\nFROM U3Enrolment\nWHERE course_code = 'DB101' AND mark >= 80\nORDER BY mark, student_id;",
+          "note": "Run after the shared Unit 3 setup in a scratch database."
+        },
+        "mysql": {
+          "code": "CREATE INDEX u3_enrol_course_mark\nON U3Enrolment(course_code, mark);\n\nSELECT student_id, mark\nFROM U3Enrolment\nWHERE course_code = 'DB101' AND mark >= 80\nORDER BY mark, student_id;",
+          "note": "Run after the shared Unit 3 setup in a scratch database."
+        },
+        "mariadb": {
+          "code": "CREATE INDEX u3_enrol_course_mark\nON U3Enrolment(course_code, mark);\n\nSELECT student_id, mark\nFROM U3Enrolment\nWHERE course_code = 'DB101' AND mark >= 80\nORDER BY mark, student_id;",
+          "note": "Run after the shared Unit 3 setup in a scratch database."
+        },
+        "sqlite": {
+          "code": "CREATE INDEX u3_enrol_course_mark\nON U3Enrolment(course_code, mark);\n\nSELECT student_id, mark\nFROM U3Enrolment\nWHERE course_code = 'DB101' AND mark >= 80\nORDER BY mark, student_id;",
+          "note": "Run after the shared Unit 3 setup in a scratch database."
+        },
+        "sqlserver": {
+          "code": "CREATE INDEX u3_enrol_course_mark\nON U3Enrolment(course_code, mark);\n\nSELECT student_id, mark\nFROM U3Enrolment\nWHERE course_code = 'DB101' AND mark >= 80\nORDER BY mark, student_id;",
+          "note": "Run after the shared Unit 3 setup in a scratch database."
+        }
+      }
+    },
+    {
+      "title": "2. Selectivity and a stated cost model",
+      "paragraphs": [
+        "Selectivity describes how small the qualifying subset is. If a table occupies 1,000 pages and an index search takes 3 page visits plus 8 distinct data-page visits, a deliberately simplified total is 11 visits versus a 1,000-page scan. Those figures are assumptions for reasoning, not measurements.",
+        "If qualifying rows touch nearly every page, an index can add work instead of saving it. Caching, clustering, random versus sequential access, parallelism, row width, and visibility checks change the real comparison. A tiny five-row teaching table may correctly use a scan even after the index is created."
+      ]
+    },
+    {
+      "title": "3. Composite, unique, and covering indexes",
+      "paragraphs": [
+        "A composite index contains multiple key columns with a defined order. A unique index enforces a uniqueness rule under the product's semantics. A covering design supplies all requested values from the index where the engine can avoid or reduce base-row lookups; PostgreSQL visibility and other engine requirements still matter.",
+        "An index on (course_code, mark) does not automatically contain student_id in a portable way. Storage engines may include primary-key columns or row locators internally, but those details differ. Explain the specific product before claiming the sample query is index-only."
+      ]
+    },
+    {
+      "title": "4. Writes pay for the access structure",
+      "paragraphs": [
+        "INSERT adds index entries, DELETE removes them, and changes to indexed values require maintenance. Extra indexes consume memory and storage, can increase logging and write latency, and may introduce page splits or other structural work. A foreign key's logical rule and an index supporting checks are separate concepts.",
+        "Prefer predicates that can be matched to an index design. Applying a function or implicit type conversion to a searched column can prevent a useful access path unless the DBMS has an appropriate expression or functional index. Do not remove necessary transformations solely on performance folklore; check equivalent meaning and actual plans."
+      ]
+    },
+    {
+      "title": "5. Inspect the plan on the chosen server",
+      "paragraphs": [
+        "Use the selected plan command after creating the index. PostgreSQL EXPLAIN reports an estimated strategy; EXPLAIN ANALYZE executes the statement and records observations. Oracle EXPLAIN PLAN plus DBMS_XPLAN displays a stored estimated plan. SQLite EXPLAIN QUERY PLAN reports access choices. The output is server- and data-dependent.",
+        "Exercise: compare the plan before and after adding the index, then try a predicate on mark alone. Record what the server chose and why the tiny fixture does not justify a production performance claim."
+      ],
+      "code": "EXPLAIN SELECT student_id, mark FROM U3Enrolment\nWHERE course_code = 'DB101' AND mark >= 80;",
+      "sqlVariants": {
+        "postgresql": {
+          "code": "EXPLAIN SELECT student_id, mark FROM U3Enrolment\nWHERE course_code = 'DB101' AND mark >= 80;",
+          "note": "Run after the shared Unit 3 setup in a scratch database."
+        },
+        "oracle": {
+          "code": "EXPLAIN PLAN FOR\nSELECT student_id, mark FROM U3Enrolment\nWHERE course_code = 'DB101' AND mark >= 80;\nSELECT * FROM TABLE(DBMS_XPLAN.DISPLAY(NULL, NULL, 'BASIC'));",
+          "note": "Oracle: requires appropriate plan-table and DBMS_XPLAN access. Estimated plan, not measured execution."
+        },
+        "mysql": {
+          "code": "EXPLAIN SELECT student_id, mark FROM U3Enrolment\nWHERE course_code = 'DB101' AND mark >= 80;",
+          "note": "Run after the shared Unit 3 setup in a scratch database."
+        },
+        "mariadb": {
+          "code": "EXPLAIN SELECT student_id, mark FROM U3Enrolment\nWHERE course_code = 'DB101' AND mark >= 80;",
+          "note": "Run after the shared Unit 3 setup in a scratch database."
+        },
+        "sqlite": {
+          "code": "EXPLAIN QUERY PLAN SELECT student_id, mark FROM U3Enrolment\nWHERE course_code = 'DB101' AND mark >= 80;",
+          "note": "SQLite: inspect SEARCH/SCAN details; no fixed plan text is promised."
+        },
+        "sqlserver": {
+          "code": "SET SHOWPLAN_TEXT ON;\nGO\nSELECT student_id, mark FROM U3Enrolment\nWHERE course_code = 'DB101' AND mark >= 80;\nGO\nSET SHOWPLAN_TEXT OFF;\nGO",
+          "note": "SQL Server: run separate SSMS/sqlcmd batches; SHOWPLAN permission is required. GO is not server SQL."
+        }
+      }
+    }
+  ],
+  "revision": [
+    "Trace the equality prefix and range on the second key.",
+    "State selectivity, page-work assumptions, and maintenance costs.",
+    "Distinguish a supported access path from a guaranteed chosen plan."
+  ],
+  "questions": [
+    {
+      "id": "indexing-always",
+      "question": "Why might the DBMS ignore the new index?",
+      "answer": [
+        "A scan can be cheaper for a tiny table or a broad predicate. Statistics, data layout, caching, and available plans influence that choice. The existence of an index does not obligate the optimizer to use it."
+      ],
+      "level": "easy",
+      "tags": [
+        "Concept check"
+      ]
+    },
+    {
+      "id": "indexing-order",
+      "question": "Are indexes on (course_code, mark) and (mark, course_code) equivalent?",
+      "answer": [
+        "They contain the same logical key attributes but different key ordering. A course equality followed by a mark range aligns naturally with the first order. Workloads and supported optimizer strategies determine which access paths are useful."
+      ],
+      "level": "medium",
+      "tags": [
+        "Concept check"
+      ]
+    },
+    {
+      "id": "indexing-cost",
+      "question": "Does the 11-page illustration prove an 11/1000 elapsed-time ratio?",
+      "answer": [
+        "No. It omits CPU, caching, I/O latency differences, parallelism, contention, and other effects. It is a page-work model with stated assumptions, not a measured wall-clock speedup."
+      ],
+      "level": "hard",
+      "tags": [
+        "Exam practice"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "title": "PostgreSQL: multicolumn indexes",
+      "url": "https://www.postgresql.org/docs/current/indexes-multicolumn.html"
+    },
+    {
+      "title": "PostgreSQL: table expressions and logical query stages",
+      "url": "https://www.postgresql.org/docs/current/queries-table-expressions.html"
+    },
+    {
+      "title": "PostgreSQL: declarative constraints",
+      "url": "https://www.postgresql.org/docs/current/ddl-constraints.html"
+    },
+    {
+      "title": "Oracle 19c: DBMS_XPLAN",
+      "url": "https://docs.oracle.com/en/database/oracle/oracle-database/19/arpls/DBMS_XPLAN.html"
+    },
+    {
+      "title": "SQLite: EXPLAIN QUERY PLAN",
+      "url": "https://www.sqlite.org/eqp.html"
+    },
+    {
+      "title": "SQL Server: SHOWPLAN_TEXT",
+      "url": "https://learn.microsoft.com/en-us/sql/t-sql/statements/set-showplan-text-transact-sql"
+    }
+  ],
+  "next": {
+    "id": "cursors",
+    "title": "Cursors and row-by-row processing"
+  }
+}

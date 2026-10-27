@@ -1,0 +1,201 @@
+{
+  "id": "cursors",
+  "title": "Cursors and row-by-row processing",
+  "summary": "Trace cursor state, fetch termination, implicit attributes, and set-based alternatives.",
+  "topics": [
+    "cursors"
+  ],
+  "intro": "A cursor gives procedural code a controlled way to consume query rows. It is useful when a task truly needs per-row interaction, but a loop is not automatically better than a set-based statement.",
+  "outcomes": [
+    "Trace declare, open, fetch, exhaustion, and close.",
+    "Use Oracle cursor attributes and distinguish PostgreSQL FOUND.",
+    "Explain resource cleanup, set-based alternatives, and client cursor differences."
+  ],
+  "sections": [
+    {
+      "title": "1. The cursor lifecycle",
+      "paragraphs": [
+        "A declaration associates a name with a query and its result shape. OPEN establishes the cursor's execution context. FETCH attempts to obtain the next row into compatible variables. A failed fetch signals exhaustion; CLOSE releases the open cursor resource. The first fetch occurs after opening, before the first row has been consumed.",
+        "Test exhaustion immediately after FETCH and before processing the target variables. Processing first can reuse stale values or act on invalid contents after the last row. Closing before the last necessary fetch loses access to remaining rows."
+      ],
+      "diagram": "cursor",
+      "diagramHeight": 680,
+      "alt": "Declared cursor opens before the first row. Fetch either supplies one row for processing and loops back, or signals exhausted and leads to close. Exception cleanup also closes the resource before rethrowing.",
+      "caption": "Exhaustion is checked before processing. The result set can be empty on the very first fetch."
+    },
+    {
+      "title": "2. Explicit cursor trace on the shared dataset",
+      "paragraphs": [
+        "The query selects MCA students ordered by student_id. Fetches succeed for 101 Asha, 102 Ravi, and 104 Neha; the fourth fetch reports exhaustion. The target table makes the row-by-row effect visible without depending on console-output configuration."
+      ],
+      "code": "CREATE TABLE U3CursorResult (student_id INTEGER NOT NULL PRIMARY KEY, name VARCHAR(80) NOT NULL);\nDO $$\nDECLARE\n  c CURSOR FOR SELECT student_id, name FROM U3Student\n    WHERE programme = 'MCA' ORDER BY student_id;\n  v_id U3Student.student_id%TYPE;\n  v_name U3Student.name%TYPE;\nBEGIN\n  OPEN c;\n  LOOP\n    FETCH c INTO v_id, v_name;\n    EXIT WHEN NOT FOUND;\n    INSERT INTO U3CursorResult VALUES (v_id, v_name);\n  END LOOP;\n  CLOSE c;\nEND;\n$$;\nSELECT student_id, name FROM U3CursorResult ORDER BY student_id;",
+      "sqlVariants": {
+        "postgresql": {
+          "code": "CREATE TABLE U3CursorResult (student_id INTEGER NOT NULL PRIMARY KEY, name VARCHAR(80) NOT NULL);\nDO $$\nDECLARE\n  c CURSOR FOR SELECT student_id, name FROM U3Student\n    WHERE programme = 'MCA' ORDER BY student_id;\n  v_id U3Student.student_id%TYPE;\n  v_name U3Student.name%TYPE;\nBEGIN\n  OPEN c;\n  LOOP\n    FETCH c INTO v_id, v_name;\n    EXIT WHEN NOT FOUND;\n    INSERT INTO U3CursorResult VALUES (v_id, v_name);\n  END LOOP;\n  CLOSE c;\nEND;\n$$;\nSELECT student_id, name FROM U3CursorResult ORDER BY student_id;",
+          "note": "Run once after setup in a fresh scratch database. This exercise creates U3CursorResult; it is not a performance recommendation.",
+          "download": {
+            "href": "/examples/dbms-unit3/cursors-postgresql.sql",
+            "filename": "unit3-cursors-postgresql.sql"
+          }
+        },
+        "oracle": {
+          "code": "CREATE TABLE U3CursorResult (student_id NUMBER(10) NOT NULL PRIMARY KEY, name VARCHAR2(80) NOT NULL);\nDECLARE\n  CURSOR c IS SELECT student_id, name FROM U3Student\n    WHERE programme = 'MCA' ORDER BY student_id;\n  v_id U3Student.student_id%TYPE;\n  v_name U3Student.name%TYPE;\nBEGIN\n  OPEN c;\n  LOOP\n    FETCH c INTO v_id, v_name;\n    EXIT WHEN c%NOTFOUND;\n    INSERT INTO U3CursorResult VALUES (v_id, v_name);\n  END LOOP;\n  CLOSE c;\nEXCEPTION\n  WHEN OTHERS THEN\n    IF c%ISOPEN THEN CLOSE c; END IF;\n    RAISE;\nEND;\n/\nSELECT student_id, name FROM U3CursorResult ORDER BY student_id;",
+          "note": "Oracle 19c PL/SQL: run as a SQL*Plus/SQL Developer script. The slash submits the anonymous block; it is not API SQL.",
+          "download": {
+            "href": "/examples/dbms-unit3/cursors-oracle.sql",
+            "filename": "unit3-cursors-oracle.sql"
+          }
+        },
+        "mysql": {
+          "code": "CREATE TABLE U3CursorResult (student_id INTEGER NOT NULL PRIMARY KEY, name VARCHAR(80) NOT NULL) ENGINE=InnoDB;\nDELIMITER //\nCREATE PROCEDURE U3CopyMCA()\nBEGIN\n  DECLARE v_done BOOLEAN DEFAULT FALSE;\n  DECLARE v_id INTEGER;\n  DECLARE v_name VARCHAR(80);\n  DECLARE c CURSOR FOR SELECT student_id, name FROM U3Student\n    WHERE programme = 'MCA' ORDER BY student_id;\n  DECLARE CONTINUE HANDLER FOR NOT FOUND SET v_done = TRUE;\n  OPEN c;\n  read_loop: LOOP\n    FETCH c INTO v_id, v_name;\n    IF v_done THEN LEAVE read_loop; END IF;\n    INSERT INTO U3CursorResult VALUES (v_id, v_name);\n  END LOOP;\n  CLOSE c;\nEND//\nDELIMITER ;\nCALL U3CopyMCA();\nSELECT student_id, name FROM U3CursorResult ORDER BY student_id;",
+          "note": "MySQL: DELIMITER is a mysql-client instruction. Declarations appear before executable statements, and the NOT FOUND handler ends the fetch loop.",
+          "download": {
+            "href": "/examples/dbms-unit3/cursors-mysql.sql",
+            "filename": "unit3-cursors-mysql.sql"
+          }
+        },
+        "mariadb": {
+          "code": "CREATE TABLE U3CursorResult (student_id INTEGER NOT NULL PRIMARY KEY, name VARCHAR(80) NOT NULL) ENGINE=InnoDB;\nDELIMITER //\nCREATE PROCEDURE U3CopyMCA()\nBEGIN\n  DECLARE v_done BOOLEAN DEFAULT FALSE;\n  DECLARE v_id INTEGER;\n  DECLARE v_name VARCHAR(80);\n  DECLARE c CURSOR FOR SELECT student_id, name FROM U3Student\n    WHERE programme = 'MCA' ORDER BY student_id;\n  DECLARE CONTINUE HANDLER FOR NOT FOUND SET v_done = TRUE;\n  OPEN c;\n  read_loop: LOOP\n    FETCH c INTO v_id, v_name;\n    IF v_done THEN LEAVE read_loop; END IF;\n    INSERT INTO U3CursorResult VALUES (v_id, v_name);\n  END LOOP;\n  CLOSE c;\nEND//\nDELIMITER ;\nCALL U3CopyMCA();\nSELECT student_id, name FROM U3CursorResult ORDER BY student_id;",
+          "note": "MariaDB: stored-program cursor with a NOT FOUND handler. DELIMITER is a client instruction.",
+          "download": {
+            "href": "/examples/dbms-unit3/cursors-mariadb.sql",
+            "filename": "unit3-cursors-mariadb.sql"
+          }
+        },
+        "sqlite": {
+          "code": "SELECT student_id, name FROM U3Student WHERE programme = 'MCA' ORDER BY student_id;",
+          "note": "SQLite does not implement this stored-program cursor block. This SELECT is a set-based result alternative; application code can iterate rows through its driver. It does not create U3CursorResult.",
+          "download": {
+            "href": "/examples/dbms-unit3/cursors-sqlite.sql",
+            "filename": "unit3-cursors-sqlite.sql"
+          }
+        },
+        "sqlserver": {
+          "code": "CREATE TABLE U3CursorResult (student_id INTEGER NOT NULL PRIMARY KEY, name VARCHAR(80) NOT NULL);\nDECLARE @id INTEGER, @name VARCHAR(80);\nDECLARE c CURSOR LOCAL FAST_FORWARD FOR\n  SELECT student_id, name FROM U3Student\n  WHERE programme = 'MCA' ORDER BY student_id;\nBEGIN TRY\n  OPEN c;\n  FETCH NEXT FROM c INTO @id, @name;\n  WHILE @@FETCH_STATUS = 0\n  BEGIN\n    INSERT INTO U3CursorResult VALUES (@id, @name);\n    FETCH NEXT FROM c INTO @id, @name;\n  END;\n  CLOSE c;\n  DEALLOCATE c;\nEND TRY\nBEGIN CATCH\n  IF CURSOR_STATUS('local', 'c') >= 0 CLOSE c;\n  IF CURSOR_STATUS('local', 'c') > -3 DEALLOCATE c;\n  THROW;\nEND CATCH;\nSELECT student_id, name FROM U3CursorResult ORDER BY student_id;",
+          "note": "SQL Server: a local FAST_FORWARD cursor uses @@FETCH_STATUS and explicit cleanup in normal and error paths.",
+          "download": {
+            "href": "/examples/dbms-unit3/cursors-sqlserver.sql",
+            "filename": "unit3-cursors-sqlserver.sql"
+          }
+        }
+      },
+      "table": {
+        "caption": "Successful fetch trace",
+        "headers": [
+          "Fetch",
+          "Student",
+          "Action"
+        ],
+        "rows": [
+          [
+            1,
+            "101 Asha",
+            "Insert one result row"
+          ],
+          [
+            2,
+            "102 Ravi",
+            "Insert one result row"
+          ],
+          [
+            3,
+            "104 Neha",
+            "Insert one result row"
+          ],
+          [
+            4,
+            "No row",
+            "Exit; do not insert again"
+          ]
+        ]
+      }
+    },
+    {
+      "title": "3. Implicit cursors and scope-sensitive attributes",
+      "paragraphs": [
+        "Oracle automatically manages an implicit SQL cursor for SQL statements. SQL%ROWCOUNT reports affected rows for the most recent applicable SQL statement; copy it immediately if later statements might overwrite the information. SQL%FOUND and SQL%NOTFOUND reflect whether rows were affected or returned in that context. An explicit cursor uses c%ROWCOUNT and c%NOTFOUND for its own state.",
+        "Before an explicit fetch, Oracle %FOUND and %NOTFOUND are NULL. %ROWCOUNT counts successfully fetched rows, not the total cardinality before iteration. PostgreSQL uses FOUND after a FETCH; it is a procedure-local status variable affected by other operations, not Oracle's % attribute syntax."
+      ]
+    },
+    {
+      "title": "4. Prefer sets when the operation is relational",
+      "paragraphs": [
+        "The copying exercise could be written INSERT INTO U3CursorResult SELECT student_id, name FROM U3Student WHERE programme = 'MCA'. That lets the engine process the set without a procedural fetch/insert cycle. Use a cursor when per-row sequencing or an API obligation actually requires it, then measure the overhead.",
+        "Oracle cursor FOR loops manage open/fetch/close automatically for their query. Bulk SQL features can reduce repeated SQL/procedural transitions. They are not the same as issuing COMMIT inside every iteration. Frequent commits break atomicity and do not inherently solve cursor resource or consistency problems."
+      ]
+    },
+    {
+      "title": "5. Exceptions, locking, and application cursors",
+      "paragraphs": [
+        "Close resources in normal and failure paths. Do not swallow an exception merely to make the loop finish. A FOR UPDATE cursor may introduce row locks and engine-specific restrictions; it is not a general answer to every consistency problem.",
+        "A Python or Java driver cursor is an API abstraction and may buffer rows client-side or use server-side resources depending on configuration. Its method name alone does not prove it is an Oracle explicit PL/SQL cursor. State the server, driver behaviour, and transaction lifetime when discussing streaming large results."
+      ]
+    }
+  ],
+  "revision": [
+    "Trace the first, last successful, and first failed fetch.",
+    "Explain c%NOTFOUND versus SQL%ROWCOUNT versus PostgreSQL FOUND.",
+    "Choose a set operation first and justify any procedural loop."
+  ],
+  "questions": [
+    {
+      "id": "cursors-termination",
+      "question": "Why must exhaustion be checked immediately after FETCH?",
+      "answer": [
+        "A failed fetch does not provide a fresh valid row. Processing the target variables before checking can repeat stale work or act on undefined contents. The fixture requires exactly three inserts, not four."
+      ],
+      "level": "easy",
+      "tags": [
+        "Concept check"
+      ]
+    },
+    {
+      "id": "cursors-rowcount",
+      "question": "Does c%ROWCOUNT reveal the total number of rows before fetching?",
+      "answer": [
+        "No. For an explicit Oracle cursor it counts rows fetched so far. The fourth unsuccessful fetch does not make the count four; it remains three."
+      ],
+      "level": "medium",
+      "tags": [
+        "Concept check"
+      ]
+    },
+    {
+      "id": "cursors-set-alternative",
+      "question": "How can the copy be done without a cursor, and why consider it?",
+      "answer": [
+        "INSERT INTO target SELECT ... expresses the whole copy as one relational statement. It avoids per-row procedural dispatch and is easier to reason about atomically. Choose a loop only when the operation cannot be adequately expressed or controlled as a set."
+      ],
+      "level": "hard",
+      "tags": [
+        "Practical"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "title": "Oracle 19c: implicit and explicit cursors",
+      "url": "https://docs.oracle.com/en/database/oracle/oracle-database/19/lnpls/cursors-overview.html"
+    },
+    {
+      "title": "PostgreSQL: PL/pgSQL cursors",
+      "url": "https://www.postgresql.org/docs/current/plpgsql-cursors.html"
+    },
+    {
+      "title": "MySQL 8.4: cursors in stored programs",
+      "url": "https://dev.mysql.com/doc/refman/8.4/en/cursors.html"
+    },
+    {
+      "title": "MariaDB: cursor overview",
+      "url": "https://mariadb.com/docs/server/reference/sql-statements/programmatic-compound-statements/programmatic-compound-statements-cursors/cursor-overview"
+    },
+    {
+      "title": "SQL Server: cursor operations",
+      "url": "https://learn.microsoft.com/en-us/sql/t-sql/language-elements/cursors-transact-sql"
+    }
+  ],
+  "next": {
+    "id": "stored-procedures",
+    "title": "Stored procedures, parameters, and exceptions"
+  }
+}

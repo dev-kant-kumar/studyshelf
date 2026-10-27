@@ -5,7 +5,7 @@ import NoteLinks from '../../../shared/components/NoteLinks'
 import { link, eyebrow, muted, focus } from '@/ui/classes'
 
 export default function NoteSidebar({ paper, currentNoteId: _currentNoteId, currentUnitId }) {
-  const [topicFilter, setTopicFilter] = useState('')
+  const [searchQuery, setSearchQuery] = useState('')
   const [openUnits, setOpenUnits] = useState(() => (currentUnitId ? [currentUnitId] : []))
   const [prevUnitId, setPrevUnitId] = useState(currentUnitId)
 
@@ -26,90 +26,118 @@ export default function NoteSidebar({ paper, currentNoteId: _currentNoteId, curr
   const expandAll = () => setOpenUnits(paper.units.map(u => u.id))
   const collapseAll = () => setOpenUnits([])
 
-  const query = topicFilter.trim().toLocaleLowerCase()
+  const terms = searchQuery.toLowerCase().trim().split(/\s+/).filter(Boolean)
+
+  const isNoteMatch = (item, unit) => {
+    if (!terms.length) return true
+
+    const coveredTopicTitles = (unit.topics ?? [])
+      .filter(topic => item.coveredTopics?.includes(topic.id))
+      .map(topic => topic.title)
+
+    const tags = item.tags ?? []
+    const unitInfo = `unit ${unit.number} ${unit.title ?? ''}`
+
+    const haystack = [
+      item.title,
+      item.summary,
+      ...tags,
+      ...coveredTopicTitles,
+      item.id,
+      item.slug,
+      unitInfo,
+    ]
+      .filter(Boolean)
+      .join(' ')
+      .toLowerCase()
+
+    return terms.every(term => haystack.includes(term))
+  }
 
   const allMatchingNotesCount = paper.units.reduce((acc, unit) => {
-    const matches = unit.notes.filter(
-      item => !query || `${item.title} ${item.summary}`.toLocaleLowerCase().includes(query)
-    )
+    const matches = unit.notes.filter(item => isNoteMatch(item, unit))
     return acc + matches.length
   }, 0)
 
   return (
-    <nav aria-label="Subject notes" className="space-y-4">
-      {/* Return to Paper Overview Link */}
-      <Link
-        className={`${link} inline-flex items-center gap-1.5 text-xs font-semibold sm:text-sm`}
-        to={paper.href}
+    <nav aria-label="Subject notes" className="flex h-full min-h-0 flex-1 flex-col">
+      {/* Pinned Search & Navigation Header (stays fixed while topics scroll) */}
+      <div className="sticky top-0 z-10 shrink-0 space-y-3 border-b border-line bg-surface px-4 pt-5 pb-3 dark:border-night-line dark:bg-night-surface lg:px-5">
+        {/* Return to Paper Overview Link */}
+        <Link
+          className={`${link} inline-flex items-center gap-1.5 text-xs font-semibold sm:text-sm`}
+          to={paper.href}
+        >
+          <ArrowLeft size={14} aria-hidden="true" />
+          <span className="line-clamp-1">{paper.title}</span>
+        </Link>
+
+        {/* Search Notes Input */}
+        <div className="relative">
+          <label htmlFor="topic-search-input" className="sr-only">
+            Search notes in this paper
+          </label>
+          <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-subtle dark:text-night-subtle">
+            <Search size={14} aria-hidden="true" />
+          </div>
+          <input
+            id="topic-search-input"
+            type="search"
+            value={searchQuery}
+            onChange={e => setSearchQuery(e.target.value)}
+            placeholder="Search notes in this paper..."
+            className={`min-h-10 w-full rounded-lg border border-line bg-canvas py-2 pr-8 pl-8.5 text-xs text-ink placeholder:text-subtle/70 outline-none transition-colors dark:border-night-line dark:bg-night-canvas dark:text-night-ink dark:placeholder:text-night-subtle/70 ${focus}`}
+          />
+          {searchQuery && (
+            <button
+              type="button"
+              onClick={() => setSearchQuery('')}
+              aria-label="Clear search"
+              className="absolute inset-y-0 right-0 flex items-center pr-2.5 text-subtle hover:text-ink dark:text-night-subtle dark:hover:text-night-ink"
+            >
+              <X size={13} aria-hidden="true" />
+            </button>
+          )}
+        </div>
+
+        {/* Expand all / Collapse all toolbar */}
+        <div className="flex items-center justify-between text-xs">
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={expandAll}
+              className={`text-brand hover:underline dark:text-night-brand ${focus}`}
+            >
+              Expand all
+            </button>
+            <span className={muted}>·</span>
+            <button
+              type="button"
+              onClick={collapseAll}
+              className={`text-subtle hover:text-ink dark:text-night-subtle dark:hover:text-night-ink ${focus}`}
+            >
+              Collapse all
+            </button>
+          </div>
+          <span className="font-mono text-[11px] text-subtle dark:text-night-subtle">
+            {paper.units.length} {paper.units.length === 1 ? 'unit' : 'units'}
+          </span>
+        </div>
+      </div>
+
+      {/* Units List - Scrolls Independently */}
+      <div
+        data-sidebar-scroll
+        className="flex-1 min-h-0 space-y-3 overflow-y-auto overscroll-contain px-4 py-4 lg:px-5"
       >
-        <ArrowLeft size={14} aria-hidden="true" />
-        <span className="line-clamp-1">{paper.title}</span>
-      </Link>
-
-      {/* Topic Filter Input */}
-      <div className="relative">
-        <label htmlFor="topic-search-input" className="sr-only">
-          Filter subject topics
-        </label>
-        <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-subtle dark:text-night-subtle">
-          <Search size={14} aria-hidden="true" />
-        </div>
-        <input
-          id="topic-search-input"
-          type="search"
-          value={topicFilter}
-          onChange={e => setTopicFilter(e.target.value)}
-          placeholder="Filter topics..."
-          className={`min-h-10 w-full rounded-lg border border-line bg-canvas py-2 pr-8 pl-8.5 text-xs text-ink placeholder:text-subtle/70 outline-none transition-colors dark:border-night-line dark:bg-night-canvas dark:text-night-ink dark:placeholder:text-night-subtle/70 ${focus}`}
-        />
-        {topicFilter && (
-          <button
-            type="button"
-            onClick={() => setTopicFilter('')}
-            aria-label="Clear topic search"
-            className="absolute inset-y-0 right-0 flex items-center pr-2.5 text-subtle hover:text-ink dark:text-night-subtle dark:hover:text-night-ink"
-          >
-            <X size={13} aria-hidden="true" />
-          </button>
-        )}
-      </div>
-
-      {/* Expand all / Collapse all toolbar */}
-      <div className="flex items-center justify-between border-b border-line pb-2.5 text-xs dark:border-night-line">
-        <div className="flex items-center gap-2">
-          <button
-            type="button"
-            onClick={expandAll}
-            className={`text-brand hover:underline dark:text-night-brand ${focus}`}
-          >
-            Expand all
-          </button>
-          <span className={muted}>·</span>
-          <button
-            type="button"
-            onClick={collapseAll}
-            className={`text-subtle hover:text-ink dark:text-night-subtle dark:hover:text-night-ink ${focus}`}
-          >
-            Collapse all
-          </button>
-        </div>
-        <span className="font-mono text-[11px] text-subtle dark:text-night-subtle">
-          {paper.units.length} {paper.units.length === 1 ? 'unit' : 'units'}
-        </span>
-      </div>
-
-      {/* Units List */}
-      <div className="space-y-3 pt-1">
         {paper.units.map(unit => {
-          const matches = unit.notes.filter(
-            item => !query || `${item.title} ${item.summary}`.toLocaleLowerCase().includes(query)
-          )
+          const matches = unit.notes.filter(item => isNoteMatch(item, unit))
 
           // If searching, hide units that have no matches
-          if (query && !matches.length) return null
+          if (terms.length && !matches.length) return null
 
           // When searching, auto-expand matching units so results are visible
-          const isExpanded = query ? true : openUnits.includes(unit.id)
+          const isExpanded = terms.length ? true : openUnits.includes(unit.id)
           const isCurrentUnit = unit.id === currentUnitId
 
           return (
@@ -165,10 +193,10 @@ export default function NoteSidebar({ paper, currentNoteId: _currentNoteId, curr
           )
         })}
 
-        {/* Empty filter state */}
-        {query && allMatchingNotesCount === 0 && (
-          <p role="status" className={`py-4 text-center text-xs ${muted}`}>
-            No topics match "{topicFilter}". Try another keyword.
+        {/* Empty search state */}
+        {terms.length > 0 && allMatchingNotesCount === 0 && (
+          <p role="status" className={`py-6 text-center text-xs ${muted}`}>
+            No notes match "{searchQuery}". Try another search term.
           </p>
         )}
       </div>

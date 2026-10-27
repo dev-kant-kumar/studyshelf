@@ -1,0 +1,10 @@
+export const pg = page => `https://www.postgresql.org/docs/18/${page}.html`
+export const p = text => ({ type: 'paragraph', text })
+export const note = (title, text) => ({ type: 'note', title, text })
+export const table = (caption, headers, rows) => ({ type: 'table', caption, headers, rows })
+export const sql = (title, code, explanation, expected, options = {}) => ({ type: 'code', title, code, explanation, expected, language: 'postgresql', runnable: true, ...options })
+export const code = (title, language, code, explanation) => ({ type: 'code', title, language, code, explanation, runnable: false })
+export const diagram = (kind, caption) => ({ type: 'diagram', kind, caption })
+export const exercise = (task, hint, solution, explanation, expected) => ({ type: 'exercise', task, hint, solution, explanation, expected })
+export const section = (title, ...blocks) => ({ title, blocks })
+export const lesson = (id, title, summary, sections, practice, references, extra = {}) => ({ id, title, summary, sections, practice, references: references.map(([title, url]) => ({ title, url })), ...extra })

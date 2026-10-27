@@ -1,5 +1,8 @@
 import { roleRoadmaps } from '../app/main-website/pages/Developers/roleRoadmapData.js'
+import { lessons, lessonHref } from '../app/main-website/pages/Sql/data/course.js'
 export const publicPages = [
+  { path: '/developers/sql', label: 'SQL for backend engineers' },
+  ...lessons.map(lesson => ({ path: lessonHref(lesson.id), label: lesson.title })),
   ...roleRoadmaps.map(roadmap => ({ path: `/developers/${roadmap.slug}`, label: `${roadmap.title} roadmap` })),
   { path: '/careers', label: 'Career Explorer' },
   { path: '/developers', label: 'Developer Shelf' },

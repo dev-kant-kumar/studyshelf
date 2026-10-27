@@ -1,0 +1,204 @@
+{
+  "id": "triggers",
+  "title": "Triggers, audit trails, and hidden side effects",
+  "summary": "Trace row and statement triggers, old/new values, multirow updates, and rollback.",
+  "topics": [
+    "triggers"
+  ],
+  "intro": "A trigger is invoked by a declared database event rather than an explicit caller command. It is powerful precisely because it runs on paths that an application author might not see in the submitted SQL.",
+  "outcomes": [
+    "Specify event, timing, granularity, condition, and action.",
+    "Build a NULL-aware mark audit for more than one updated row.",
+    "Explain transactional side effects, recursion, and when a constraint is better."
+  ],
+  "sections": [
+    {
+      "title": "1. The trigger contract has five parts",
+      "paragraphs": [
+        "State the event (such as UPDATE), timing (BEFORE, AFTER, or an applicable INSTEAD OF), granularity (row or statement), condition, and action. A row trigger runs for each qualifying row. A statement trigger runs for the statement and may receive sets of changed rows through product-specific mechanisms.",
+        "An UPDATE affecting zero rows still has statement-level consequences in engines that support statement triggers, while no row trigger has a changed row to process. AFTER describes timing within database execution; it does not generally mean after the transaction commits."
+      ],
+      "diagram": "trigger",
+      "diagramHeight": 680,
+      "alt": "One UPDATE matches two enrolments. Row-trigger engines invoke the audit action twice; SQL Server receives inserted and deleted sets and performs a set-based audit insert. Commit preserves both base and audit changes; rollback undoes both.",
+      "caption": "Trigger actions participate in the transaction in this design. A two-row update must produce two audit rows, not one arbitrary row."
+    },
+    {
+      "title": "2. Build a visible, NULL-aware audit",
+      "paragraphs": [
+        "This scratch example records old and new marks. The demo UPDATE changes Asha from 82 to 83 and Ravi from 88 to 89. It does not change Mira's NULL mark. A trigger must test an actual value change, not only whether mark appears in the UPDATE column list."
+      ],
+      "code": "CREATE TABLE U3MarkAudit (student_id INTEGER NOT NULL, course_code VARCHAR(10) NOT NULL, old_mark INTEGER NULL, new_mark INTEGER NULL);\nCREATE FUNCTION U3LogMark() RETURNS trigger\nLANGUAGE plpgsql AS $$\nBEGIN\n  INSERT INTO U3MarkAudit VALUES\n    (NEW.student_id, NEW.course_code, OLD.mark, NEW.mark);\n  RETURN NEW;\nEND;\n$$;\nCREATE TRIGGER u3_mark_change\nAFTER UPDATE OF mark ON U3Enrolment\nFOR EACH ROW WHEN (OLD.mark IS DISTINCT FROM NEW.mark)\nEXECUTE FUNCTION U3LogMark();\nUPDATE U3Enrolment SET mark = mark + 1\nWHERE course_code = 'DB101' AND mark IS NOT NULL;\nSELECT student_id, course_code, old_mark, new_mark\nFROM U3MarkAudit ORDER BY student_id;",
+      "sqlVariants": {
+        "postgresql": {
+          "code": "CREATE TABLE U3MarkAudit (student_id INTEGER NOT NULL, course_code VARCHAR(10) NOT NULL, old_mark INTEGER NULL, new_mark INTEGER NULL);\nCREATE FUNCTION U3LogMark() RETURNS trigger\nLANGUAGE plpgsql AS $$\nBEGIN\n  INSERT INTO U3MarkAudit VALUES\n    (NEW.student_id, NEW.course_code, OLD.mark, NEW.mark);\n  RETURN NEW;\nEND;\n$$;\nCREATE TRIGGER u3_mark_change\nAFTER UPDATE OF mark ON U3Enrolment\nFOR EACH ROW WHEN (OLD.mark IS DISTINCT FROM NEW.mark)\nEXECUTE FUNCTION U3LogMark();\nUPDATE U3Enrolment SET mark = mark + 1\nWHERE course_code = 'DB101' AND mark IS NOT NULL;\nSELECT student_id, course_code, old_mark, new_mark\nFROM U3MarkAudit ORDER BY student_id;",
+          "note": "Run once in a fresh Unit 3 fixture. This exercise modifies two marks; restore the fixture before unrelated exercises. The trigger body does not commit.",
+          "download": {
+            "href": "/examples/dbms-unit3/triggers-postgresql.sql",
+            "filename": "unit3-triggers-postgresql.sql"
+          }
+        },
+        "oracle": {
+          "code": "CREATE TABLE U3MarkAudit (student_id NUMBER(10) NOT NULL, course_code VARCHAR2(10) NOT NULL, old_mark NUMBER(10) NULL, new_mark NUMBER(10) NULL);\nCREATE OR REPLACE TRIGGER u3_mark_change\nAFTER UPDATE OF mark ON U3Enrolment\nFOR EACH ROW\nBEGIN\n  IF :OLD.mark <> :NEW.mark\n     OR (:OLD.mark IS NULL AND :NEW.mark IS NOT NULL)\n     OR (:OLD.mark IS NOT NULL AND :NEW.mark IS NULL) THEN\n    INSERT INTO U3MarkAudit VALUES\n      (:NEW.student_id, :NEW.course_code, :OLD.mark, :NEW.mark);\n  END IF;\nEND;\n/\nUPDATE U3Enrolment SET mark = mark + 1\nWHERE course_code = 'DB101' AND mark IS NOT NULL;\nSELECT student_id, course_code, old_mark, new_mark\nFROM U3MarkAudit ORDER BY student_id;",
+          "note": "Oracle 19c row trigger: :OLD and :NEW refer to values of the changed row. Slash submits the trigger definition in a script.",
+          "download": {
+            "href": "/examples/dbms-unit3/triggers-oracle.sql",
+            "filename": "unit3-triggers-oracle.sql"
+          }
+        },
+        "mysql": {
+          "code": "CREATE TABLE U3MarkAudit (student_id INTEGER NOT NULL, course_code VARCHAR(10) NOT NULL, old_mark INTEGER NULL, new_mark INTEGER NULL) ENGINE=InnoDB;\nDELIMITER //\nCREATE TRIGGER u3_mark_change\nAFTER UPDATE ON U3Enrolment FOR EACH ROW\nBEGIN\n  IF NOT (OLD.mark <=> NEW.mark) THEN\n    INSERT INTO U3MarkAudit VALUES\n      (NEW.student_id, NEW.course_code, OLD.mark, NEW.mark);\n  END IF;\nEND//\nDELIMITER ;\nUPDATE U3Enrolment SET mark = mark + 1\nWHERE course_code = 'DB101' AND mark IS NOT NULL;\nSELECT student_id, course_code, old_mark, new_mark\nFROM U3MarkAudit ORDER BY student_id;",
+          "note": "MySQL row trigger: <=> is NULL-safe equality; NOT detects an actual change. Use InnoDB for transactional base and audit tables.",
+          "download": {
+            "href": "/examples/dbms-unit3/triggers-mysql.sql",
+            "filename": "unit3-triggers-mysql.sql"
+          }
+        },
+        "mariadb": {
+          "code": "CREATE TABLE U3MarkAudit (student_id INTEGER NOT NULL, course_code VARCHAR(10) NOT NULL, old_mark INTEGER NULL, new_mark INTEGER NULL) ENGINE=InnoDB;\nDELIMITER //\nCREATE TRIGGER u3_mark_change\nAFTER UPDATE ON U3Enrolment FOR EACH ROW\nBEGIN\n  IF NOT (OLD.mark <=> NEW.mark) THEN\n    INSERT INTO U3MarkAudit VALUES\n      (NEW.student_id, NEW.course_code, OLD.mark, NEW.mark);\n  END IF;\nEND//\nDELIMITER ;\nUPDATE U3Enrolment SET mark = mark + 1\nWHERE course_code = 'DB101' AND mark IS NOT NULL;\nSELECT student_id, course_code, old_mark, new_mark\nFROM U3MarkAudit ORDER BY student_id;",
+          "note": "MariaDB row trigger: <=> handles transitions to and from NULL. Use InnoDB transactional tables.",
+          "download": {
+            "href": "/examples/dbms-unit3/triggers-mariadb.sql",
+            "filename": "unit3-triggers-mariadb.sql"
+          }
+        },
+        "sqlite": {
+          "code": "CREATE TABLE U3MarkAudit (student_id INTEGER NOT NULL, course_code VARCHAR(10) NOT NULL, old_mark INTEGER NULL, new_mark INTEGER NULL);\nCREATE TRIGGER u3_mark_change\nAFTER UPDATE OF mark ON U3Enrolment\nFOR EACH ROW WHEN OLD.mark IS NOT NEW.mark\nBEGIN\n  INSERT INTO U3MarkAudit VALUES\n    (NEW.student_id, NEW.course_code, OLD.mark, NEW.mark);\nEND;\nUPDATE U3Enrolment SET mark = mark + 1\nWHERE course_code = 'DB101' AND mark IS NOT NULL;\nSELECT student_id, course_code, old_mark, new_mark\nFROM U3MarkAudit ORDER BY student_id;",
+          "note": "SQLite row trigger: IS NOT detects a change including NULL transitions. Changes to the audit table roll back with the triggering transaction.",
+          "download": {
+            "href": "/examples/dbms-unit3/triggers-sqlite.sql",
+            "filename": "unit3-triggers-sqlite.sql"
+          }
+        },
+        "sqlserver": {
+          "code": "CREATE TABLE U3MarkAudit (student_id INTEGER NOT NULL, course_code VARCHAR(10) NOT NULL, old_mark INTEGER NULL, new_mark INTEGER NULL);\nGO\nCREATE TRIGGER u3_mark_change ON U3Enrolment\nAFTER UPDATE AS\nBEGIN\n  SET NOCOUNT ON;\n  INSERT INTO U3MarkAudit (student_id, course_code, old_mark, new_mark)\n  SELECT i.student_id, i.course_code, d.mark, i.mark\n  FROM inserted i JOIN deleted d\n    ON i.student_id = d.student_id AND i.course_code = d.course_code\n  WHERE i.mark <> d.mark\n     OR (i.mark IS NULL AND d.mark IS NOT NULL)\n     OR (i.mark IS NOT NULL AND d.mark IS NULL);\nEND;\nGO\nUPDATE U3Enrolment SET mark = mark + 1\nWHERE course_code = 'DB101' AND mark IS NOT NULL;\nSELECT student_id, course_code, old_mark, new_mark\nFROM U3MarkAudit ORDER BY student_id;",
+          "note": "SQL Server statement trigger: inserted/deleted can contain many rows. This exercise changes marks only; the composite identity remains unchanged. GO separates client batches.",
+          "download": {
+            "href": "/examples/dbms-unit3/triggers-sqlserver.sql",
+            "filename": "unit3-triggers-sqlserver.sql"
+          }
+        }
+      },
+      "table": {
+        "caption": "Expected audit rows",
+        "headers": [
+          "Student",
+          "Course",
+          "Old",
+          "New"
+        ],
+        "rows": [
+          [
+            101,
+            "DB101",
+            82,
+            83
+          ],
+          [
+            102,
+            "DB101",
+            88,
+            89
+          ]
+        ]
+      }
+    },
+    {
+      "title": "3. NULL-aware comparison and multirow correctness",
+      "paragraphs": [
+        "OLD.mark <> NEW.mark alone misses a change from NULL to 70 or from 70 to NULL because the comparison is UNKNOWN. PostgreSQL IS DISTINCT FROM, MySQL/MariaDB NULL-safe equality, SQLite IS NOT, and explicit Oracle/SQL Server predicates express the intended distinction.",
+        "SQL Server triggers process inserted and deleted rowsets. Assigning a scalar variable from inserted and assuming one row would silently mishandle a multirow statement. The sample joins old/new sets on the unchanged composite identity; mutable identity would require a stable matching design or a different operation policy."
+      ]
+    },
+    {
+      "title": "4. Rollback, failure, and scope",
+      "paragraphs": [
+        "For this transactional audit design, a rollback undoes both the base mark change and its audit insert. Test it by starting a transaction after creating the trigger, changing a mark, observing the audit row, then rolling back and rechecking both tables. Oracle DDL implicit commits mean trigger creation must be outside the rollback exercise.",
+        "A failed trigger action can fail the triggering statement. It should not silently swallow an audit write error if the requirement is that every accepted change be audited. External emails and HTTP calls are not automatically rolled back with database rows; use an appropriate transactional outbox or other explicit integration design when needed."
+      ]
+    },
+    {
+      "title": "5. Prefer visible rules and control trigger interactions",
+      "paragraphs": [
+        "Use constraints for ordinary key, reference, required-value, and row-domain rules. Triggers are reasonable for carefully designed audit or derived-side-effect requirements. They can also create recursion, hidden latency, unexpected lock ordering, or dependency chains.",
+        "Oracle row triggers can encounter mutating-table restrictions when querying or changing their triggering table. Do not repair that by committing inside the trigger. Other engines have their own recursion and table-access restrictions. A trigger that counts enrolments without concurrency control is not automatically a safe course-capacity constraint."
+      ]
+    },
+    {
+      "title": "6. Boundary exercises",
+      "paragraphs": [
+        "Run an UPDATE setting mark to its existing value: no audit row should be added. Change Mira's DB101 mark from NULL to 70: exactly one audit row should appear with old_mark NULL. Then change it back to NULL and check the reverse transition. Run one statement changing two non-NULL marks and verify two rows.",
+        "These tests distinguish a real value-change audit from a statement-column detector. They also reveal single-row assumptions and bad NULL comparisons that a simple one-row numeric update would never expose."
+      ]
+    }
+  ],
+  "revision": [
+    "Specify all five trigger-contract parts.",
+    "Trace a two-row update and NULL transitions.",
+    "Explain rollback and prefer constraints for declarative invariants."
+  ],
+  "questions": [
+    {
+      "id": "triggers-after",
+      "question": "Does AFTER UPDATE mean the trigger runs after COMMIT?",
+      "answer": [
+        "No. In this design it runs during execution of the data-changing statement, before the enclosing transaction is committed. Its audit writes are transactional and are undone on rollback."
+      ],
+      "level": "easy",
+      "tags": [
+        "Concept check"
+      ]
+    },
+    {
+      "id": "triggers-null-change",
+      "question": "Why is OLD.mark <> NEW.mark insufficient?",
+      "answer": [
+        "A comparison involving NULL is UNKNOWN. It misses transitions between missing and recorded values. Use the selected DBMS's NULL-aware comparison or the explicit transition predicates."
+      ],
+      "level": "medium",
+      "tags": [
+        "Concept check"
+      ]
+    },
+    {
+      "id": "triggers-multirow",
+      "question": "What is wrong with reading one scalar value from SQL Server inserted?",
+      "answer": [
+        "A statement trigger can receive many inserted rows. Picking one cannot audit every changed row and may be nondeterministic. Write a set-based operation over inserted/deleted and a valid stable matching key."
+      ],
+      "level": "hard",
+      "tags": [
+        "Practical"
+      ]
+    },
+    {
+      "id": "triggers-audit-rollback",
+      "question": "Can a rolled-back change remain in this audit table?",
+      "answer": [
+        "Not when both the base and audit changes participate in the same ordinary transaction as shown. A durable record of failed attempts would require a deliberately different design and failure/security analysis, not a hidden commit in this trigger."
+      ],
+      "level": "hard",
+      "tags": [
+        "Concept check"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "title": "Oracle 19c: PL/SQL triggers",
+      "url": "https://docs.oracle.com/en/database/oracle/oracle-database/19/lnpls/plsql-triggers.html"
+    },
+    {
+      "title": "PostgreSQL: trigger functions",
+      "url": "https://www.postgresql.org/docs/current/plpgsql-trigger.html"
+    },
+    {
+      "title": "SQLite: trigger syntax and restrictions",
+      "url": "https://www.sqlite.org/lang_createtrigger.html"
+    },
+    {
+      "title": "SQL Server: CREATE TRIGGER",
+      "url": "https://learn.microsoft.com/en-us/sql/t-sql/statements/create-trigger-transact-sql"
+    }
+  ]
+}

@@ -1,0 +1,200 @@
+{
+  "id": "advanced-sql",
+  "title": "Advanced SQL: joins, CTEs, and window functions",
+  "summary": "Trace outer joins, named query stages, ranking, and deterministic top-N selection.",
+  "topics": [
+    "advanced-sql"
+  ],
+  "intro": "Advanced SQL is the composition of simpler operations under careful rules about row multiplicity. A correct join, a reusable query stage, and a window calculation solve different problems. Treating them as interchangeable shortcuts leads to missing or duplicated results.",
+  "outcomes": [
+    "Explain inner and outer join row construction.",
+    "Use CTEs without assuming materialization.",
+    "Distinguish grouping from ranking and build stable top-N-per-group queries."
+  ],
+  "sections": [
+    {
+      "title": "1. Join on the relationship, not on coincidence",
+      "paragraphs": [
+        "An inner join returns matching combinations. If a student has two enrolments, the student appears twice when joined to enrolments. This is a correct one-to-many expansion, not necessarily a duplicate-data defect. A missing ON condition can create a Cartesian product: four students times five enrolments gives twenty candidate combinations.",
+        "A left join preserves each left row even when it has no right match. For AI101, right-side columns are filled with NULL. Putting a right-table filter in WHERE can discard that preserved row; placing an eligibility condition in ON affects which right rows can match while still preserving the left side."
+      ],
+      "diagram": "outer-join",
+      "diagramHeight": 600,
+      "alt": "Three course rows feed a left join with enrolments. DB101 has three matches, CS101 two, and AI101 one null-extended row. Grouping counts the non-null child key as three, two, zero.",
+      "caption": "The NULL-extended row is an intermediate join result. It is not an actual enrolment record.",
+      "code": "SELECT c.course_code, COUNT(e.student_id) AS enrolled\nFROM U3Course c\nLEFT JOIN U3Enrolment e ON e.course_code = c.course_code\nGROUP BY c.course_code\nORDER BY c.course_code;",
+      "sqlVariants": {
+        "postgresql": {
+          "code": "SELECT c.course_code, COUNT(e.student_id) AS enrolled\nFROM U3Course c\nLEFT JOIN U3Enrolment e ON e.course_code = c.course_code\nGROUP BY c.course_code\nORDER BY c.course_code;",
+          "note": "Run after the shared Unit 3 setup in a scratch database."
+        },
+        "oracle": {
+          "code": "SELECT c.course_code, COUNT(e.student_id) AS enrolled\nFROM U3Course c\nLEFT JOIN U3Enrolment e ON e.course_code = c.course_code\nGROUP BY c.course_code\nORDER BY c.course_code;",
+          "note": "Run after the shared Unit 3 setup in a scratch database."
+        },
+        "mysql": {
+          "code": "SELECT c.course_code, COUNT(e.student_id) AS enrolled\nFROM U3Course c\nLEFT JOIN U3Enrolment e ON e.course_code = c.course_code\nGROUP BY c.course_code\nORDER BY c.course_code;",
+          "note": "Run after the shared Unit 3 setup in a scratch database."
+        },
+        "mariadb": {
+          "code": "SELECT c.course_code, COUNT(e.student_id) AS enrolled\nFROM U3Course c\nLEFT JOIN U3Enrolment e ON e.course_code = c.course_code\nGROUP BY c.course_code\nORDER BY c.course_code;",
+          "note": "Run after the shared Unit 3 setup in a scratch database."
+        },
+        "sqlite": {
+          "code": "SELECT c.course_code, COUNT(e.student_id) AS enrolled\nFROM U3Course c\nLEFT JOIN U3Enrolment e ON e.course_code = c.course_code\nGROUP BY c.course_code\nORDER BY c.course_code;",
+          "note": "Run after the shared Unit 3 setup in a scratch database."
+        },
+        "sqlserver": {
+          "code": "SELECT c.course_code, COUNT(e.student_id) AS enrolled\nFROM U3Course c\nLEFT JOIN U3Enrolment e ON e.course_code = c.course_code\nGROUP BY c.course_code\nORDER BY c.course_code;",
+          "note": "Run after the shared Unit 3 setup in a scratch database."
+        }
+      }
+    },
+    {
+      "title": "2. Logical stages are not a physical plan",
+      "paragraphs": [
+        "Conceptually FROM and JOIN construct an input, WHERE filters rows, GROUP BY forms groups, HAVING filters groups, SELECT computes results, and ORDER BY defines presentation. Window calculations use the post-filter, post-group rows available to their query level. A DBMS can physically reorder work when meaning is preserved.",
+        "An alias produced in SELECT is generally not available to WHERE at that same level. Move the calculation into a subquery or CTE if a later stage needs to filter it. This is a scope issue, not proof that the server evaluates every expression literally in printed order."
+      ],
+      "diagram": "query-stages",
+      "diagramHeight": 600,
+      "alt": "Logical query stages run from FROM and JOIN through WHERE, GROUP BY, HAVING, SELECT and window calculation, ORDER BY, then row limiting. The optimizer may choose a different equivalent physical execution.",
+      "caption": "Use this order to reason about visibility and results; do not present it as an observed operator execution plan."
+    },
+    {
+      "title": "3. A CTE gives a query expression a name",
+      "paragraphs": [
+        "WITH names an intermediate relational expression for one statement. It is not a permanent table and is not automatically a performance cache. A DBMS may inline or materialize it according to its rules and plan. Recursive CTEs add an anchor and repeated step, but are not required for this nonrecursive example."
+      ],
+      "code": "WITH CourseMean AS (\n  SELECT course_code, AVG(mark) AS mean_mark\n  FROM U3Enrolment\n  GROUP BY course_code\n)\nSELECT course_code, mean_mark\nFROM CourseMean\nWHERE mean_mark >= 85\nORDER BY course_code;",
+      "sqlVariants": {
+        "postgresql": {
+          "code": "WITH CourseMean AS (\n  SELECT course_code, AVG(mark) AS mean_mark\n  FROM U3Enrolment\n  GROUP BY course_code\n)\nSELECT course_code, mean_mark\nFROM CourseMean\nWHERE mean_mark >= 85\nORDER BY course_code;",
+          "note": "Run after the shared Unit 3 setup in a scratch database."
+        },
+        "oracle": {
+          "code": "WITH CourseMean AS (\n  SELECT course_code, AVG(mark) AS mean_mark\n  FROM U3Enrolment\n  GROUP BY course_code\n)\nSELECT course_code, mean_mark\nFROM CourseMean\nWHERE mean_mark >= 85\nORDER BY course_code;",
+          "note": "Run after the shared Unit 3 setup in a scratch database."
+        },
+        "mysql": {
+          "code": "WITH CourseMean AS (\n  SELECT course_code, AVG(mark) AS mean_mark\n  FROM U3Enrolment\n  GROUP BY course_code\n)\nSELECT course_code, mean_mark\nFROM CourseMean\nWHERE mean_mark >= 85\nORDER BY course_code;",
+          "note": "Run after the shared Unit 3 setup in a scratch database."
+        },
+        "mariadb": {
+          "code": "WITH CourseMean AS (\n  SELECT course_code, AVG(mark) AS mean_mark\n  FROM U3Enrolment\n  GROUP BY course_code\n)\nSELECT course_code, mean_mark\nFROM CourseMean\nWHERE mean_mark >= 85\nORDER BY course_code;",
+          "note": "Run after the shared Unit 3 setup in a scratch database."
+        },
+        "sqlite": {
+          "code": "WITH CourseMean AS (\n  SELECT course_code, AVG(mark) AS mean_mark\n  FROM U3Enrolment\n  GROUP BY course_code\n)\nSELECT course_code, mean_mark\nFROM CourseMean\nWHERE mean_mark >= 85\nORDER BY course_code;",
+          "note": "Run after the shared Unit 3 setup in a scratch database."
+        },
+        "sqlserver": {
+          "code": "WITH CourseMean AS (\n  SELECT course_code, AVG(mark) AS mean_mark\n  FROM U3Enrolment\n  GROUP BY course_code\n)\nSELECT course_code, mean_mark\nFROM CourseMean\nWHERE mean_mark >= 85\nORDER BY course_code;",
+          "note": "Run after the shared Unit 3 setup in a scratch database."
+        }
+      },
+      "example": [
+        "DB101 has two recorded marks, 82 and 88, so its mean is 85. CS101 has 91 and 74, giving 82.5. Only DB101 passes. The NULL DB101 mark is not converted to zero."
+      ]
+    },
+    {
+      "title": "4. Windows annotate rows instead of collapsing them",
+      "paragraphs": [
+        "GROUP BY usually reduces many input rows to one result per group. ROW_NUMBER adds an ordinal to each existing row in its partition. PARTITION BY restarts the calculation for each course; the window ORDER BY defines positions within that partition. The outer ORDER BY controls output presentation separately.",
+        "The CASE expression puts missing marks after recorded marks without relying on product-specific NULL sort defaults. student_id breaks equal-mark ties. ROW_NUMBER always gives unique positions; RANK leaves gaps after ties; DENSE_RANK does not. The right function depends on whether a tie should occupy one prize level or consume multiple positions."
+      ],
+      "code": "SELECT course_code, student_id, mark,\n       ROW_NUMBER() OVER (\n         PARTITION BY course_code\n         ORDER BY CASE WHEN mark IS NULL THEN 1 ELSE 0 END,\n                  mark DESC, student_id\n       ) AS position\nFROM U3Enrolment\nORDER BY course_code, position;",
+      "sqlVariants": {
+        "postgresql": {
+          "code": "SELECT course_code, student_id, mark,\n       ROW_NUMBER() OVER (\n         PARTITION BY course_code\n         ORDER BY CASE WHEN mark IS NULL THEN 1 ELSE 0 END,\n                  mark DESC, student_id\n       ) AS position\nFROM U3Enrolment\nORDER BY course_code, position;",
+          "note": "PostgreSQL, Oracle 19c, MySQL 8+, MariaDB 10.6+, SQLite 3.25+, and SQL Server support this window form."
+        },
+        "oracle": {
+          "code": "SELECT course_code, student_id, mark,\n       ROW_NUMBER() OVER (\n         PARTITION BY course_code\n         ORDER BY CASE WHEN mark IS NULL THEN 1 ELSE 0 END,\n                  mark DESC, student_id\n       ) AS position\nFROM U3Enrolment\nORDER BY course_code, position;",
+          "note": "PostgreSQL, Oracle 19c, MySQL 8+, MariaDB 10.6+, SQLite 3.25+, and SQL Server support this window form."
+        },
+        "mysql": {
+          "code": "SELECT course_code, student_id, mark,\n       ROW_NUMBER() OVER (\n         PARTITION BY course_code\n         ORDER BY CASE WHEN mark IS NULL THEN 1 ELSE 0 END,\n                  mark DESC, student_id\n       ) AS position\nFROM U3Enrolment\nORDER BY course_code, position;",
+          "note": "PostgreSQL, Oracle 19c, MySQL 8+, MariaDB 10.6+, SQLite 3.25+, and SQL Server support this window form."
+        },
+        "mariadb": {
+          "code": "SELECT course_code, student_id, mark,\n       ROW_NUMBER() OVER (\n         PARTITION BY course_code\n         ORDER BY CASE WHEN mark IS NULL THEN 1 ELSE 0 END,\n                  mark DESC, student_id\n       ) AS position\nFROM U3Enrolment\nORDER BY course_code, position;",
+          "note": "PostgreSQL, Oracle 19c, MySQL 8+, MariaDB 10.6+, SQLite 3.25+, and SQL Server support this window form."
+        },
+        "sqlite": {
+          "code": "SELECT course_code, student_id, mark,\n       ROW_NUMBER() OVER (\n         PARTITION BY course_code\n         ORDER BY CASE WHEN mark IS NULL THEN 1 ELSE 0 END,\n                  mark DESC, student_id\n       ) AS position\nFROM U3Enrolment\nORDER BY course_code, position;",
+          "note": "PostgreSQL, Oracle 19c, MySQL 8+, MariaDB 10.6+, SQLite 3.25+, and SQL Server support this window form."
+        },
+        "sqlserver": {
+          "code": "SELECT course_code, student_id, mark,\n       ROW_NUMBER() OVER (\n         PARTITION BY course_code\n         ORDER BY CASE WHEN mark IS NULL THEN 1 ELSE 0 END,\n                  mark DESC, student_id\n       ) AS position\nFROM U3Enrolment\nORDER BY course_code, position;",
+          "note": "PostgreSQL, Oracle 19c, MySQL 8+, MariaDB 10.6+, SQLite 3.25+, and SQL Server support this window form."
+        }
+      }
+    },
+    {
+      "title": "5. Top-N and join fan-out diagnosis",
+      "paragraphs": [
+        "For the best two marks per course, wrap the window query in a CTE and filter position <= 2 in the outer query. Decide first whether NULL marks should be candidates and whether ties should share a place. Do not apply a global row limit when the requirement says per course.",
+        "Before summing money or marks across several joins, identify the intended grain: one row per student, enrolment, or course. Joining two child collections can multiply facts. Aggregate each child at the intended key before combining, or explain why the multiplicity is intended. DISTINCT is not a substitute for fixing the join relationship."
+      ]
+    }
+  ],
+  "revision": [
+    "Trace the unmatched AI101 row and explain COUNT of the child key.",
+    "Separate a CTE name, a window partition, and a physical access strategy.",
+    "State NULL and tie handling before designing a top-N query."
+  ],
+  "questions": [
+    {
+      "id": "advanced-sql-left-filter",
+      "question": "Why does WHERE e.mark >= 80 change a left join?",
+      "answer": [
+        "The predicate is UNKNOWN for a null-extended right row, so WHERE removes it. If every course must remain, move the match restriction into ON and count a non-null child key."
+      ],
+      "level": "medium",
+      "tags": [
+        "Exam practice"
+      ]
+    },
+    {
+      "id": "advanced-sql-window",
+      "question": "How many rows does the example ROW_NUMBER query return?",
+      "answer": [
+        "Five: one per enrolment. Partitioning and ranking do not aggregate them into one row per course. The final ordering groups by course and ordinal."
+      ],
+      "level": "easy",
+      "tags": [
+        "Concept check"
+      ]
+    },
+    {
+      "id": "advanced-sql-ties",
+      "question": "Why add student_id after mark DESC?",
+      "answer": [
+        "Without a tie-breaker, equally marked students can exchange ROW_NUMBER positions. A stable key makes the chosen order deterministic. If the policy requires equal rank for equal marks, use an appropriate ranking function instead of breaking the tie."
+      ],
+      "level": "hard",
+      "tags": [
+        "Practical"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "title": "PostgreSQL: table expressions and logical query stages",
+      "url": "https://www.postgresql.org/docs/current/queries-table-expressions.html"
+    },
+    {
+      "title": "PostgreSQL: SELECT reference",
+      "url": "https://www.postgresql.org/docs/current/sql-select.html"
+    },
+    {
+      "title": "PostgreSQL: aggregate functions",
+      "url": "https://www.postgresql.org/docs/current/functions-aggregate.html"
+    }
+  ],
+  "next": {
+    "id": "database-languages",
+    "title": "Database languages and transaction control"
+  }
+}

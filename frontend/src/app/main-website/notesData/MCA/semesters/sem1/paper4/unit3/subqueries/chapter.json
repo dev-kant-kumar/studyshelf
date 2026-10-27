@@ -1,0 +1,138 @@
+{
+  "id": "subqueries",
+  "title": "Subqueries, correlation, and existence",
+  "summary": "Choose scalar, set-valued, and correlated subqueries by their result shape.",
+  "topics": [
+    "subqueries"
+  ],
+  "intro": "A subquery is a query expression nested inside another statement. Its contract is the shape and cardinality of the result it supplies. Write that contract before deciding whether to use equality, IN, EXISTS, or a join.",
+  "outcomes": [
+    "Distinguish scalar, row-set, and derived-table subqueries.",
+    "Trace correlation for each outer row without assuming physical repetition.",
+    "Compare EXISTS, IN, ANY/ALL, and joins with NULL and duplicate cases."
+  ],
+  "sections": [
+    {
+      "title": "1. A scalar contract allows at most one value",
+      "paragraphs": [
+        "A scalar subquery used as an expression must return one column and at most one row in PostgreSQL and Oracle. Zero rows produce NULL. More than one row is an error in those engines; SQLite has different scalar-subquery behaviour and can use the first row. Never depend on that difference for portable correctness.",
+        "SELECT mark FROM U3Enrolment WHERE course_code = 'DB101' is not a scalar contract because it can return three rows. An aggregate without GROUP BY can produce one summary row, or a declared unique key predicate can guarantee at most one matching row."
+      ]
+    },
+    {
+      "title": "2. Correlation connects query levels",
+      "paragraphs": [
+        "The inner alias x belongs to the subquery; e belongs to the outer query. x.course_code = e.course_code asks for the average of the current enrolment's course. This is a logical dependency, not a guarantee that the engine rescans the table once per outer row. An optimizer can transform equivalent work."
+      ],
+      "code": "SELECT e.student_id, e.mark\nFROM U3Enrolment e\nWHERE e.course_code = 'DB101'\n  AND e.mark > (\n    SELECT AVG(x.mark * 1.0) FROM U3Enrolment x\n    WHERE x.course_code = e.course_code\n  )\nORDER BY e.student_id;",
+      "sqlVariants": {
+        "postgresql": {
+          "code": "SELECT e.student_id, e.mark\nFROM U3Enrolment e\nWHERE e.course_code = 'DB101'\n  AND e.mark > (\n    SELECT AVG(x.mark * 1.0) FROM U3Enrolment x\n    WHERE x.course_code = e.course_code\n  )\nORDER BY e.student_id;",
+          "note": "Run after the shared Unit 3 setup in a scratch database."
+        },
+        "oracle": {
+          "code": "SELECT e.student_id, e.mark\nFROM U3Enrolment e\nWHERE e.course_code = 'DB101'\n  AND e.mark > (\n    SELECT AVG(x.mark * 1.0) FROM U3Enrolment x\n    WHERE x.course_code = e.course_code\n  )\nORDER BY e.student_id;",
+          "note": "Run after the shared Unit 3 setup in a scratch database."
+        },
+        "mysql": {
+          "code": "SELECT e.student_id, e.mark\nFROM U3Enrolment e\nWHERE e.course_code = 'DB101'\n  AND e.mark > (\n    SELECT AVG(x.mark * 1.0) FROM U3Enrolment x\n    WHERE x.course_code = e.course_code\n  )\nORDER BY e.student_id;",
+          "note": "Run after the shared Unit 3 setup in a scratch database."
+        },
+        "mariadb": {
+          "code": "SELECT e.student_id, e.mark\nFROM U3Enrolment e\nWHERE e.course_code = 'DB101'\n  AND e.mark > (\n    SELECT AVG(x.mark * 1.0) FROM U3Enrolment x\n    WHERE x.course_code = e.course_code\n  )\nORDER BY e.student_id;",
+          "note": "Run after the shared Unit 3 setup in a scratch database."
+        },
+        "sqlite": {
+          "code": "SELECT e.student_id, e.mark\nFROM U3Enrolment e\nWHERE e.course_code = 'DB101'\n  AND e.mark > (\n    SELECT AVG(x.mark * 1.0) FROM U3Enrolment x\n    WHERE x.course_code = e.course_code\n  )\nORDER BY e.student_id;",
+          "note": "Run after the shared Unit 3 setup in a scratch database."
+        },
+        "sqlserver": {
+          "code": "SELECT e.student_id, e.mark\nFROM U3Enrolment e\nWHERE e.course_code = 'DB101'\n  AND e.mark > (\n    SELECT AVG(x.mark * 1.0) FROM U3Enrolment x\n    WHERE x.course_code = e.course_code\n  )\nORDER BY e.student_id;",
+          "note": "Run after the shared Unit 3 setup in a scratch database."
+        }
+      },
+      "example": [
+        "The correlated DB101 mean is 85. Asha's 82 fails, Ravi's 88 passes, and Mira's NULL comparison is UNKNOWN. Only student 102 with mark 88 remains. CS101 is excluded by the outer condition."
+      ]
+    },
+    {
+      "title": "3. EXISTS asks about a row, not a selected value",
+      "paragraphs": [
+        "EXISTS is TRUE when its subquery yields at least one qualifying row. SELECT 1 emphasizes that the output value is irrelevant; even SELECT NULL can make EXISTS TRUE if a row exists. NOT EXISTS is useful for finding Neha, the student without enrolments.",
+        "A join used only to test membership may multiply outer rows. Joining Asha to Enrolment produces two rows because she has two enrolments. EXISTS can preserve one Student row when the question is whether any enrolment exists. DISTINCT after a join may mask a multiplicity error rather than state the requirement clearly."
+      ]
+    },
+    {
+      "title": "4. IN, ANY, and ALL need explicit empty-set reasoning",
+      "paragraphs": [
+        "IN tests equality membership in a one-column result. x > ANY asks whether at least one comparison is TRUE; x > ALL requires all comparisons to be TRUE. For an empty comparison set, ANY is FALSE and ALL is TRUE. NULL elements can produce UNKNOWN when no decisive comparison resolves the result.",
+        "Do not replace > ALL with > MAX blindly. An empty input makes MAX return NULL, while the ALL condition over an empty set is TRUE. SQLite lacks the general ANY/ALL comparison syntax; use supported existence or aggregate formulations only after checking edge-case equivalence."
+      ]
+    },
+    {
+      "title": "5. Derived tables and alias scope",
+      "paragraphs": [
+        "A subquery in FROM creates a query-level relation with named result columns. A CTE offers a readable alternative for a complex pipeline. Give derived tables aliases for portability. A nested query cannot usually use an outer FROM alias as though it were a lateral input unless the DBMS provides the corresponding feature.",
+        "Exercise: find students who take both DB101 and CS101 using two EXISTS predicates. Predict Asha and Mira. Then find students taking every course: because AI101 has no enrolments, nobody qualifies. This is the practical meaning behind double-NOT-EXISTS relational division, not a demand to memorize a mysterious template."
+      ]
+    }
+  ],
+  "revision": [
+    "State subquery cardinality before choosing an operator.",
+    "Trace one correlation using concrete outer key values.",
+    "Test duplicate matches, NULLs, and empty results before rewriting."
+  ],
+  "questions": [
+    {
+      "id": "subqueries-scalar",
+      "question": "Why can equality to a multirow subquery fail?",
+      "answer": [
+        "A scalar expression expects at most one value. A nonunique predicate can return several rows. Use a guaranteed scalar aggregation or a set operator such as IN when that is the intended requirement; adding an arbitrary row limit can hide a modelling error."
+      ],
+      "level": "medium",
+      "tags": [
+        "Concept check"
+      ]
+    },
+    {
+      "id": "subqueries-exists-null",
+      "question": "Can EXISTS (SELECT NULL FROM U3Enrolment) be TRUE?",
+      "answer": [
+        "Yes. The table has rows, and EXISTS tests whether rows are present, not whether the selected expression is non-NULL."
+      ],
+      "level": "easy",
+      "tags": [
+        "Concept check"
+      ]
+    },
+    {
+      "id": "subqueries-all-empty",
+      "question": "Why does > MAX not always replace > ALL?",
+      "answer": [
+        "On an empty input MAX is NULL and the comparison becomes UNKNOWN, whereas > ALL over an empty comparison set is TRUE. NULL-containing inputs add more differences. Equivalence needs stated assumptions."
+      ],
+      "level": "hard",
+      "tags": [
+        "Exam practice"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "title": "PostgreSQL: table expressions and logical query stages",
+      "url": "https://www.postgresql.org/docs/current/queries-table-expressions.html"
+    },
+    {
+      "title": "PostgreSQL: comparisons, IN, and NOT IN",
+      "url": "https://www.postgresql.org/docs/current/functions-comparisons.html"
+    },
+    {
+      "title": "PostgreSQL: aggregate functions",
+      "url": "https://www.postgresql.org/docs/current/functions-aggregate.html"
+    }
+  ],
+  "next": {
+    "id": "integrity-constraints",
+    "title": "Entity, referential, and domain integrity"
+  }
+}

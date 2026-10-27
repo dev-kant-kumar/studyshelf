@@ -1,0 +1,166 @@
+{
+  "id": "database-languages",
+  "title": "Database languages and transaction control",
+  "summary": "Distinguish DDL, DML, DCL, TCL, client commands, and parameterized SQL.",
+  "topics": [
+    "database-languages"
+  ],
+  "intro": "Database-language categories describe the purpose of a statement, not separate databases or guaranteed transaction rules. A backend sends statements through a driver, and the driver and server each have responsibilities that must not be confused.",
+  "outcomes": [
+    "Classify statement families with examples.",
+    "Distinguish SQL commands from client script delimiters.",
+    "Explain parameter binding, least privilege, and commit boundaries."
+  ],
+  "sections": [
+    {
+      "title": "1. Classify by purpose",
+      "paragraphs": [
+        "DDL defines objects, DML retrieves or changes data, DCL manages access, and TCL governs transaction boundaries. Some courses call SELECT DQL; other classifications include it in DML. Explain the convention rather than claiming one list is a universal parser rule.",
+        "These labels do not say whether an operation can be rolled back. Oracle DDL normally creates implicit commit boundaries. PostgreSQL supports transactional behaviour for many DDL commands, with command-specific exceptions. Consult the actual command and connection behaviour before using rollback as a safety assumption."
+      ],
+      "table": {
+        "caption": "Common statement families",
+        "headers": [
+          "Family",
+          "Examples",
+          "Purpose"
+        ],
+        "rows": [
+          [
+            "DDL",
+            "CREATE, ALTER, DROP",
+            "Object definitions"
+          ],
+          [
+            "DML / DQL",
+            "SELECT, INSERT, UPDATE, DELETE",
+            "Retrieve or change rows"
+          ],
+          [
+            "DCL",
+            "GRANT, REVOKE",
+            "Manage privileges"
+          ],
+          [
+            "TCL",
+            "COMMIT, ROLLBACK, SAVEPOINT",
+            "Control a transaction"
+          ]
+        ]
+      }
+    },
+    {
+      "title": "2. The unit of work belongs to a session",
+      "paragraphs": [
+        "Auto-commit can make each successful statement its own transaction. With explicit transactions, the application decides when a related group succeeds. A savepoint names an intermediate position so that part of the work can be undone while earlier work remains pending.",
+        "A transaction is not the same as a connection: one connection can run many transactions. An exception can leave a transaction needing an explicit rollback. Keep transactions short enough to avoid unnecessary locks and retained snapshots. Detailed isolation and schedules are developed in Unit 5."
+      ]
+    },
+    {
+      "title": "3. A delimiter is not a database operation",
+      "paragraphs": [
+        "The semicolon usually terminates a statement in a script. Oracle SQL*Plus SET SERVEROUTPUT ON and the slash on its own line are client instructions; slash submits the buffered PL/SQL block. MySQL DELIMITER changes how its command-line client splits compound statements. SQL Server GO separates client batches.",
+        "A database driver commonly expects the statement text without client commands. Copying a full terminal script into an API call can therefore fail even when the procedural body is valid. Separate the server statement from the client wrapper when integrating a lab into a backend."
+      ]
+    },
+    {
+      "title": "4. Bind values; do not assemble executable text",
+      "paragraphs": [
+        "A bound parameter is a value supplied separately through the driver. The DBMS does not interpret the value as SQL syntax. Concatenating an untrusted value into a WHERE clause allows its characters to become executable syntax. Quoting manually is not a replacement for driver-supported binding.",
+        "Bind values, not arbitrary object names or SQL keywords. Dynamic identifiers require an allow-list and proper identifier handling. Parameterization also does not grant permissions: the connected database identity still needs only the privileges the application requires."
+      ],
+      "code": "SELECT student_id, name FROM U3Student\nWHERE student_id = $1;",
+      "sqlVariants": {
+        "postgresql": {
+          "code": "SELECT student_id, name FROM U3Student\nWHERE student_id = $1;",
+          "note": "Driver template, not a standalone runnable script: bind an integer value using your database library. Parameter styles are driver-dependent."
+        },
+        "oracle": {
+          "code": "SELECT student_id, name FROM U3Student\nWHERE student_id = :student_id;",
+          "note": "Driver template, not a standalone runnable script: bind an integer value using your database library. Parameter styles are driver-dependent."
+        },
+        "mysql": {
+          "code": "SELECT student_id, name FROM U3Student\nWHERE student_id = ?;",
+          "note": "Driver template, not a standalone runnable script: bind an integer value using your database library. Parameter styles are driver-dependent."
+        },
+        "mariadb": {
+          "code": "SELECT student_id, name FROM U3Student\nWHERE student_id = ?;",
+          "note": "Driver template, not a standalone runnable script: bind an integer value using your database library. Parameter styles are driver-dependent."
+        },
+        "sqlite": {
+          "code": "SELECT student_id, name FROM U3Student\nWHERE student_id = ?;",
+          "note": "Driver template, not a standalone runnable script: bind an integer value using your database library. Parameter styles are driver-dependent."
+        },
+        "sqlserver": {
+          "code": "SELECT student_id, name FROM U3Student\nWHERE student_id = @student_id;",
+          "note": "Driver template, not a standalone runnable script: bind an integer value using your database library. Parameter styles are driver-dependent."
+        }
+      }
+    },
+    {
+      "title": "5. Access control and backend boundaries",
+      "paragraphs": [
+        "An owner account used for migrations should not automatically be the everyday application account. A reader may need SELECT on a limited view but no UPDATE on its base tables. GRANT gives a privilege within the product's role and ownership model; REVOKE removes a grant but may not remove other access paths.",
+        "SQLite does not offer a server-side GRANT/REVOKE user system comparable to PostgreSQL or Oracle; application and file permissions matter there. A stored procedure is not automatically safe merely because callers cannot see its SQL. Its execution rights, dynamic SQL, and input checks require explicit design."
+      ]
+    }
+  ],
+  "revision": [
+    "Classify a statement without inferring its commit behaviour.",
+    "Remove client-only commands when sending SQL through a driver.",
+    "Bind values and separate migration, runtime, and reader privileges."
+  ],
+  "questions": [
+    {
+      "id": "database-languages-families",
+      "question": "Is SELECT DML or DQL?",
+      "answer": [
+        "Both classifications occur in teaching. DQL emphasizes retrieval; the broader DML category includes querying in many references. State which convention you are using and describe the operation rather than treating the acronym as a runtime property."
+      ],
+      "level": "easy",
+      "tags": [
+        "Concept check"
+      ]
+    },
+    {
+      "id": "database-languages-begin",
+      "question": "Why is BEGIN not portable transaction-start syntax?",
+      "answer": [
+        "PostgreSQL and SQLite accept BEGIN for a transaction. In Oracle PL/SQL it begins a procedural block; in SQL Server BEGIN begins a block unless followed by TRANSACTION. MySQL START TRANSACTION avoids confusion with stored-program blocks."
+      ],
+      "level": "medium",
+      "tags": [
+        "Concept check"
+      ]
+    },
+    {
+      "id": "database-languages-binding",
+      "question": "Can a bound table name replace an allow-list?",
+      "answer": [
+        "Ordinary value placeholders do not stand for table identifiers. Choose a permitted identifier through an allow-list and product-aware quoting, while binding data values separately. This preserves the boundary between code structure and data."
+      ],
+      "level": "hard",
+      "tags": [
+        "Practical"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "title": "PostgreSQL: SELECT reference",
+      "url": "https://www.postgresql.org/docs/current/sql-select.html"
+    },
+    {
+      "title": "PostgreSQL: CREATE PROCEDURE",
+      "url": "https://www.postgresql.org/docs/current/sql-createprocedure.html"
+    },
+    {
+      "title": "Oracle 19c: PL/SQL subprograms",
+      "url": "https://docs.oracle.com/en/database/oracle/oracle-database/19/lnpls/plsql-subprograms.html"
+    }
+  ],
+  "next": {
+    "id": "set-operations",
+    "title": "Set operations: UNION, INTERSECT, and difference"
+  }
+}

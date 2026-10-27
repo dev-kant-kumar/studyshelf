@@ -63,7 +63,7 @@ export default function Header() {
   return (
     <>
       <a
-        className={`fixed top-2 left-4 z-[100] -translate-y-24 rounded-lg bg-brand px-4 py-3 text-on-brand transition-transform focus:translate-y-0 ${focus}`}
+        className={`fixed top-2 left-4 z-[100] -translate-y-24 rounded-lg bg-brand px-4 py-3 text-on-brand transition-transform focus:translate-y-0 ${focus} print:hidden`}
         href="#main-content"
       >
         Skip to main content

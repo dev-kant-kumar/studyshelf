@@ -23,7 +23,14 @@ export default function Dropdown({ id, label, options, value, onChange, icon: Ic
     return () => { document.removeEventListener('pointerdown', outside); window.removeEventListener('resize', dismiss) }
   }, [open])
   useEffect(() => {
-    if (open) list.current?.children[active]?.scrollIntoView({ block: 'nearest' })
+    if (!open) return
+    const menu = list.current, option = menu?.children[active]
+    if (!option) return
+    // Keep keyboard selection visible inside the menu without scrolling the page.
+    const top = option.getBoundingClientRect().top - menu.getBoundingClientRect().top + menu.scrollTop
+    const bottom = top + option.offsetHeight
+    if (top < menu.scrollTop) menu.scrollTop = top
+    else if (bottom > menu.scrollTop + menu.clientHeight) menu.scrollTop = bottom - menu.clientHeight
   }, [active, open])
 
   function show(index = selected) {

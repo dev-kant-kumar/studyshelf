@@ -1,0 +1,197 @@
+{
+  "id": "aggregate-functions",
+  "title": "Aggregate functions, grouping, and HAVING",
+  "summary": "Derive group counts, sums, and averages while handling NULL and outer joins correctly.",
+  "topics": [
+    "aggregate-functions"
+  ],
+  "intro": "An aggregate reduces a collection of input values to a summary. The important question is not only which function to choose, but which rows reach it and what each row represents.",
+  "outcomes": [
+    "Distinguish COUNT(*), COUNT(column), and COUNT(DISTINCT column).",
+    "Trace WHERE, grouping, aggregate evaluation, and HAVING.",
+    "Explain empty-group and missing-mark results."
+  ],
+  "sections": [
+    {
+      "title": "1. Define the input and the denominator",
+      "paragraphs": [
+        "COUNT(*) counts rows. COUNT(mark) counts non-NULL marks. SUM and AVG of mark use recorded marks; AVG divides by their count, not by the count of all rows. MIN and MAX identify the least and greatest non-NULL value. A zero mark is a recorded numeric value and must not be treated as missing.",
+        "For DB101 the input marks are 82, 88, NULL. Their sum is 170, recorded count is 2, enrolment count is 3, and average is 85. Treating the missing mark as zero changes the question to a different policy. Use such a policy only when the requirement explicitly defines it."
+      ],
+      "diagram": "aggregate",
+      "diagramHeight": 600,
+      "alt": "DB101 rows with marks 82, 88, and NULL produce COUNT star 3, COUNT mark 2, SUM 170, and AVG 85. An explicit zero substitution instead produces 170 divided by 3.",
+      "caption": "The denominator is part of the meaning. An absent mark and an assessed zero are different facts."
+    },
+    {
+      "title": "2. Count the correct side of an outer join",
+      "paragraphs": [
+        "Each course must appear, including AI101. A left join creates a null-extended row for AI101. COUNT(*) would count that intermediate row as one; COUNT(e.student_id) returns zero because no non-NULL child key is present. An enrolment student_id is required, making it a reliable match indicator."
+      ],
+      "code": "SELECT c.course_code, COUNT(e.student_id) AS enrolled,\n       COUNT(e.mark) AS marked, AVG(e.mark * 1.0) AS mean_mark\nFROM U3Course c\nLEFT JOIN U3Enrolment e ON e.course_code = c.course_code\nGROUP BY c.course_code\nORDER BY c.course_code;",
+      "sqlVariants": {
+        "postgresql": {
+          "code": "SELECT c.course_code, COUNT(e.student_id) AS enrolled,\n       COUNT(e.mark) AS marked, AVG(e.mark * 1.0) AS mean_mark\nFROM U3Course c\nLEFT JOIN U3Enrolment e ON e.course_code = c.course_code\nGROUP BY c.course_code\nORDER BY c.course_code;",
+          "note": "Run after the shared Unit 3 setup in a scratch database."
+        },
+        "oracle": {
+          "code": "SELECT c.course_code, COUNT(e.student_id) AS enrolled,\n       COUNT(e.mark) AS marked, AVG(e.mark * 1.0) AS mean_mark\nFROM U3Course c\nLEFT JOIN U3Enrolment e ON e.course_code = c.course_code\nGROUP BY c.course_code\nORDER BY c.course_code;",
+          "note": "Run after the shared Unit 3 setup in a scratch database."
+        },
+        "mysql": {
+          "code": "SELECT c.course_code, COUNT(e.student_id) AS enrolled,\n       COUNT(e.mark) AS marked, AVG(e.mark * 1.0) AS mean_mark\nFROM U3Course c\nLEFT JOIN U3Enrolment e ON e.course_code = c.course_code\nGROUP BY c.course_code\nORDER BY c.course_code;",
+          "note": "Run after the shared Unit 3 setup in a scratch database."
+        },
+        "mariadb": {
+          "code": "SELECT c.course_code, COUNT(e.student_id) AS enrolled,\n       COUNT(e.mark) AS marked, AVG(e.mark * 1.0) AS mean_mark\nFROM U3Course c\nLEFT JOIN U3Enrolment e ON e.course_code = c.course_code\nGROUP BY c.course_code\nORDER BY c.course_code;",
+          "note": "Run after the shared Unit 3 setup in a scratch database."
+        },
+        "sqlite": {
+          "code": "SELECT c.course_code, COUNT(e.student_id) AS enrolled,\n       COUNT(e.mark) AS marked, AVG(e.mark * 1.0) AS mean_mark\nFROM U3Course c\nLEFT JOIN U3Enrolment e ON e.course_code = c.course_code\nGROUP BY c.course_code\nORDER BY c.course_code;",
+          "note": "Run after the shared Unit 3 setup in a scratch database."
+        },
+        "sqlserver": {
+          "code": "SELECT c.course_code, COUNT(e.student_id) AS enrolled,\n       COUNT(e.mark) AS marked, AVG(e.mark * 1.0) AS mean_mark\nFROM U3Course c\nLEFT JOIN U3Enrolment e ON e.course_code = c.course_code\nGROUP BY c.course_code\nORDER BY c.course_code;",
+          "note": "Run after the shared Unit 3 setup in a scratch database."
+        }
+      },
+      "table": {
+        "caption": "Expected course summary",
+        "headers": [
+          "Course",
+          "Enrolled",
+          "Marked",
+          "Mean"
+        ],
+        "rows": [
+          [
+            "AI101",
+            0,
+            0,
+            "NULL"
+          ],
+          [
+            "CS101",
+            2,
+            2,
+            82.5
+          ],
+          [
+            "DB101",
+            3,
+            2,
+            85
+          ]
+        ]
+      }
+    },
+    {
+      "title": "3. WHERE filters rows; HAVING filters groups",
+      "paragraphs": [
+        "WHERE mark >= 80 removes the low and missing marks before grouping. HAVING AVG(mark) >= 80 keeps or rejects each group after its aggregate is computed. These are not equivalent ways to spell the same filter."
+      ],
+      "code": "SELECT course_code, COUNT(*) AS enrolled, AVG(mark * 1.0) AS mean_mark\nFROM U3Enrolment\nGROUP BY course_code\nHAVING COUNT(*) >= 3\nORDER BY course_code;",
+      "sqlVariants": {
+        "postgresql": {
+          "code": "SELECT course_code, COUNT(*) AS enrolled, AVG(mark * 1.0) AS mean_mark\nFROM U3Enrolment\nGROUP BY course_code\nHAVING COUNT(*) >= 3\nORDER BY course_code;",
+          "note": "Run after the shared Unit 3 setup in a scratch database."
+        },
+        "oracle": {
+          "code": "SELECT course_code, COUNT(*) AS enrolled, AVG(mark * 1.0) AS mean_mark\nFROM U3Enrolment\nGROUP BY course_code\nHAVING COUNT(*) >= 3\nORDER BY course_code;",
+          "note": "Run after the shared Unit 3 setup in a scratch database."
+        },
+        "mysql": {
+          "code": "SELECT course_code, COUNT(*) AS enrolled, AVG(mark * 1.0) AS mean_mark\nFROM U3Enrolment\nGROUP BY course_code\nHAVING COUNT(*) >= 3\nORDER BY course_code;",
+          "note": "Run after the shared Unit 3 setup in a scratch database."
+        },
+        "mariadb": {
+          "code": "SELECT course_code, COUNT(*) AS enrolled, AVG(mark * 1.0) AS mean_mark\nFROM U3Enrolment\nGROUP BY course_code\nHAVING COUNT(*) >= 3\nORDER BY course_code;",
+          "note": "Run after the shared Unit 3 setup in a scratch database."
+        },
+        "sqlite": {
+          "code": "SELECT course_code, COUNT(*) AS enrolled, AVG(mark * 1.0) AS mean_mark\nFROM U3Enrolment\nGROUP BY course_code\nHAVING COUNT(*) >= 3\nORDER BY course_code;",
+          "note": "Run after the shared Unit 3 setup in a scratch database."
+        },
+        "sqlserver": {
+          "code": "SELECT course_code, COUNT(*) AS enrolled, AVG(mark * 1.0) AS mean_mark\nFROM U3Enrolment\nGROUP BY course_code\nHAVING COUNT(*) >= 3\nORDER BY course_code;",
+          "note": "Run after the shared Unit 3 setup in a scratch database."
+        }
+      },
+      "example": [
+        "Only DB101 has at least three enrolments. Adding WHERE mark IS NOT NULL first would leave it with only two input rows, so the same HAVING condition would return nothing. The order changes the input fact population."
+      ]
+    },
+    {
+      "title": "4. Empty inputs and legal grouped columns",
+      "paragraphs": [
+        "A single aggregate query without GROUP BY still returns one row over an empty input: COUNT is zero, while AVG and SUM are NULL. A grouped query over no rows normally has no groups and returns no rows. COALESCE can convert a missing summary to a display value, but it cannot establish that the value was measured.",
+        "For portable grouped queries, every selected nonaggregated expression must be a grouping expression. Do not select a random student name beside a course-wide average. Some products allow functional-dependency rules or permissive modes, but a coincidental name is not the owner of an aggregate result."
+      ]
+    },
+    {
+      "title": "5. Conditional aggregation and fan-out",
+      "paragraphs": [
+        "SUM(CASE WHEN mark >= 80 THEN 1 ELSE 0 END) counts qualifying rows in an existing group. COUNT(DISTINCT student_id) counts distinct non-NULL students. Neither formula repairs a join that repeats monetary facts before SUM.",
+        "Exercise: DB101 has two recorded marks at least 80 and one unmarked enrolment; CS101 has one mark at least 80 and no unmarked enrolments. First derive these counts by hand, then write the CASE expressions. Use the Course left join if AI101 must appear too."
+      ]
+    }
+  ],
+  "revision": [
+    "State the numerator and denominator of an average.",
+    "Use a required child key to count matches after a left join.",
+    "Distinguish no group, an empty aggregate input, and a group of NULL values."
+  ],
+  "questions": [
+    {
+      "id": "aggregate-functions-counts",
+      "question": "Why does COUNT(*) give one for an empty course after a left join?",
+      "answer": [
+        "The left join preserves the course as one null-extended output row. COUNT(*) counts that row. COUNT(e.student_id) counts only actual matching enrolments because the child key is non-NULL in real rows."
+      ],
+      "level": "medium",
+      "tags": [
+        "Practical"
+      ]
+    },
+    {
+      "id": "aggregate-functions-average",
+      "question": "Should AVG(mark) for DB101 be 170/3?",
+      "answer": [
+        "Not under the ordinary aggregate semantics. The NULL mark is omitted, so AVG uses 170/2 = 85. A zero-substitution grading policy would be a separate, explicit calculation."
+      ],
+      "level": "easy",
+      "tags": [
+        "Concept check"
+      ]
+    },
+    {
+      "id": "aggregate-functions-having",
+      "question": "Can HAVING COUNT(*) >= 3 be moved into WHERE?",
+      "answer": [
+        "No. WHERE operates on individual input rows before the group count exists. A nested query can expose a previously computed count, but that creates another query level with its own input."
+      ],
+      "level": "hard",
+      "tags": [
+        "Concept check"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "title": "PostgreSQL: aggregate functions",
+      "url": "https://www.postgresql.org/docs/current/functions-aggregate.html"
+    },
+    {
+      "title": "PostgreSQL: table expressions and logical query stages",
+      "url": "https://www.postgresql.org/docs/current/queries-table-expressions.html"
+    },
+    {
+      "title": "PostgreSQL: comparisons, IN, and NOT IN",
+      "url": "https://www.postgresql.org/docs/current/functions-comparisons.html"
+    }
+  ],
+  "next": {
+    "id": "null-values",
+    "title": "NULL values and three-valued logic"
+  }
+}

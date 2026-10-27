@@ -1076,7 +1076,335 @@ export default {
               syllabusText:
                 "Basic Concepts, Basic SQL, Advance SQL, Database languages, Set operations, Aggregate Functions, Null Values, views, Sub-queries, Integrity Constraints(Entity integrity, Referential integrity and Domain constraint), SQL Constraints Types , Indexing , Cursors, Stored procedures and triggers. [Q-1]",
               sourcePage: 12,
-              notes: [],
+              topics: [
+                {
+                  "id": "basic-concepts",
+                  "title": "Basic SQL and PL/SQL concepts"
+                },
+                {
+                  "id": "basic-sql",
+                  "title": "Basic SQL"
+                },
+                {
+                  "id": "advanced-sql",
+                  "title": "Advanced SQL"
+                },
+                {
+                  "id": "database-languages",
+                  "title": "Database languages"
+                },
+                {
+                  "id": "set-operations",
+                  "title": "Set operations"
+                },
+                {
+                  "id": "aggregate-functions",
+                  "title": "Aggregate functions"
+                },
+                {
+                  "id": "null-values",
+                  "title": "NULL values"
+                },
+                {
+                  "id": "views",
+                  "title": "Views"
+                },
+                {
+                  "id": "subqueries",
+                  "title": "Subqueries"
+                },
+                {
+                  "id": "entity-integrity",
+                  "title": "Entity integrity"
+                },
+                {
+                  "id": "referential-integrity",
+                  "title": "Referential integrity"
+                },
+                {
+                  "id": "domain-constraints",
+                  "title": "Domain constraints"
+                },
+                {
+                  "id": "sql-constraints",
+                  "title": "SQL constraint types"
+                },
+                {
+                  "id": "indexing",
+                  "title": "Indexing"
+                },
+                {
+                  "id": "cursors",
+                  "title": "Cursors"
+                },
+                {
+                  "id": "stored-procedures",
+                  "title": "Stored procedures"
+                },
+                {
+                  "id": "triggers",
+                  "title": "Triggers"
+                }
+              ],
+              notes: [
+                {
+                  "id": "sql-foundations",
+                  "title": "SQL foundations and the shared practice database",
+                  "summary": "Understand SQL, relational vocabulary, and the dataset used throughout Unit 3.",
+                  "status": "published",
+                  "order": 1,
+                  "coveredTopics": [
+                    "basic-concepts"
+                  ],
+                  "updatedAt": "2026-10-27",
+                  "tags": [
+                    "dbms",
+                    "sql",
+                    "plsql",
+                    "unit3"
+                  ]
+                },
+                {
+                  "id": "basic-sql",
+                  "title": "Basic SQL: selecting and changing rows",
+                  "summary": "Write SELECT, INSERT, UPDATE, and DELETE with precise predicates and predictable results.",
+                  "status": "published",
+                  "order": 2,
+                  "coveredTopics": [
+                    "basic-sql"
+                  ],
+                  "updatedAt": "2026-10-27",
+                  "tags": [
+                    "dbms",
+                    "sql",
+                    "plsql",
+                    "unit3"
+                  ]
+                },
+                {
+                  "id": "advanced-sql",
+                  "title": "Advanced SQL: joins, CTEs, and window functions",
+                  "summary": "Trace outer joins, named query stages, ranking, and deterministic top-N selection.",
+                  "status": "published",
+                  "order": 3,
+                  "coveredTopics": [
+                    "advanced-sql"
+                  ],
+                  "updatedAt": "2026-10-27",
+                  "tags": [
+                    "dbms",
+                    "sql",
+                    "plsql",
+                    "unit3"
+                  ]
+                },
+                {
+                  "id": "database-languages",
+                  "title": "Database languages and transaction control",
+                  "summary": "Distinguish DDL, DML, DCL, TCL, client commands, and parameterized SQL.",
+                  "status": "published",
+                  "order": 4,
+                  "coveredTopics": [
+                    "database-languages"
+                  ],
+                  "updatedAt": "2026-10-27",
+                  "tags": [
+                    "dbms",
+                    "sql",
+                    "plsql",
+                    "unit3"
+                  ]
+                },
+                {
+                  "id": "set-operations",
+                  "title": "Set operations: UNION, INTERSECT, and difference",
+                  "summary": "Combine query results with correct duplicate, compatibility, and precedence rules.",
+                  "status": "published",
+                  "order": 5,
+                  "coveredTopics": [
+                    "set-operations"
+                  ],
+                  "updatedAt": "2026-10-27",
+                  "tags": [
+                    "dbms",
+                    "sql",
+                    "plsql",
+                    "unit3"
+                  ]
+                },
+                {
+                  "id": "aggregate-functions",
+                  "title": "Aggregate functions, grouping, and HAVING",
+                  "summary": "Derive group counts, sums, and averages while handling NULL and outer joins correctly.",
+                  "status": "published",
+                  "order": 6,
+                  "coveredTopics": [
+                    "aggregate-functions"
+                  ],
+                  "updatedAt": "2026-10-27",
+                  "tags": [
+                    "dbms",
+                    "sql",
+                    "plsql",
+                    "unit3"
+                  ]
+                },
+                {
+                  "id": "null-values",
+                  "title": "NULL values and three-valued logic",
+                  "summary": "Use IS NULL, COALESCE, and existence checks without confusing unknown values with zero or empty text.",
+                  "status": "published",
+                  "order": 7,
+                  "coveredTopics": [
+                    "null-values"
+                  ],
+                  "updatedAt": "2026-10-27",
+                  "tags": [
+                    "dbms",
+                    "sql",
+                    "plsql",
+                    "unit3"
+                  ]
+                },
+                {
+                  "id": "views",
+                  "title": "SQL views: interfaces, updates, and access",
+                  "summary": "Create views, trace their results, and explain update and security boundaries.",
+                  "status": "published",
+                  "order": 8,
+                  "coveredTopics": [
+                    "views"
+                  ],
+                  "updatedAt": "2026-10-27",
+                  "tags": [
+                    "dbms",
+                    "sql",
+                    "plsql",
+                    "unit3"
+                  ]
+                },
+                {
+                  "id": "subqueries",
+                  "title": "Subqueries, correlation, and existence",
+                  "summary": "Choose scalar, set-valued, and correlated subqueries by their result shape.",
+                  "status": "published",
+                  "order": 9,
+                  "coveredTopics": [
+                    "subqueries"
+                  ],
+                  "updatedAt": "2026-10-27",
+                  "tags": [
+                    "dbms",
+                    "sql",
+                    "plsql",
+                    "unit3"
+                  ]
+                },
+                {
+                  "id": "integrity-constraints",
+                  "title": "Entity, referential, and domain integrity",
+                  "summary": "Translate identity, relationship, and value-domain rules into enforceable database conditions.",
+                  "status": "published",
+                  "order": 10,
+                  "coveredTopics": [
+                    "entity-integrity",
+                    "referential-integrity",
+                    "domain-constraints"
+                  ],
+                  "updatedAt": "2026-10-27",
+                  "tags": [
+                    "dbms",
+                    "sql",
+                    "plsql",
+                    "unit3"
+                  ]
+                },
+                {
+                  "id": "sql-constraints",
+                  "title": "SQL constraint types and schema evolution",
+                  "summary": "Implement named PRIMARY KEY, FOREIGN KEY, UNIQUE, NOT NULL, CHECK, and default rules.",
+                  "status": "published",
+                  "order": 11,
+                  "coveredTopics": [
+                    "sql-constraints"
+                  ],
+                  "updatedAt": "2026-10-27",
+                  "tags": [
+                    "dbms",
+                    "sql",
+                    "plsql",
+                    "unit3"
+                  ]
+                },
+                {
+                  "id": "indexing",
+                  "title": "Indexing and query-plan reasoning",
+                  "summary": "Explain ordered indexes, selectivity, composite keys, and the cost of maintaining access paths.",
+                  "status": "published",
+                  "order": 12,
+                  "coveredTopics": [
+                    "indexing"
+                  ],
+                  "updatedAt": "2026-10-27",
+                  "tags": [
+                    "dbms",
+                    "sql",
+                    "plsql",
+                    "unit3"
+                  ]
+                },
+                {
+                  "id": "cursors",
+                  "title": "Cursors and row-by-row processing",
+                  "summary": "Trace cursor state, fetch termination, implicit attributes, and set-based alternatives.",
+                  "status": "published",
+                  "order": 13,
+                  "coveredTopics": [
+                    "cursors"
+                  ],
+                  "updatedAt": "2026-10-27",
+                  "tags": [
+                    "dbms",
+                    "sql",
+                    "plsql",
+                    "unit3"
+                  ]
+                },
+                {
+                  "id": "stored-procedures",
+                  "title": "Stored procedures, parameters, and exceptions",
+                  "summary": "Build reusable server-side operations with clear input/output and transaction contracts.",
+                  "status": "published",
+                  "order": 14,
+                  "coveredTopics": [
+                    "stored-procedures"
+                  ],
+                  "updatedAt": "2026-10-27",
+                  "tags": [
+                    "dbms",
+                    "sql",
+                    "plsql",
+                    "unit3"
+                  ]
+                },
+                {
+                  "id": "triggers",
+                  "title": "Triggers, audit trails, and hidden side effects",
+                  "summary": "Trace row and statement triggers, old/new values, multirow updates, and rollback.",
+                  "status": "published",
+                  "order": 15,
+                  "coveredTopics": [
+                    "triggers"
+                  ],
+                  "updatedAt": "2026-10-27",
+                  "tags": [
+                    "dbms",
+                    "sql",
+                    "plsql",
+                    "unit3"
+                  ]
+                }
+              ],
             },
             {
               id: "unit4",

@@ -1,0 +1,301 @@
+{
+  "id": "sql-foundations",
+  "title": "SQL foundations and the shared practice database",
+  "summary": "Understand SQL, relational vocabulary, and the dataset used throughout Unit 3.",
+  "topics": [
+    "basic-concepts"
+  ],
+  "intro": "SQL describes database structures and operations on related tables. PL/SQL adds Oracle procedural control around SQL; PostgreSQL uses a different language, PL/pgSQL. Begin with the relational vocabulary and a small database whose rows can be checked by hand.",
+  "outcomes": [
+    "Explain table, row, column, key, schema, statement, and transaction.",
+    "Build the shared dataset on the selected DBMS.",
+    "Distinguish a query result from stored state and SQL from a procedural extension."
+  ],
+  "sections": [
+    {
+      "title": "1. From a requirement to a relation",
+      "paragraphs": [
+        "A relation represents facts of one shape. U3Student records students, U3Course records course definitions, and U3Enrolment records a student taking a course. A row is one fact; a column describes an attribute. student_id is a stable identity rather than an instruction to sort students. A schema defines permitted structures; the database state is the set of rows currently present.",
+        "The pair (student_id, course_code) identifies an enrolment. Repeating a student across different courses is valid; repeating the same pair is not. The foreign keys connect enrolments to existing students and courses. A join reconstructs related information without copying the student name into every enrolment."
+      ],
+      "diagram": "dataset",
+      "diagramHeight": 680,
+      "alt": "U3Student and U3Course each connect through a primary-to-foreign-key relationship to U3Enrolment. The enrolment key is the pair student_id and course_code.",
+      "caption": "The child table stores relationships. A student may have no enrolments; an enrolment must reference existing parent rows."
+    },
+    {
+      "title": "2. Create the shared laboratory database",
+      "paragraphs": [
+        "Choose the DBMS you will actually run. Execute this setup once in a fresh scratch database or schema. It creates four students, three courses, and five enrolments. Later chapters assume this baseline unless they explicitly create their own table. Repeating CREATE TABLE without cleanup is expected to fail; do not drop real application tables to make a teaching script run.",
+        "NULL means a missing value, not the text NULL. Mira has an enrolment in DB101 but no recorded mark. Neha has no enrolments at all. AI101 has no enrolments. These are deliberately different conditions used to expose incorrect joins and counts."
+      ],
+      "code": "BEGIN;\n\nCREATE TABLE U3Student (\n  student_id INTEGER NOT NULL,\n  name VARCHAR(80) NOT NULL,\n  programme VARCHAR(20) DEFAULT 'MCA' NOT NULL,\n  email VARCHAR(120),\n  CONSTRAINT u3_student_pk PRIMARY KEY (student_id)\n);\nCREATE TABLE U3Course (\n  course_code VARCHAR(10) NOT NULL,\n  title VARCHAR(100) NOT NULL,\n  credits INTEGER NOT NULL,\n  CONSTRAINT u3_course_pk PRIMARY KEY (course_code),\n  CONSTRAINT u3_credits_ck CHECK (credits BETWEEN 1 AND 6)\n);\nCREATE TABLE U3Enrolment (\n  student_id INTEGER NOT NULL,\n  course_code VARCHAR(10) NOT NULL,\n  mark INTEGER NULL,\n  CONSTRAINT u3_enrol_pk PRIMARY KEY (student_id, course_code),\n  CONSTRAINT u3_student_fk FOREIGN KEY (student_id) REFERENCES U3Student(student_id),\n  CONSTRAINT u3_course_fk FOREIGN KEY (course_code) REFERENCES U3Course(course_code),\n  CONSTRAINT u3_mark_ck CHECK (mark BETWEEN 0 AND 100)\n);\n\nINSERT INTO U3Student VALUES\n  (101, 'Asha', 'MCA', 'asha@example.test'),\n  (102, 'Ravi', 'MCA', NULL),\n  (103, 'Mira', 'MBA', 'mira@example.test'),\n  (104, 'Neha', 'MCA', 'neha@example.test');\n\nINSERT INTO U3Course VALUES\n  ('DB101', 'Database Systems', 3),\n  ('CS101', 'C Programming', 4),\n  ('AI101', 'Artificial Intelligence', 3);\n\nINSERT INTO U3Enrolment VALUES\n  (101, 'DB101', 82),\n  (102, 'DB101', 88),\n  (103, 'DB101', NULL),\n  (101, 'CS101', 91),\n  (103, 'CS101', 74);\n\nCOMMIT;",
+      "sqlVariants": {
+        "postgresql": {
+          "code": "BEGIN;\n\nCREATE TABLE U3Student (\n  student_id INTEGER NOT NULL,\n  name VARCHAR(80) NOT NULL,\n  programme VARCHAR(20) DEFAULT 'MCA' NOT NULL,\n  email VARCHAR(120),\n  CONSTRAINT u3_student_pk PRIMARY KEY (student_id)\n);\nCREATE TABLE U3Course (\n  course_code VARCHAR(10) NOT NULL,\n  title VARCHAR(100) NOT NULL,\n  credits INTEGER NOT NULL,\n  CONSTRAINT u3_course_pk PRIMARY KEY (course_code),\n  CONSTRAINT u3_credits_ck CHECK (credits BETWEEN 1 AND 6)\n);\nCREATE TABLE U3Enrolment (\n  student_id INTEGER NOT NULL,\n  course_code VARCHAR(10) NOT NULL,\n  mark INTEGER NULL,\n  CONSTRAINT u3_enrol_pk PRIMARY KEY (student_id, course_code),\n  CONSTRAINT u3_student_fk FOREIGN KEY (student_id) REFERENCES U3Student(student_id),\n  CONSTRAINT u3_course_fk FOREIGN KEY (course_code) REFERENCES U3Course(course_code),\n  CONSTRAINT u3_mark_ck CHECK (mark BETWEEN 0 AND 100)\n);\n\nINSERT INTO U3Student VALUES\n  (101, 'Asha', 'MCA', 'asha@example.test'),\n  (102, 'Ravi', 'MCA', NULL),\n  (103, 'Mira', 'MBA', 'mira@example.test'),\n  (104, 'Neha', 'MCA', 'neha@example.test');\n\nINSERT INTO U3Course VALUES\n  ('DB101', 'Database Systems', 3),\n  ('CS101', 'C Programming', 4),\n  ('AI101', 'Artificial Intelligence', 3);\n\nINSERT INTO U3Enrolment VALUES\n  (101, 'DB101', 82),\n  (102, 'DB101', 88),\n  (103, 'DB101', NULL),\n  (101, 'CS101', 91),\n  (103, 'CS101', 74);\n\nCOMMIT;",
+          "note": "PostgreSQL: run once in a new scratch schema. U3 prefixes keep this dataset separate from Unit 1.",
+          "download": {
+            "href": "/examples/dbms-unit3/setup-postgresql.sql",
+            "filename": "unit3-setup-postgresql.sql"
+          }
+        },
+        "oracle": {
+          "code": "CREATE TABLE U3Student (\n  student_id NUMBER(10) NOT NULL,\n  name VARCHAR2(80) NOT NULL,\n  programme VARCHAR2(20) DEFAULT 'MCA' NOT NULL,\n  email VARCHAR2(120),\n  CONSTRAINT u3_student_pk PRIMARY KEY (student_id)\n);\nCREATE TABLE U3Course (\n  course_code VARCHAR2(10) NOT NULL,\n  title VARCHAR2(100) NOT NULL,\n  credits NUMBER(10) NOT NULL,\n  CONSTRAINT u3_course_pk PRIMARY KEY (course_code),\n  CONSTRAINT u3_credits_ck CHECK (credits BETWEEN 1 AND 6)\n);\nCREATE TABLE U3Enrolment (\n  student_id NUMBER(10) NOT NULL,\n  course_code VARCHAR2(10) NOT NULL,\n  mark NUMBER(10) NULL,\n  CONSTRAINT u3_enrol_pk PRIMARY KEY (student_id, course_code),\n  CONSTRAINT u3_student_fk FOREIGN KEY (student_id) REFERENCES U3Student(student_id),\n  CONSTRAINT u3_course_fk FOREIGN KEY (course_code) REFERENCES U3Course(course_code),\n  CONSTRAINT u3_mark_ck CHECK (mark BETWEEN 0 AND 100)\n);\n\nINSERT INTO U3Student VALUES (101, 'Asha', 'MCA', 'asha@example.test');\nINSERT INTO U3Student VALUES (102, 'Ravi', 'MCA', NULL);\nINSERT INTO U3Student VALUES (103, 'Mira', 'MBA', 'mira@example.test');\nINSERT INTO U3Student VALUES (104, 'Neha', 'MCA', 'neha@example.test');\n\nINSERT INTO U3Course VALUES ('DB101', 'Database Systems', 3);\nINSERT INTO U3Course VALUES ('CS101', 'C Programming', 4);\nINSERT INTO U3Course VALUES ('AI101', 'Artificial Intelligence', 3);\n\nINSERT INTO U3Enrolment VALUES (101, 'DB101', 82);\nINSERT INTO U3Enrolment VALUES (102, 'DB101', 88);\nINSERT INTO U3Enrolment VALUES (103, 'DB101', NULL);\nINSERT INTO U3Enrolment VALUES (101, 'CS101', 91);\nINSERT INTO U3Enrolment VALUES (103, 'CS101', 74);\n\nCOMMIT;",
+          "note": "Oracle 19c: run as a script. NUMBER/VARCHAR2 and individual INSERT statements are used. DDL commits implicitly.",
+          "download": {
+            "href": "/examples/dbms-unit3/setup-oracle.sql",
+            "filename": "unit3-setup-oracle.sql"
+          }
+        },
+        "mysql": {
+          "code": "CREATE TABLE U3Student (\n  student_id INTEGER NOT NULL,\n  name VARCHAR(80) NOT NULL,\n  programme VARCHAR(20) DEFAULT 'MCA' NOT NULL,\n  email VARCHAR(120),\n  CONSTRAINT u3_student_pk PRIMARY KEY (student_id)\n) ENGINE=InnoDB;\nCREATE TABLE U3Course (\n  course_code VARCHAR(10) NOT NULL,\n  title VARCHAR(100) NOT NULL,\n  credits INTEGER NOT NULL,\n  CONSTRAINT u3_course_pk PRIMARY KEY (course_code),\n  CONSTRAINT u3_credits_ck CHECK (credits BETWEEN 1 AND 6)\n) ENGINE=InnoDB;\nCREATE TABLE U3Enrolment (\n  student_id INTEGER NOT NULL,\n  course_code VARCHAR(10) NOT NULL,\n  mark INTEGER NULL,\n  CONSTRAINT u3_enrol_pk PRIMARY KEY (student_id, course_code),\n  CONSTRAINT u3_student_fk FOREIGN KEY (student_id) REFERENCES U3Student(student_id),\n  CONSTRAINT u3_course_fk FOREIGN KEY (course_code) REFERENCES U3Course(course_code),\n  CONSTRAINT u3_mark_ck CHECK (mark BETWEEN 0 AND 100)\n) ENGINE=InnoDB;\n\nINSERT INTO U3Student VALUES\n  (101, 'Asha', 'MCA', 'asha@example.test'),\n  (102, 'Ravi', 'MCA', NULL),\n  (103, 'Mira', 'MBA', 'mira@example.test'),\n  (104, 'Neha', 'MCA', 'neha@example.test');\n\nINSERT INTO U3Course VALUES\n  ('DB101', 'Database Systems', 3),\n  ('CS101', 'C Programming', 4),\n  ('AI101', 'Artificial Intelligence', 3);\n\nINSERT INTO U3Enrolment VALUES\n  (101, 'DB101', 82),\n  (102, 'DB101', 88),\n  (103, 'DB101', NULL),\n  (101, 'CS101', 91),\n  (103, 'CS101', 74);\n\nCOMMIT;",
+          "note": "MySQL 8.0.31+ profile: InnoDB foreign keys and enforced CHECK constraints. Later set-operation examples require 8.0.31+.",
+          "download": {
+            "href": "/examples/dbms-unit3/setup-mysql.sql",
+            "filename": "unit3-setup-mysql.sql"
+          }
+        },
+        "mariadb": {
+          "code": "CREATE TABLE U3Student (\n  student_id INTEGER NOT NULL,\n  name VARCHAR(80) NOT NULL,\n  programme VARCHAR(20) DEFAULT 'MCA' NOT NULL,\n  email VARCHAR(120),\n  CONSTRAINT u3_student_pk PRIMARY KEY (student_id)\n) ENGINE=InnoDB;\nCREATE TABLE U3Course (\n  course_code VARCHAR(10) NOT NULL,\n  title VARCHAR(100) NOT NULL,\n  credits INTEGER NOT NULL,\n  CONSTRAINT u3_course_pk PRIMARY KEY (course_code),\n  CONSTRAINT u3_credits_ck CHECK (credits BETWEEN 1 AND 6)\n) ENGINE=InnoDB;\nCREATE TABLE U3Enrolment (\n  student_id INTEGER NOT NULL,\n  course_code VARCHAR(10) NOT NULL,\n  mark INTEGER NULL,\n  CONSTRAINT u3_enrol_pk PRIMARY KEY (student_id, course_code),\n  CONSTRAINT u3_student_fk FOREIGN KEY (student_id) REFERENCES U3Student(student_id),\n  CONSTRAINT u3_course_fk FOREIGN KEY (course_code) REFERENCES U3Course(course_code),\n  CONSTRAINT u3_mark_ck CHECK (mark BETWEEN 0 AND 100)\n) ENGINE=InnoDB;\n\nINSERT INTO U3Student VALUES\n  (101, 'Asha', 'MCA', 'asha@example.test'),\n  (102, 'Ravi', 'MCA', NULL),\n  (103, 'Mira', 'MBA', 'mira@example.test'),\n  (104, 'Neha', 'MCA', 'neha@example.test');\n\nINSERT INTO U3Course VALUES\n  ('DB101', 'Database Systems', 3),\n  ('CS101', 'C Programming', 4),\n  ('AI101', 'Artificial Intelligence', 3);\n\nINSERT INTO U3Enrolment VALUES\n  (101, 'DB101', 82),\n  (102, 'DB101', 88),\n  (103, 'DB101', NULL),\n  (101, 'CS101', 91),\n  (103, 'CS101', 74);\n\nCOMMIT;",
+          "note": "MariaDB 10.6+ profile: InnoDB foreign keys and CHECK constraints.",
+          "download": {
+            "href": "/examples/dbms-unit3/setup-mariadb.sql",
+            "filename": "unit3-setup-mariadb.sql"
+          }
+        },
+        "sqlite": {
+          "code": "PRAGMA foreign_keys = ON;\nBEGIN;\n\nCREATE TABLE U3Student (\n  student_id INTEGER NOT NULL,\n  name VARCHAR(80) NOT NULL,\n  programme VARCHAR(20) DEFAULT 'MCA' NOT NULL,\n  email VARCHAR(120),\n  CONSTRAINT u3_student_pk PRIMARY KEY (student_id)\n);\nCREATE TABLE U3Course (\n  course_code VARCHAR(10) NOT NULL,\n  title VARCHAR(100) NOT NULL,\n  credits INTEGER NOT NULL,\n  CONSTRAINT u3_course_pk PRIMARY KEY (course_code),\n  CONSTRAINT u3_credits_ck CHECK (credits BETWEEN 1 AND 6)\n);\nCREATE TABLE U3Enrolment (\n  student_id INTEGER NOT NULL,\n  course_code VARCHAR(10) NOT NULL,\n  mark INTEGER NULL,\n  CONSTRAINT u3_enrol_pk PRIMARY KEY (student_id, course_code),\n  CONSTRAINT u3_student_fk FOREIGN KEY (student_id) REFERENCES U3Student(student_id),\n  CONSTRAINT u3_course_fk FOREIGN KEY (course_code) REFERENCES U3Course(course_code),\n  CONSTRAINT u3_mark_ck CHECK (mark BETWEEN 0 AND 100)\n);\n\nINSERT INTO U3Student VALUES\n  (101, 'Asha', 'MCA', 'asha@example.test'),\n  (102, 'Ravi', 'MCA', NULL),\n  (103, 'Mira', 'MBA', 'mira@example.test'),\n  (104, 'Neha', 'MCA', 'neha@example.test');\n\nINSERT INTO U3Course VALUES\n  ('DB101', 'Database Systems', 3),\n  ('CS101', 'C Programming', 4),\n  ('AI101', 'Artificial Intelligence', 3);\n\nINSERT INTO U3Enrolment VALUES\n  (101, 'DB101', 82),\n  (102, 'DB101', 88),\n  (103, 'DB101', NULL),\n  (101, 'CS101', 91),\n  (103, 'CS101', 74);\n\nCOMMIT;",
+          "note": "SQLite 3.25+ profile: enable foreign keys on this connection before transactions. VARCHAR length is not enforced and typing is flexible.",
+          "download": {
+            "href": "/examples/dbms-unit3/setup-sqlite.sql",
+            "filename": "unit3-setup-sqlite.sql"
+          }
+        },
+        "sqlserver": {
+          "code": "BEGIN TRANSACTION;\n\nCREATE TABLE U3Student (\n  student_id INTEGER NOT NULL,\n  name VARCHAR(80) NOT NULL,\n  programme VARCHAR(20) DEFAULT 'MCA' NOT NULL,\n  email VARCHAR(120),\n  CONSTRAINT u3_student_pk PRIMARY KEY (student_id)\n);\nCREATE TABLE U3Course (\n  course_code VARCHAR(10) NOT NULL,\n  title VARCHAR(100) NOT NULL,\n  credits INTEGER NOT NULL,\n  CONSTRAINT u3_course_pk PRIMARY KEY (course_code),\n  CONSTRAINT u3_credits_ck CHECK (credits BETWEEN 1 AND 6)\n);\nCREATE TABLE U3Enrolment (\n  student_id INTEGER NOT NULL,\n  course_code VARCHAR(10) NOT NULL,\n  mark INTEGER NULL,\n  CONSTRAINT u3_enrol_pk PRIMARY KEY (student_id, course_code),\n  CONSTRAINT u3_student_fk FOREIGN KEY (student_id) REFERENCES U3Student(student_id),\n  CONSTRAINT u3_course_fk FOREIGN KEY (course_code) REFERENCES U3Course(course_code),\n  CONSTRAINT u3_mark_ck CHECK (mark BETWEEN 0 AND 100)\n);\n\nINSERT INTO U3Student VALUES\n  (101, 'Asha', 'MCA', 'asha@example.test'),\n  (102, 'Ravi', 'MCA', NULL),\n  (103, 'Mira', 'MBA', 'mira@example.test'),\n  (104, 'Neha', 'MCA', 'neha@example.test');\n\nINSERT INTO U3Course VALUES\n  ('DB101', 'Database Systems', 3),\n  ('CS101', 'C Programming', 4),\n  ('AI101', 'Artificial Intelligence', 3);\n\nINSERT INTO U3Enrolment VALUES\n  (101, 'DB101', 82),\n  (102, 'DB101', 88),\n  (103, 'DB101', NULL),\n  (101, 'CS101', 91),\n  (103, 'CS101', 74);\n\nCOMMIT;",
+          "note": "SQL Server 2017+ profile: explicit NULL on mark permits missing marks regardless of session nullability defaults.",
+          "download": {
+            "href": "/examples/dbms-unit3/setup-sqlserver.sql",
+            "filename": "unit3-setup-sqlserver.sql"
+          }
+        }
+      }
+    },
+    {
+      "title": "3. Inspect before reasoning",
+      "paragraphs": [
+        "Read the three tables in key order. Without ORDER BY, SQL does not promise a presentation order. The Student rows are 101 Asha MCA, 102 Ravi MCA, 103 Mira MBA, and 104 Neha MCA. Ravi has no email. The five enrolments include two for Asha, one for Ravi, two for Mira, and none for Neha."
+      ],
+      "table": {
+        "caption": "Baseline enrolments",
+        "headers": [
+          "Student",
+          "Course",
+          "Mark"
+        ],
+        "rows": [
+          [
+            101,
+            "DB101",
+            82
+          ],
+          [
+            102,
+            "DB101",
+            88
+          ],
+          [
+            103,
+            "DB101",
+            "NULL"
+          ],
+          [
+            101,
+            "CS101",
+            91
+          ],
+          [
+            103,
+            "CS101",
+            74
+          ]
+        ]
+      },
+      "code": "SELECT student_id, course_code, mark\nFROM U3Enrolment\nORDER BY student_id, course_code;",
+      "sqlVariants": {
+        "postgresql": {
+          "code": "SELECT student_id, course_code, mark\nFROM U3Enrolment\nORDER BY student_id, course_code;",
+          "note": "Run after the shared Unit 3 setup in a scratch database."
+        },
+        "oracle": {
+          "code": "SELECT student_id, course_code, mark\nFROM U3Enrolment\nORDER BY student_id, course_code;",
+          "note": "Run after the shared Unit 3 setup in a scratch database."
+        },
+        "mysql": {
+          "code": "SELECT student_id, course_code, mark\nFROM U3Enrolment\nORDER BY student_id, course_code;",
+          "note": "Run after the shared Unit 3 setup in a scratch database."
+        },
+        "mariadb": {
+          "code": "SELECT student_id, course_code, mark\nFROM U3Enrolment\nORDER BY student_id, course_code;",
+          "note": "Run after the shared Unit 3 setup in a scratch database."
+        },
+        "sqlite": {
+          "code": "SELECT student_id, course_code, mark\nFROM U3Enrolment\nORDER BY student_id, course_code;",
+          "note": "Run after the shared Unit 3 setup in a scratch database."
+        },
+        "sqlserver": {
+          "code": "SELECT student_id, course_code, mark\nFROM U3Enrolment\nORDER BY student_id, course_code;",
+          "note": "Run after the shared Unit 3 setup in a scratch database."
+        }
+      }
+    },
+    {
+      "title": "4. SQL statements and procedural blocks",
+      "paragraphs": [
+        "SELECT requests rows; INSERT, UPDATE, and DELETE change rows; CREATE TABLE defines an object. A transaction groups work into a commit-or-rollback outcome. Several semicolon-terminated statements do not automatically become one atomic transaction. Auto-commit settings and DDL behaviour vary by engine.",
+        "A procedural block adds local variables, branching, loops, and exception handling. Oracle DECLARE/BEGIN/EXCEPTION/END is PL/SQL, not a portable SQL dialect. A PostgreSQL dollar-quoted procedure body is not directly executable in Oracle. The editor changes the displayed example; it does not connect to a database or execute your edits."
+      ]
+    },
+    {
+      "title": "5. Read an anonymous procedural block",
+      "paragraphs": [
+        "In Oracle, DECLARE introduces optional local declarations, BEGIN starts the required executable part, EXCEPTION introduces optional error handlers, and END closes the block. A variable holds a value for that invocation. An assignment uses :=, while = is used for comparison in conditions. A declaration such as v_mark U3Enrolment.mark%TYPE follows the referenced column type rather than duplicating its type definition.",
+        "SELECT ... INTO assigns a query result to compatible procedural variables. The example uses an ungrouped aggregate, so it supplies one count row even when no enrolments match. It reports 2 for DB101. A nonaggregate lookup can instead raise a cardinality exception; that is developed with stored procedures. IF chooses a branch, and LOOP repeats a body until the stated exit condition. Cursors later combine these mechanisms to consume rows.",
+        "An anonymous block is submitted for execution without creating a reusable named procedure. A local variable is not a driver bind placeholder; the colon in an Oracle :bind value belongs to the client binding interface, while a declared local v_marked is referenced directly in this block. SELECT INTO in PL/SQL assigns variables, whereas some other SQL contexts use that phrase for table creation. Always identify the language context."
+      ],
+      "code": "DO $$\nDECLARE\n  v_marked INTEGER;\nBEGIN\n  SELECT COUNT(mark) INTO v_marked\n  FROM U3Enrolment WHERE course_code = 'DB101';\n  RAISE NOTICE 'Recorded marks: %', v_marked;\nEND;\n$$;",
+      "sqlVariants": {
+        "postgresql": {
+          "code": "DO $$\nDECLARE\n  v_marked INTEGER;\nBEGIN\n  SELECT COUNT(mark) INTO v_marked\n  FROM U3Enrolment WHERE course_code = 'DB101';\n  RAISE NOTICE 'Recorded marks: %', v_marked;\nEND;\n$$;",
+          "note": "PostgreSQL anonymous PL/pgSQL block: the NOTICE reports 2. Dollar quotes delimit the body; no SQL*Plus slash is used."
+        },
+        "oracle": {
+          "code": "SET SERVEROUTPUT ON\nDECLARE\n  v_marked NUMBER;\nBEGIN\n  SELECT COUNT(mark) INTO v_marked\n  FROM U3Enrolment WHERE course_code = 'DB101';\n  DBMS_OUTPUT.PUT_LINE('Recorded marks: ' || v_marked);\nEND;\n/",
+          "note": "Oracle 19c anonymous PL/SQL block: run in SQL*Plus or SQL Developer script mode. SET SERVEROUTPUT ON and slash are client commands."
+        },
+        "mysql": {
+          "code": "SELECT COUNT(mark) AS recorded_marks\nFROM U3Enrolment WHERE course_code = 'DB101';",
+          "note": "MySQL: this SELECT is the set-based result alternative. A bare Oracle-style anonymous DECLARE/BEGIN block is not accepted here; stored-program blocks appear in the procedure chapter."
+        },
+        "mariadb": {
+          "code": "SELECT COUNT(mark) AS recorded_marks\nFROM U3Enrolment WHERE course_code = 'DB101';",
+          "note": "MariaDB: this SELECT is a set-based alternative, not Oracle PL/SQL. Stored-program blocks are developed in the procedure chapter."
+        },
+        "sqlite": {
+          "code": "SELECT COUNT(mark) AS recorded_marks\nFROM U3Enrolment WHERE course_code = 'DB101';",
+          "note": "SQLite has no Oracle-style PL/SQL anonymous block. This SELECT supplies the same count; procedural control belongs in application code."
+        },
+        "sqlserver": {
+          "code": "DECLARE @marked INTEGER;\nBEGIN\n  SELECT @marked = COUNT(mark) FROM U3Enrolment\n  WHERE course_code = 'DB101';\n  PRINT CONCAT('Recorded marks: ', @marked);\nEND;",
+          "note": "SQL Server uses T-SQL variables and PRINT. BEGIN/END groups statements; it does not start a transaction."
+        }
+      },
+      "example": [
+        "Oracle prints Recorded marks: 2 when server output is enabled. PostgreSQL emits a NOTICE with the same count. The set-based alternatives return a result row instead; they do not implement the procedural block."
+      ]
+    },
+    {
+      "title": "6. Practice with an evidence trail",
+      "paragraphs": [
+        "First predict how many rows SELECT * FROM U3Enrolment returns: five. Then predict SELECT DISTINCT student_id: three. The second query counts students with enrolments, not all four students. Record the DBMS, query, result, and any error when checking an answer.",
+        "Do not infer that a displayed plan or cost is an observation from your server. This unit states expected logical results and uses conceptual diagrams. SQLite verification of compatible examples does not prove Oracle procedural code has been executed."
+      ]
+    },
+    {
+      "title": "7. Run a query workbook",
+      "paragraphs": [
+        "The workbook repeats the setup and then runs the checked query examples in order. Use a fresh scratch database for it; do not run it on top of a previous setup. Expected logical rows appear as comments. It excludes intentional errors, driver-only parameter templates, and procedural demonstrations."
+      ],
+      "links": [
+        {
+          "href": "/examples/dbms-unit3/queries-postgresql.sql",
+          "label": "Download the postgresql query workbook",
+          "download": "unit3-queries-postgresql.sql"
+        },
+        {
+          "href": "/examples/dbms-unit3/queries-oracle.sql",
+          "label": "Download the oracle query workbook",
+          "download": "unit3-queries-oracle.sql"
+        },
+        {
+          "href": "/examples/dbms-unit3/queries-mysql.sql",
+          "label": "Download the mysql query workbook",
+          "download": "unit3-queries-mysql.sql"
+        },
+        {
+          "href": "/examples/dbms-unit3/queries-mariadb.sql",
+          "label": "Download the mariadb query workbook",
+          "download": "unit3-queries-mariadb.sql"
+        },
+        {
+          "href": "/examples/dbms-unit3/queries-sqlite.sql",
+          "label": "Download the sqlite query workbook",
+          "download": "unit3-queries-sqlite.sql"
+        },
+        {
+          "href": "/examples/dbms-unit3/queries-sqlserver.sql",
+          "label": "Download the sqlserver query workbook",
+          "download": "unit3-queries-sqlserver.sql"
+        }
+      ]
+    }
+  ],
+  "revision": [
+    "Recreate the fixture in a clean scratch database.",
+    "Identify both parent tables, the composite key, and the missing-data cases.",
+    "Explain why ordering, transactions, and procedural syntax need explicit treatment."
+  ],
+  "questions": [
+    {
+      "id": "sql-foundations-facts",
+      "question": "Why is U3Enrolment a separate table?",
+      "answer": [
+        "A student can take several courses and a course can contain several students. The enrolment row represents one pairing and its mark. Putting repeated course columns in Student would make a variable-size relationship part of the table structure."
+      ],
+      "level": "easy",
+      "tags": [
+        "Concept check"
+      ]
+    },
+    {
+      "id": "sql-foundations-count",
+      "question": "Why are four students compatible with only three distinct student IDs in Enrolment?",
+      "answer": [
+        "Neha has no enrolment. A query over the child table only sees referenced students. A left join from Student is required when every student must appear."
+      ],
+      "level": "medium",
+      "tags": [
+        "Practical"
+      ]
+    },
+    {
+      "id": "sql-foundations-engines",
+      "question": "Does changing the editor to Oracle translate arbitrary edits?",
+      "answer": [
+        "No. The site supplies authored dialect variants. Your temporary edits belong to the selected version. SQL syntax, client delimiters, transaction behaviour, and procedural languages still follow the actual server and client."
+      ],
+      "level": "medium",
+      "tags": [
+        "Concept check"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "title": "PostgreSQL: table expressions and logical query stages",
+      "url": "https://www.postgresql.org/docs/current/queries-table-expressions.html"
+    },
+    {
+      "title": "PostgreSQL: declarative constraints",
+      "url": "https://www.postgresql.org/docs/current/ddl-constraints.html"
+    },
+    {
+      "title": "Oracle 19c: PL/SQL subprograms",
+      "url": "https://docs.oracle.com/en/database/oracle/oracle-database/19/lnpls/plsql-subprograms.html"
+    }
+  ],
+  "next": {
+    "id": "basic-sql",
+    "title": "Basic SQL: selecting and changing rows"
+  }
+}

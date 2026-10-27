@@ -9,6 +9,7 @@
     "lint": "oxlint",
     "preview": "vite preview",
     "test": "node --test test/*.test.js",
+    "verify:sql": "node scripts/verify-sql-course.mjs",
     "verify:build": "node scripts/verify-build.mjs",
     "verify:production": "node scripts/verify-production.mjs"
   },
@@ -19,6 +20,7 @@
     "@codemirror/legacy-modes": "^6.5.5",
     "@codemirror/state": "^6.7.6",
     "@codemirror/view": "^6.43.14",
+    "@electric-sql/pglite": "^0.5.12",
     "@fontsource/literata": "^5.3.0",
     "@fontsource/source-sans-3": "^5.3.1",
     "@lezer/highlight": "^1.2.5",

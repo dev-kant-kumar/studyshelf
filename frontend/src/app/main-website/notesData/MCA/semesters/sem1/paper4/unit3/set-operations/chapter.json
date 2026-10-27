@@ -1,0 +1,142 @@
+{
+  "id": "set-operations",
+  "title": "Set operations: UNION, INTERSECT, and difference",
+  "summary": "Combine query results with correct duplicate, compatibility, and precedence rules.",
+  "topics": [
+    "set-operations"
+  ],
+  "intro": "Set operations combine complete result rows vertically. They do not match columns from related tables as a join does. Begin by writing each input result and deciding whether duplicate occurrences are meaningful.",
+  "outcomes": [
+    "Check degree and type compatibility of two results.",
+    "Derive union, intersection, and difference from the shared data.",
+    "Choose UNION ALL when preserving multiplicity is required."
+  ],
+  "sections": [
+    {
+      "title": "1. Compatible rows, positional columns",
+      "paragraphs": [
+        "Both input queries must return the same number of columns and compatible types in corresponding positions. Column names need not match. Output names normally come from the first query. A set operation does not infer a match between columns with similar names.",
+        "Let A be DB101 student IDs: {101, 102, 103}. Let B be CS101 IDs: {101, 103}. Their union is {101, 102, 103}; intersection is {101, 103}; A minus B is {102}. B minus A is empty. Difference is directional."
+      ],
+      "diagram": "sets",
+      "diagramHeight": 600,
+      "alt": "DB101 has students 101, 102, 103 and CS101 has 101, 103. The shared area contains 101 and 103, while only the DB101 area contains 102.",
+      "caption": "Write input row values first. Venn-style membership alone does not show duplicate multiplicities."
+    },
+    {
+      "title": "2. UNION removes duplicates; UNION ALL preserves them",
+      "paragraphs": [
+        "UNION ALL appends both input multisets. The two course lists produce five occurrences: student 101 twice, 102 once, and 103 twice. UNION reduces these to three distinct rows. Duplicate removal applies to the entire selected row, not just a preferred key column.",
+        "If course_code is also selected, (101, DB101) and (101, CS101) are different rows and both remain under UNION. Use UNION ALL when the task is to retain every source event. Removing duplicates requires extra work and may destroy meaningful counts."
+      ]
+    },
+    {
+      "title": "3. Difference syntax is product-sensitive",
+      "paragraphs": [
+        "Oracle 19c uses MINUS for the distinct difference operation shown here. PostgreSQL, SQLite, SQL Server, MariaDB, and current MySQL use EXCEPT. The MySQL profile requires 8.0.31 or later for INTERSECT and EXCEPT; older versions need a different formulation."
+      ],
+      "code": "SELECT student_id FROM U3Enrolment WHERE course_code = 'DB101'\nEXCEPT\nSELECT student_id FROM U3Enrolment WHERE course_code = 'CS101'\nORDER BY student_id;",
+      "sqlVariants": {
+        "postgresql": {
+          "code": "SELECT student_id FROM U3Enrolment WHERE course_code = 'DB101'\nEXCEPT\nSELECT student_id FROM U3Enrolment WHERE course_code = 'CS101'\nORDER BY student_id;",
+          "note": "Run after the shared Unit 3 setup in a scratch database."
+        },
+        "oracle": {
+          "code": "SELECT student_id FROM U3Enrolment WHERE course_code = 'DB101'\nMINUS\nSELECT student_id FROM U3Enrolment WHERE course_code = 'CS101'\nORDER BY student_id;",
+          "note": "Oracle 19c: MINUS computes distinct left-side rows absent from the right. MySQL examples require 8.0.31+; MariaDB profile is 10.6+."
+        },
+        "mysql": {
+          "code": "SELECT student_id FROM U3Enrolment WHERE course_code = 'DB101'\nEXCEPT\nSELECT student_id FROM U3Enrolment WHERE course_code = 'CS101'\nORDER BY student_id;",
+          "note": "Run after the shared Unit 3 setup in a scratch database."
+        },
+        "mariadb": {
+          "code": "SELECT student_id FROM U3Enrolment WHERE course_code = 'DB101'\nEXCEPT\nSELECT student_id FROM U3Enrolment WHERE course_code = 'CS101'\nORDER BY student_id;",
+          "note": "Run after the shared Unit 3 setup in a scratch database."
+        },
+        "sqlite": {
+          "code": "SELECT student_id FROM U3Enrolment WHERE course_code = 'DB101'\nEXCEPT\nSELECT student_id FROM U3Enrolment WHERE course_code = 'CS101'\nORDER BY student_id;",
+          "note": "Run after the shared Unit 3 setup in a scratch database."
+        },
+        "sqlserver": {
+          "code": "SELECT student_id FROM U3Enrolment WHERE course_code = 'DB101'\nEXCEPT\nSELECT student_id FROM U3Enrolment WHERE course_code = 'CS101'\nORDER BY student_id;",
+          "note": "Run after the shared Unit 3 setup in a scratch database."
+        }
+      },
+      "example": [
+        "Only Ravi (102) takes DB101 without taking CS101. The same condition can be expressed using NOT EXISTS; a join without an anti-match condition would answer a different question."
+      ]
+    },
+    {
+      "title": "4. NULL, ordering, and operator grouping",
+      "paragraphs": [
+        "Set duplicate elimination treats NULL values as equal for the purpose of identifying duplicate result rows. That does not turn an ordinary NULL = NULL predicate into TRUE. Different operators can therefore have different notions of comparison for different purposes.",
+        "Put one final ORDER BY on the compound result. Parentheses or explicit intermediate queries make the intended combination clear when UNION, INTERSECT, and difference are mixed. Precedence differs across engines and versions, so do not rely on a remembered algebraic priority for a cross-DBMS script."
+      ]
+    },
+    {
+      "title": "5. Diagnose the wrong operation",
+      "paragraphs": [
+        "A join between course rosters asks for combinations related by a predicate, while INTERSECT asks for whole rows appearing in both results. If one query includes names and the other includes IDs, they are not interchangeable sets merely because both identify students.",
+        "Try replacing EXCEPT with UNION ALL and predict the five ordered IDs: 101, 101, 102, 103, 103. Then replace it with INTERSECT and predict 101, 103. Test the case where one input is empty; union, intersection, and difference must still follow their definitions."
+      ]
+    }
+  ],
+  "revision": [
+    "Write A and B before evaluating the compound query.",
+    "Explain which columns define a duplicate result row.",
+    "Use MINUS for Oracle 19c difference and state version requirements elsewhere."
+  ],
+  "questions": [
+    {
+      "id": "set-operations-all",
+      "question": "Why can UNION ALL be more correct than UNION?",
+      "answer": [
+        "If the result represents occurrences such as enrolments, removing a repeated student ID erases an occurrence. UNION ALL keeps all five course-list occurrences; UNION answers distinct membership instead."
+      ],
+      "level": "medium",
+      "tags": [
+        "Exam practice"
+      ]
+    },
+    {
+      "id": "set-operations-direction",
+      "question": "What is CS101 minus DB101 in the fixture?",
+      "answer": [
+        "The empty result, because both CS101 students also take DB101. Reversing difference gives Ravi, showing that difference is not commutative."
+      ],
+      "level": "easy",
+      "tags": [
+        "Concept check"
+      ]
+    },
+    {
+      "id": "set-operations-null-sets",
+      "question": "Does duplicate removal treating NULLs alike contradict three-valued WHERE logic?",
+      "answer": [
+        "No. Set duplicate identification and scalar equality predicates have different specified semantics. SQL can remove duplicate rows containing NULL while NULL = NULL still evaluates to UNKNOWN in WHERE."
+      ],
+      "level": "hard",
+      "tags": [
+        "Concept check"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "title": "PostgreSQL: combining query results",
+      "url": "https://www.postgresql.org/docs/current/queries-union.html"
+    },
+    {
+      "title": "MySQL 8.4: UNION, INTERSECT, and EXCEPT",
+      "url": "https://dev.mysql.com/doc/refman/8.4/en/set-operations.html"
+    },
+    {
+      "title": "PostgreSQL: comparisons, IN, and NOT IN",
+      "url": "https://www.postgresql.org/docs/current/functions-comparisons.html"
+    }
+  ],
+  "next": {
+    "id": "aggregate-functions",
+    "title": "Aggregate functions, grouping, and HAVING"
+  }
+}
