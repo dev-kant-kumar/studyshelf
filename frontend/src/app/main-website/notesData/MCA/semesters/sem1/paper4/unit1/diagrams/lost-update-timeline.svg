@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 700" role="img" aria-labelledby="title desc"><title id="title">Lost update: two allocations, only one decrement</title><desc id="desc">Time runs downward. Both clerks read the same old seat count.</desc><defs><marker id="tip" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#0f766e"/></marker></defs><rect width="960" height="700" rx="16" fill="#f8fafc"/>
+<text x="40" y="48" text-anchor="start" font-family="Arial,sans-serif" font-size="27" font-weight="700" fill="#16324f">Lost update: two allocations, only one decrement</text>
+<text x="40" y="82" text-anchor="start" font-family="Arial,sans-serif" font-size="19" font-weight="400" fill="#16324f">Time runs downward. Both clerks read the same old seat count.</text>
+<text x="95" y="132" text-anchor="start" font-family="Arial,sans-serif" font-size="24" font-weight="700" fill="#16324f">Clerk A</text>
+<text x="410" y="132" text-anchor="start" font-family="Arial,sans-serif" font-size="24" font-weight="700" fill="#16324f">Stored count</text>
+<text x="735" y="132" text-anchor="start" font-family="Arial,sans-serif" font-size="24" font-weight="700" fill="#16324f">Clerk B</text>
+<rect x="370" y="155" width="220" height="70" rx="9" fill="#e0f2fe" stroke="#94a3b8" stroke-width="2"/>
+<text x="386" y="187" text-anchor="start" font-family="Arial,sans-serif" font-size="21" font-weight="700" fill="#16324f">10 seats</text>
+<rect x="40" y="260" width="245" height="105" rx="9" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="56" y="292" text-anchor="start" font-family="Arial,sans-serif" font-size="21" font-weight="700" fill="#16324f">Read 10</text>
+<text x="56" y="324" text-anchor="start" font-family="Arial,sans-serif" font-size="21" font-weight="400" fill="#16324f">Compute 10 - 1 = 9</text>
+<rect x="675" y="260" width="245" height="105" rx="9" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="691" y="292" text-anchor="start" font-family="Arial,sans-serif" font-size="21" font-weight="700" fill="#16324f">Read 10</text>
+<text x="691" y="324" text-anchor="start" font-family="Arial,sans-serif" font-size="21" font-weight="400" fill="#16324f">Compute 10 - 1 = 9</text>
+<path d="M370 190 L160 190 L160 255" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<path d="M590 190 L795 190 L795 255" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<rect x="370" y="395" width="220" height="70" rx="9" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="386" y="427" text-anchor="start" font-family="Arial,sans-serif" font-size="21" font-weight="700" fill="#16324f">Write A: 9</text>
+<path d="M160 365 L160 430 L365 430" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<rect x="370" y="495" width="220" height="70" rx="9" fill="#fff7ed" stroke="#94a3b8" stroke-width="2"/>
+<text x="386" y="527" text-anchor="start" font-family="Arial,sans-serif" font-size="21" font-weight="700" fill="#16324f">Write B: 9</text>
+<path d="M795 365 L795 530 L595 530" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<text x="40" y="640" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Observed final count = 9. Correct count after two allocations = 8.</text>
+<text x="40" y="667" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">The second write overwrites a result based on stale input.</text>
+</svg>

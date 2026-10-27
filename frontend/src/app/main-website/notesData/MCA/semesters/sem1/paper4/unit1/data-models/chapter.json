@@ -1,0 +1,109 @@
+{
+  "intro": "A data model is a set of concepts for representing data, relationships, permitted operations, and constraints. It is the vocabulary used to construct a schema; the schema is one particular design expressed with that vocabulary.",
+  "outcomes": [
+    "Separate a model from a schema and a database state.",
+    "Build a small conceptual and relational college representation.",
+    "Compare model choices without confusing logical design and physical storage."
+  ],
+  "sections": [
+    {
+      "title": "1. The three parts of a model",
+      "paragraphs": [
+        "Structure defines how facts are represented: entities and relationships, tables and attributes, objects, documents, or vertices and edges. Operations define how facts can be retrieved and changed. Constraints define valid states and permitted relationships. A picture of boxes without operations or rules is only a partial account of a data model.",
+        "For a relational design, Student(student_id, name) is a relation structure, selecting students by name is an operation, and uniqueness of student_id is a constraint. A data model supplies general concepts; this Student definition is a schema; the rows currently stored are a database state."
+      ]
+    },
+    {
+      "title": "2. Conceptual models and the ER approach",
+      "paragraphs": [
+        "A conceptual model describes the domain with limited concern for implementation. An entity is a distinguishable real-world thing about which facts are stored, such as a student or course. An attribute is a described property, such as course_title. A relationship associates entities, such as a student enrolling in a course.",
+        "Cardinality expresses how many entities can participate. One student may take many courses and one course may have many students, giving a many-to-many relationship. Enrolment can itself have attributes such as enrolled_on and mark because these facts belong to the association rather than to either participant alone.",
+        "An entity type describes the category Student; an entity instance is a particular student. A conceptual model should state optionality too: a newly created course may have zero enrolments. Entity-relationship diagrams communicate these design choices before table implementation."
+      ],
+      "diagram": "conceptual-er-enrolment",
+      "diagramHeight": 700,
+      "alt": "Student and Course entity boxes connect through an ENROLS relationship diamond marked many-to-many. The mark attribute attaches to that association.",
+      "caption": "The diamond represents the association. Its mark depends on both participants, which explains why it later belongs in Enrolment."
+    },
+    {
+      "title": "3. Logical relational representation",
+      "paragraphs": [
+        "Map students to Student(student_id, name), courses to Course(course_code, title), and the many-to-many relationship to Enrolment(student_id, course_code, mark). The pair (student_id, course_code) identifies an enrolment under the simplifying rule that a student takes each course at most once. Retakes would require an attempt or offering identifier.",
+        "A key is a set of attributes that uniquely identifies a row. A foreign key requires a referencing value to match an eligible key in another or the same table, subject to its NULL and matching rules. Joining Enrolment to Student and Course reconstructs meaningful combinations using matching identifiers.",
+        "The model should follow meaning. Putting course titles into one comma-separated Student field makes individual course constraints and reporting awkward. Separating courses and associations expresses the relationships explicitly."
+      ],
+      "diagram": "college-model",
+      "alt": "Student and Course tables connected through Enrolment, whose student and course identifiers reference their keys.",
+      "caption": "Enrolment represents a many-to-many relationship. Its key assumes no repeat attempt for the same student and course.",
+      "diagramHeight": 570
+    },
+    {
+      "title": "4. Physical models and alternative representations",
+      "paragraphs": [
+        "A physical model chooses representations such as record layout, indexes, partitioning, and storage organisation. The same logical tables can have different physical layouts. A conceptual diagram is not a disk layout, and drawing a line between entities does not prescribe a particular index.",
+        "In a document model, a course may contain an array of modules. In a graph model, a Course vertex can have a REQUIRES edge to another Course. A hierarchy naturally models nested ownership. Each choice makes some operations easy and others more complex. The college may use different representations for different services, but synchronising shared facts then becomes an explicit design problem."
+      ]
+    },
+    {
+      "title": "5. Worked modelling decisions and common mistakes",
+      "paragraphs": [
+        "The fact that Asha received 82 in DB101 belongs to her enrolment, because neither Asha alone nor DB101 alone determines that mark. A course title belongs to Course because all enrolments in that course share it. Correct placement reduces duplicated facts and update anomalies.",
+        "Before selecting fields, ask what identifies an entity, whether an association can repeat, which attributes are optional, and what should happen when a referenced entity is removed. An identifier does not by itself establish a relationship; the association and rules must be defined. A flexible document shape also does not remove the need to define these meanings."
+      ],
+      "diagram": "model-fact-placement",
+      "diagramHeight": 740,
+      "alt": "The same student has different marks in two courses and two students have different marks in DB101. Name, course title, and mark therefore belong to different structures.",
+      "caption": "Compare repeated identifiers with changing marks. Neither student_id alone nor course_code alone determines one mark."
+    }
+  ],
+  "questions": [
+    {
+      "id": "model-schema-state",
+      "question": "Distinguish a data model, a schema, and an instance.",
+      "answer": [
+        "A data model provides general representation concepts, operations, and constraints. A schema is a particular database design expressed using those concepts, such as Student(student_id, name) with a key on student_id. An instance or state is the actual data satisfying that design at a particular time. The same schema can have many valid states."
+      ],
+      "level": "easy",
+      "tags": [
+        "Concept check"
+      ]
+    },
+    {
+      "id": "mark-placement",
+      "question": "Why should a mark be stored in Enrolment rather than Student or Course?",
+      "answer": [
+        "A mark depends on a particular student taking a particular course or course offering. Student alone cannot identify it because one student takes several courses; Course alone cannot identify it because students receive different marks. Enrolment represents the association and therefore owns the mark. If retakes occur, its identifier must also distinguish the relevant attempt."
+      ],
+      "level": "medium",
+      "tags": [
+        "Practical"
+      ]
+    },
+    {
+      "id": "models-levels",
+      "question": "How do conceptual, logical, and physical models differ?",
+      "answer": [
+        "A conceptual model describes domain entities and relationships in terms meaningful to stakeholders. A logical model translates these into structures of a chosen data model, such as relations and keys. A physical model specifies storage and access choices such as indexes and partitions. These are related design stages and concerns, not necessarily separate copies or tools."
+      ],
+      "level": "medium",
+      "tags": [
+        "Concept check"
+      ]
+    }
+  ],
+  "revision": [
+    "Define model structure, operations, and constraints.",
+    "Place each college fact on the entity or association that determines it.",
+    "State assumptions about retakes, optionality, and identifiers."
+  ],
+  "references": [
+    {
+      "title": "Oracle Database Concepts: introduction and architecture",
+      "url": "https://docs.oracle.com/en/database/oracle/oracle-database/19/cncpt/introduction-to-oracle-database.html"
+    }
+  ],
+  "next": {
+    "id": "data-independence",
+    "title": "Logical and physical data independence"
+  }
+}

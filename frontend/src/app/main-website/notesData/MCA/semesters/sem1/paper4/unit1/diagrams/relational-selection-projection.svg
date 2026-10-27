@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 790" role="img" aria-labelledby="title desc"><title id="title">Selection keeps rows; projection keeps attributes</title><desc id="desc">Apply two different operations independently to the same input relation.</desc><defs><marker id="tip" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#0f766e"/></marker></defs><rect width="960" height="790" rx="16" fill="#f8fafc"/>
+<text x="40" y="48" text-anchor="start" font-family="Arial,sans-serif" font-size="27" font-weight="700" fill="#16324f">Selection keeps rows; projection keeps attributes</text>
+<text x="40" y="82" text-anchor="start" font-family="Arial,sans-serif" font-size="19" font-weight="400" fill="#16324f">Apply two different operations independently to the same input relation.</text>
+<rect x="40" y="120" width="880" height="209" rx="9" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="52" y="152" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="700" fill="#16324f">Input Student</text>
+<path d="M40 169 L920 169" fill="none" stroke="#0f766e" stroke-width="3"/>
+<text x="51" y="197" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">student_id</text>
+<text x="331" y="197" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">name</text>
+<path d="M320 169 V329" stroke="#cbd5e1"/>
+<text x="631" y="197" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">programme</text>
+<path d="M620 169 V329" stroke="#cbd5e1"/>
+<text x="51" y="237" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">101</text>
+<text x="331" y="237" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Asha</text>
+<path d="M320 169 V329" stroke="#cbd5e1"/>
+<text x="631" y="237" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">MCA</text>
+<path d="M620 169 V329" stroke="#cbd5e1"/>
+<path d="M40 209 H920" stroke="#cbd5e1"/>
+<text x="51" y="277" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">102</text>
+<text x="331" y="277" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Ravi</text>
+<path d="M320 169 V329" stroke="#cbd5e1"/>
+<text x="631" y="277" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">MBA</text>
+<path d="M620 169 V329" stroke="#cbd5e1"/>
+<path d="M40 249 H920" stroke="#cbd5e1"/>
+<text x="51" y="317" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">103</text>
+<text x="331" y="317" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Mira</text>
+<path d="M320 169 V329" stroke="#cbd5e1"/>
+<text x="631" y="317" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">MCA</text>
+<path d="M620 169 V329" stroke="#cbd5e1"/>
+<path d="M40 289 H920" stroke="#cbd5e1"/>
+<rect x="40" y="430" width="550" height="169" rx="9" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="52" y="462" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="700" fill="#16324f">Select programme = MCA</text>
+<path d="M40 479 L590 479" fill="none" stroke="#0f766e" stroke-width="3"/>
+<text x="51" y="507" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">student_id</text>
+<text x="241" y="507" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">name</text>
+<path d="M230 479 V599" stroke="#cbd5e1"/>
+<text x="401" y="507" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">programme</text>
+<path d="M390 479 V599" stroke="#cbd5e1"/>
+<text x="51" y="547" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">101</text>
+<text x="241" y="547" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Asha</text>
+<path d="M230 479 V599" stroke="#cbd5e1"/>
+<text x="401" y="547" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">MCA</text>
+<path d="M390 479 V599" stroke="#cbd5e1"/>
+<path d="M40 519 H590" stroke="#cbd5e1"/>
+<text x="51" y="587" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">103</text>
+<text x="241" y="587" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Mira</text>
+<path d="M230 479 V599" stroke="#cbd5e1"/>
+<text x="401" y="587" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">MCA</text>
+<path d="M390 479 V599" stroke="#cbd5e1"/>
+<path d="M40 559 H590" stroke="#cbd5e1"/>
+<rect x="660" y="430" width="260" height="209" rx="9" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="672" y="462" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="700" fill="#16324f">Project name</text>
+<path d="M660 479 L920 479" fill="none" stroke="#0f766e" stroke-width="3"/>
+<text x="671" y="507" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">name</text>
+<text x="671" y="547" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Asha</text>
+<path d="M660 519 H920" stroke="#cbd5e1"/>
+<text x="671" y="587" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Ravi</text>
+<path d="M660 559 H920" stroke="#cbd5e1"/>
+<text x="671" y="627" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Mira</text>
+<path d="M660 599 H920" stroke="#cbd5e1"/>
+<path d="M260 330 L260 425" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<path d="M790 330 L790 425" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<text x="40" y="730" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Selection determines which tuples remain; projection determines attributes.</text>
+<text x="40" y="757" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Formal projection removes duplicates; SQL SELECT alone may retain them.</text>
+</svg>

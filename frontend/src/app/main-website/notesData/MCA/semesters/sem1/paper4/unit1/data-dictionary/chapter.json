@@ -1,0 +1,114 @@
+{
+  "intro": "A data dictionary records descriptions of the database itself. This metadata lets the DBMS understand objects, enforce rules, resolve queries, and support administration.",
+  "outcomes": [
+    "Identify metadata and distinguish it from business data.",
+    "Explain active and passive dictionaries and catalogue use.",
+    "Inspect a standard metadata interface with a worked query."
+  ],
+  "sections": [
+    {
+      "title": "1. Data about data",
+      "paragraphs": [
+        "Student rows are business data; the definition of Student, the type of student_id, and the key constraint are metadata. A dictionary can record object names, columns, types, defaults, constraints, relationships, ownership, and permissions. Systems may also maintain statistics and dependencies in related catalogue structures.",
+        "The term system catalogue often refers to the DBMS-maintained metadata repository. Data dictionary is sometimes used interchangeably and sometimes refers more broadly to descriptive documentation. A business glossary adds human meanings such as what active student means; a technical catalogue does not automatically contain a complete business definition."
+      ],
+      "diagram": "dictionary-data-metadata",
+      "diagramHeight": 700,
+      "alt": "Student rows record Asha and Ravi. Separate metadata rows describe the student_id and name columns, their types, and required-value rules.",
+      "caption": "Read across each table: one describes people, while the other describes columns used to store facts about people."
+    },
+    {
+      "title": "2. Active and passive dictionaries",
+      "paragraphs": [
+        "An active dictionary is integrated with the DBMS and maintained as definitions change. CREATE TABLE registers a structure, and subsequent parsing can consult that definition. It is authoritative for the structures the engine currently recognises.",
+        "A passive dictionary is maintained separately, such as a spreadsheet or documentation repository. It can include richer ownership notes and business explanations but can become stale if changes are not synchronised. Active does not mean every metadata field is always perfectly current: statistics and descriptive comments can have their own maintenance schedules.",
+        "Applications should use supported metadata interfaces. Editing system catalogue internals directly can violate engine assumptions; supported DDL is the normal way to change definitions."
+      ],
+      "diagram": "dictionary-active-passive",
+      "diagramHeight": 700,
+      "alt": "A DDL request updates the active catalogue. Separate passive documentation needs its own maintenance process and may otherwise become stale.",
+      "caption": "Follow both branches. Engine definitions and human documentation must remain aligned after the schema changes."
+    },
+    {
+      "title": "3. How the DBMS uses metadata",
+      "paragraphs": [
+        "When a query refers to Student.name, semantic analysis checks the catalogue for the table and column and determines the type. Permission checks consult access metadata. An insert is checked against declared constraints. The optimiser uses statistics such as row counts and estimated value distributions to compare plans.",
+        "Dependency metadata can identify that TeacherRoster depends on Student. Dropping or changing Student may be rejected or require coordinated changes. Administrative tools use metadata to display structures, compare migrations, and inspect ownership. A self-describing database stores both managed data and machine-readable definitions of that data."
+      ]
+    },
+    {
+      "title": "4. Worked metadata inspection",
+      "paragraphs": [
+        "The SQL information_schema provides standardised metadata views in supporting systems. The example lists columns of the unquoted student table in the public schema in PostgreSQL. Unquoted identifiers are folded to lowercase there. Other DBMSs use different default namespaces and identifier rules.",
+        "The returned rows describe columns, not student records. Visibility can depend on the current user permissions, so an empty result can mean the wrong namespace, different case, an absent object, or insufficient metadata visibility."
+      ],
+      "code": "SELECT column_name, data_type, is_nullable\nFROM information_schema.columns\nWHERE table_schema = 'public'\n  AND table_name = 'student'\nORDER BY ordinal_position;",
+      "example": [
+        "For a Student table with student_id INTEGER PRIMARY KEY and name VARCHAR(80) NOT NULL, expect column metadata for student_id and name, with their types and required-value status.",
+        "This query cannot tell you Asha's mark. It tells you how the database describes the columns through which business facts are represented."
+      ]
+    },
+    {
+      "title": "5. Statistics, privacy, and documentation",
+      "paragraphs": [
+        "Schema metadata changes when definitions change; contents change with ordinary data operations; statistics may be refreshed on a separate schedule. Confusing these can lead to the claim that a catalogue always contains a precise live row count. Cost estimates are often approximate.",
+        "Metadata can be sensitive: names may reveal confidential projects, and privileges reveal security structure. Access should follow supported policies. A useful human dictionary supplements technical definitions with units, allowed meanings, data owners, retention expectations, and examples. A field called balance is ambiguous without knowing currency, sign convention, and the moment represented.",
+        "Good documentation and active metadata complement each other. One supplies current engine-enforced structure; the other explains organisational meaning that cannot be inferred from types alone."
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "id": "contents",
+      "question": "What is a data dictionary, and what does it contain?",
+      "answer": [
+        "A data dictionary is a repository of metadata describing the database. It commonly includes tables, columns, types, keys, constraints, views, users, permissions, and dependencies; related catalogue structures may contain statistics. The DBMS uses these definitions to resolve requests, enforce rules, and plan operations. A human-maintained dictionary may additionally explain business meanings, owners, units, and usage."
+      ],
+      "level": "medium",
+      "tags": [
+        "Concept check"
+      ]
+    },
+    {
+      "id": "active-passive",
+      "question": "Distinguish active and passive data dictionaries.",
+      "answer": [
+        "An active dictionary is integrated with the DBMS and updated through supported definition operations. A passive dictionary exists separately and relies on a maintenance process. The active catalogue is authoritative for recognised structures, while passive documentation can explain richer business context. Separate documentation must be kept aligned with actual definitions."
+      ],
+      "level": "medium",
+      "tags": [
+        "Concept check"
+      ]
+    },
+    {
+      "id": "row-count",
+      "question": "Why can a catalogue row estimate differ from SELECT COUNT(*)?",
+      "answer": [
+        "An optimiser statistic is often an estimate collected or updated on a schedule; it need not equal the precise number visible to the current transaction. SELECT COUNT(*) evaluates the qualifying visible rows for that query. Concurrency and snapshot timing also affect comparisons. Definitions and cost statistics serve different purposes."
+      ],
+      "level": "hard",
+      "tags": [
+        "Practical"
+      ]
+    }
+  ],
+  "revision": [
+    "Classify examples as data, metadata, or business glossary definitions.",
+    "Explain catalogue use during parsing, checking, and planning.",
+    "Distinguish exact definitions from approximate statistics."
+  ],
+  "references": [
+    {
+      "title": "Oracle Database Concepts: introduction and architecture",
+      "url": "https://docs.oracle.com/en/database/oracle/oracle-database/19/cncpt/introduction-to-oracle-database.html"
+    },
+    {
+      "title": "PostgreSQL: information schema",
+      "url": "https://www.postgresql.org/docs/current/information-schema.html"
+    }
+  ],
+  "next": {
+    "id": "dba-functions",
+    "title": "Database administrator and DBA functions"
+  }
+}

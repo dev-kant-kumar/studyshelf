@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 650" role="img" aria-labelledby="title desc"><title id="title">OLTP and OLAP: different work over related facts</title><desc id="desc">Compare the size, purpose, and frequency of operations.</desc><defs><marker id="tip" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#0f766e"/></marker></defs><rect width="960" height="650" rx="16" fill="#f8fafc"/>
+<text x="40" y="48" text-anchor="start" font-family="Arial,sans-serif" font-size="28" font-weight="700" fill="#16324f">OLTP and OLAP: different work over related facts</text>
+<text x="40" y="82" text-anchor="start" font-family="Arial,sans-serif" font-size="19" font-weight="400" fill="#16324f">Compare the size, purpose, and frequency of operations.</text>
+<text x="40" y="135" text-anchor="start" font-family="Arial,sans-serif" font-size="24" font-weight="700" fill="#16324f">OLTP: daily registration</text>
+<text x="525" y="135" text-anchor="start" font-family="Arial,sans-serif" font-size="24" font-weight="700" fill="#16324f">OLAP: historical analysis</text>
+<rect x="40" y="175" width="395" height="125" rx="10" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="58" y="209" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="700" fill="#16324f">One student request</text>
+<text x="58" y="242" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="400" fill="#16324f">Register 101 for DB101</text>
+<text x="58" y="272" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="400" fill="#16324f">Check and change related rows</text>
+<rect x="525" y="175" width="395" height="125" rx="10" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="543" y="209" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="700" fill="#16324f">One analytical question</text>
+<text x="543" y="242" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="400" fill="#16324f">Compare five years of demand</text>
+<text x="543" y="272" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="400" fill="#16324f">Scan and aggregate many rows</text>
+<rect x="40" y="405" width="395" height="100" rx="10" fill="#ecfdf5" stroke="#94a3b8" stroke-width="2"/>
+<text x="58" y="439" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="700" fill="#16324f">Operational records</text>
+<text x="58" y="472" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="400" fill="#16324f">Frequent small transactions</text>
+<rect x="525" y="405" width="395" height="100" rx="10" fill="#ecfdf5" stroke="#94a3b8" stroke-width="2"/>
+<text x="543" y="439" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="700" fill="#16324f">Historical datasets</text>
+<text x="543" y="472" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="400" fill="#16324f">Grouped totals and trends</text>
+<path d="M237 300 L237 400" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<path d="M722 300 L722 400" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<text x="40" y="590" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">An engine may support both workloads, but resource demands can compete.</text>
+<text x="40" y="617" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">A separate warehouse is common, not required by the OLAP definition.</text>
+</svg>

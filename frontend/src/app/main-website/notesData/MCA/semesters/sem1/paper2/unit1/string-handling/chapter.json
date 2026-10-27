@@ -1,0 +1,102 @@
+{
+  "intro": "A C string is a character sequence terminated by a zero byte. Track length, capacity, and termination when reading, copying, comparing, and concatenating strings.",
+  "outcomes": [
+    "Represent strings and distinguish size from length.",
+    "Use common string functions with capacity checks.",
+    "Read bounded text and explain truncation and overlap."
+  ],
+  "prerequisites": "An array stores consecutive elements. A pointer can refer to the first element. The null character \\0 has value zero; it is different from the printable digit '0'.",
+  "sections": [
+    {
+      "title": "1. Representation and writable storage",
+      "paragraphs": [
+        "char word[]=\"cat\" creates a writable four-element array containing c, a, t, and \\0. strlen(word) is three; sizeof word is four in the declaring scope. char word[3]={'c','a','t'} is an array of characters but not a string because there is no terminator.",
+        "const char *label=\"cat\" refers to a string literal. Do not modify literal storage; doing so is undefined behaviour. A char array initialised from that literal is a separate modifiable object. Arrays are not assigned by word=\"dog\"; copy into sufficient storage instead.",
+        "String length counts bytes preceding the first terminator, not necessarily Unicode characters visible to a reader. Embedded zero bytes end the C string early. For binary data, keep an explicit byte count rather than treating it as a string."
+      ]
+    },
+    {
+      "title": "2. Library operations and their contracts",
+      "paragraphs": [
+        "<string.h> supplies strlen, strcpy, strcat, strcmp, strchr, strstr, memcpy, and memmove. strlen requires a valid terminated string; it searches until zero. strcpy copies including the terminator; strcat appends to an already terminated destination. Both require enough destination capacity and nonoverlapping source/destination regions.",
+        "strcmp compares byte strings lexicographically and returns a value less than, equal to, or greater than zero. Do not assume exactly -1 or 1. == compares pointer values after usual array conversion, not textual contents. strchr finds a character and strstr finds a substring; either returns NULL when there is no match.",
+        "memcpy copies an explicit number of bytes and does not require or add a terminator; its regions must not overlap. memmove supports overlapping regions. strncpy is not a universally safe replacement for strcpy: it may omit the terminator when the source length reaches the bound and pads with zeros when shorter."
+      ],
+      "code": "#include <stdio.h>\n#include <string.h>\n\nint main(void) {\n    char message[16] = \"Data\";\n    const char *suffix = \" C\";\n    size_t used = strlen(message);\n    size_t extra = strlen(suffix);\n    if (extra >= sizeof message - used) return 1;\n    strcat(message, suffix);\n    printf(\"text=%s length=%zu capacity=%zu\\n\", message, strlen(message), sizeof message);\n    printf(\"equal=%d\\n\", strcmp(message, \"Data C\") == 0);\n    char overlap[] = \"abcde\";\n    memmove(overlap, overlap + 1, strlen(overlap));\n    printf(\"shifted=%s\\n\", overlap);\n    return 0;\n}",
+      "example": [
+        "message starts with length four and capacity 16. The suffix has length two; used+extra+1 is seven, so it fits. Output is text=Data C length=6 capacity=16 and equal=1.",
+        "The memmove copies five bytes from the second character: b,c,d,e,zero. The resulting string is bcde. Including the terminator preserves the string invariant; memcpy would not be valid for these overlapping regions."
+      ]
+    },
+    {
+      "title": "3. Bounded input and truncation",
+      "paragraphs": [
+        "fgets(buffer, capacity, stdin) reads at most capacity-1 characters and terminates successful input with zero. It can retain a newline. Check its return value before processing. If it reads no newline, the input may be an unterminated final line or a line too long for the buffer; determine and handle that according to the application.",
+        "The following example removes a newline when present. It demonstrates a bounded first chunk, not a complete arbitrary-length-line reader. For a strict full-line form, detect a missing newline, check whether more characters remain, and reject or continue consuming that line.",
+        "gets cannot enforce a buffer limit and was removed from C11. Unbounded %s has the same overflow risk. A scanf width such as %15s fits a 16-byte destination but stops at whitespace and leaves extra input unread. Choose the operation that matches the intended input grammar."
+      ],
+      "code": "#include <stdio.h>\n#include <string.h>\n\nint main(void) {\n    char line[16];\n    if (fgets(line, sizeof line, stdin) == NULL) return 1;\n    char *newline = strchr(line, '\\n');\n    if (newline != NULL) *newline = '\\0';\n    printf(\"First chunk: [%s], bytes=%zu\\n\", line, strlen(line));\n    return 0;\n}",
+      "example": [
+        "Input cat followed by Enter prints First chunk: [cat], bytes=3. An empty line becomes a zero-length string. More than 15 input bytes leaves additional input unread; this program intentionally labels its output as a first chunk.",
+        "Test a length-zero string, an exact-fit concatenation including its terminator, one byte too many, a missing search character, and overlapping movement. Never call strlen on an unterminated buffer to discover whether it is terminated."
+      ]
+    },
+    {
+      "title": "4. Safety and work performed",
+      "paragraphs": [
+        "strlen examines bytes until the terminator, so its work grows with length. Calling strlen inside every loop condition can make an otherwise linear traversal quadratic if the compiler does not eliminate the repeated searches. Compute the length once when the string will not change.",
+        "The sample concatenation relies on the destination being valid and used<capacity before subtracting used from capacity. General code must establish that invariant first. Compare the suffix length to remaining capacity without allowing addition or subtraction to wrap.",
+        "Maintain three separate facts: the allocated capacity, the occupied string length, and the location of its terminator. A function name alone does not make an operation safe; safety follows from meeting its contract."
+      ]
+    }
+  ],
+  "revision": [
+    "Count the terminator in capacity calculations.",
+    "Use strcmp for content equality.",
+    "Distinguish byte copying from string copying.",
+    "Explain why strncpy can leave no terminator.",
+    "Handle input chunks and truncation deliberately."
+  ],
+  "questions": [
+    {
+      "id": "string-handling-1",
+      "question": "Why does \"cat\" require four char slots?",
+      "level": "easy",
+      "tags": [
+        "Concept check"
+      ],
+      "answer": [
+        "Three store the letters and one stores the zero terminator. strlen reports three, while sizeof a local array initialised as char a[]=\"cat\" reports four."
+      ]
+    },
+    {
+      "id": "string-handling-2",
+      "question": "Can a five-byte destination store \"ab\" followed by \"cd\"?",
+      "level": "medium",
+      "tags": [
+        "Exam practice"
+      ],
+      "answer": [
+        "Yes, exactly: the final four letters need one additional zero byte, so total capacity required is five. A four-byte destination is too small even though the visible text contains only four characters."
+      ]
+    },
+    {
+      "id": "string-handling-3",
+      "question": "Why can strncpy(dst,src,sizeof dst) still be unsafe as a string operation?",
+      "level": "hard",
+      "tags": [
+        "Interview practice"
+      ],
+      "answer": [
+        "When src has at least the supplied bound of characters, strncpy does not append a zero terminator. Passing that destination to strlen or %s can read beyond its valid storage. Establish termination explicitly and decide whether truncation is acceptable; do not confuse a byte limit with a complete string contract."
+      ]
+    }
+  ],
+  "references": [
+    {
+      "title": "WG14 C11 committee draft N1570 - consult the clauses listed in this chapter",
+      "url": "https://www.open-std.org/jtc1/sc22/wg14/www/docs/n1570.pdf"
+    }
+  ],
+  "next": "Unit 1 ends here. Unit 2 develops user-defined functions, structures, unions, pointers, and file management. Verification: N1570 clauses 7.21.7.2 and 7.24."
+}

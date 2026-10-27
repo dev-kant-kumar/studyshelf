@@ -1,0 +1,152 @@
+{
+  "intro": "DBMS is the general category of software that manages databases. RDBMS is the subset based on the relational model. The comparison is therefore between a broad category and one particular family within it.",
+  "outcomes": [
+    "Explain the subset relationship accurately.",
+    "Compare representation and operations without inventing universal product differences.",
+    "Apply the complete unit to a college database design."
+  ],
+  "sections": [
+    {
+      "title": "1. The category relationship",
+      "paragraphs": [
+        "Every RDBMS is a DBMS, but not every DBMS is relational. Hierarchical, network, object, document, key-value, and graph systems are other database-management approaches. RDBMS identifies the relational representation and its associated operations and integrity principles.",
+        "The term DBMS does not mean a primitive system that necessarily lacks security, relationships, or transactions. It includes relational systems as well as nonrelational ones. When a question intends comparison with nonrelational DBMSs, make that scope explicit and discuss the particular model involved."
+      ],
+      "diagram": "subset",
+      "alt": "The category DBMS contains relational, document, graph, hierarchical, and other systems; RDBMS is the relational subset.",
+      "caption": "RDBMS is a subset of DBMS. Model membership alone does not determine concurrency, security, or deployment.",
+      "diagramHeight": 570
+    },
+    {
+      "title": "2. Meaningful comparison",
+      "paragraphs": [
+        "The defining relational distinction is representation through relations and value-based associations with relational operations and integrity rules. Other models use different structures, such as documents, explicit graph edges, or hierarchical paths. The best comparison names the model and explains the effect on the intended queries.",
+        "SQL is widely associated with relational systems, but language alone is not a complete classification test. A nonrelational product can offer an SQL-like interface, and relational ideas can be exposed through other interfaces. Likewise, tables in a user interface may be only a presentation of underlying data."
+      ],
+      "table": {
+        "caption": "General category and relational subset",
+        "headers": [
+          "Aspect",
+          "DBMS",
+          "RDBMS"
+        ],
+        "rows": [
+          [
+            "Scope",
+            "All database management systems",
+            "Relational family of DBMSs"
+          ],
+          [
+            "Representation",
+            "Depends on the model",
+            "Relations, commonly represented as tables"
+          ],
+          [
+            "Relationships",
+            "Model-specific links or associations",
+            "Value-based references and relational combinations"
+          ],
+          [
+            "Operations",
+            "Model-specific query and update facilities",
+            "Relational operations, commonly through SQL"
+          ],
+          [
+            "Integrity",
+            "Capabilities depend on the engine and design",
+            "Relational keys and integrity rules; implementation varies"
+          ],
+          [
+            "Deployment",
+            "Embedded, server, distributed, or managed",
+            "Can use any of these deployment arrangements"
+          ],
+          [
+            "Examples",
+            "Includes all relational and nonrelational engines",
+            "PostgreSQL, SQLite, and Oracle Database are relational-family examples"
+          ]
+        ]
+      }
+    },
+    {
+      "title": "3. Misleading comparison claims",
+      "paragraphs": [
+        "Claims that a DBMS is always single-user while an RDBMS is always multi-user confuse the model with deployment and concurrency capabilities. Relational SQLite can be embedded, while nonrelational systems can support many concurrent clients.",
+        "Claims that only RDBMSs support ACID, security, backup, or constraints are also incorrect. These capabilities and their scope depend on products and configuration. A nonrelational transactional engine can provide strong guarantees. A relational application can misuse transactions or disable important protections.",
+        "Claims that an RDBMS always removes all redundancy, cannot store complex data, or must be slower are similarly unsound. Normalisation, indexing, types, query plans, and workload determine actual behaviour. Deliberate duplication and rich types can exist in relational systems."
+      ]
+    },
+    {
+      "title": "4. Worked comparison for college data",
+      "paragraphs": [
+        "A relational registration design stores Student, Course, and Enrolment with keys and foreign keys, then joins them for a roster. A document design might store a student document with embedded enrolments. The document can make one-student retrieval convenient; shared course facts and cross-student reporting need explicit design to avoid inconsistent copies.",
+        "A graph design can represent prerequisite paths naturally. A key-value system can support session lookup by token. These choices address different access patterns. None of them excuses defining identity, permitted changes, missing information, and recovery expectations.",
+        "The college may use an RDBMS for enrolment and other stores for specialised functions. Keeping authoritative ownership clear is essential when several systems repeat shared facts."
+      ],
+      "diagram": "relational-document-comparison",
+      "diagramHeight": 730,
+      "alt": "Student and Enrolment relations express an enrolment with matching identifiers, while a student document embeds an enrolment array for the same fact.",
+      "caption": "Compare the structures and associations. Transaction and security guarantees are separate product properties, not conclusions from the picture."
+    },
+    {
+      "title": "5. Complete unit case: a dependable registration workflow",
+      "paragraphs": [
+        "Begin with the conceptual facts: students register for course offerings, fees attach to registrations, and teachers assess enrolled students. Define identifiers and whether retakes exist. Build logical structures and constraints, then expose student, teacher, and accounts perspectives without unnecessary personal data.",
+        "Use a transaction to coordinate related database updates and suitable concurrency handling for capacity. Let the DBMS choose physical access paths while retaining defined query semantics. Maintain metadata and documentation, give each role appropriate privileges, and test recovery against agreed data-loss and downtime objectives.",
+        "This combines the unit concepts: the model defines the vocabulary, the schema defines the design, the instance contains current facts, abstraction separates perspectives, independence reduces change coupling, and administration keeps the managed service dependable. Later units develop ER modelling, formal relational operations, and SQL in greater depth."
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "id": "difference",
+      "question": "Explain the difference between DBMS and RDBMS.",
+      "answer": [
+        "A DBMS is software for managing databases. An RDBMS is a DBMS based on the relational model, using relations, keys, integrity rules, and relational operations, commonly exposed through SQL. The general DBMS category also includes hierarchical, network, document, graph, object, and key-value approaches. Thus all RDBMSs are DBMSs, while some DBMSs use other models.",
+        "Security, transaction support, user count, and deployment are product properties, not universal differences between these two terms."
+      ],
+      "level": "medium",
+      "tags": [
+        "Concept check"
+      ]
+    },
+    {
+      "id": "correct-table",
+      "question": "Correct the statement: DBMS stores files, RDBMS stores tables.",
+      "answer": [
+        "Both may use files underneath, and both manage data through a model and engine. An RDBMS logically represents data through relations, commonly shown as tables; other DBMS families use different logical structures. Physical files and logical tables belong to different levels of description, so treating them as mutually exclusive categories is misleading."
+      ],
+      "level": "medium",
+      "tags": [
+        "Concept check"
+      ]
+    },
+    {
+      "id": "integrated-case",
+      "question": "What must be specified before calling a registration database dependable?",
+      "answer": [
+        "Define the domain entities, identifiers, relationships, rules, and missing-value meanings; implement correct transactions and concurrency handling; expose appropriate user perspectives; enforce privileges; and maintain recovery and monitoring procedures. Verify important workflows and restoration under realistic conditions. Choosing a relational engine supplies useful mechanisms but does not establish correctness by itself."
+      ],
+      "level": "hard",
+      "tags": [
+        "Practical"
+      ]
+    }
+  ],
+  "revision": [
+    "State the subset relationship without false universal claims.",
+    "Compare named data models using their structures and query needs.",
+    "Connect model, schema, views, transactions, metadata, and DBA responsibilities."
+  ],
+  "references": [
+    {
+      "title": "Oracle Database Concepts: introduction and architecture",
+      "url": "https://docs.oracle.com/en/database/oracle/oracle-database/19/cncpt/introduction-to-oracle-database.html"
+    },
+    {
+      "title": "SQLite: embedded and client-server use cases",
+      "url": "https://www.sqlite.org/whentouse.html"
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 650" role="img" aria-labelledby="title desc"><title id="title">Object-oriented DBMS: identity and object references</title><desc id="desc">Persistent objects retain their identities and can refer to other objects.</desc><defs><marker id="tip" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#0f766e"/></marker></defs><rect width="960" height="650" rx="16" fill="#f8fafc"/>
+<text x="40" y="48" text-anchor="start" font-family="Arial,sans-serif" font-size="28" font-weight="700" fill="#16324f">Object-oriented DBMS: identity and object references</text>
+<text x="40" y="82" text-anchor="start" font-family="Arial,sans-serif" font-size="19" font-weight="400" fill="#16324f">Persistent objects retain their identities and can refer to other objects.</text>
+<rect x="40" y="120" width="340" height="160" rx="10" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="58" y="154" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="700" fill="#16324f">Class Student</text>
+<text x="58" y="187" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="400" fill="#16324f">attributes: name, courses</text>
+<text x="58" y="217" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="400" fill="#16324f">method: enrol(course)</text>
+<rect x="40" y="360" width="340" height="140" rx="10" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="58" y="394" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="700" fill="#16324f">Class Postgraduate</text>
+<text x="58" y="427" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="400" fill="#16324f">inherits Student</text>
+<text x="58" y="457" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="400" fill="#16324f">adds: dissertation</text>
+<path d="M210 355 L210 285" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)" stroke-dasharray="7 6"/>
+<text x="230" y="325" text-anchor="start" font-family="Arial,sans-serif" font-size="19" font-weight="400" fill="#0f766e">inherits</text>
+<rect x="470" y="120" width="440" height="160" rx="10" fill="#ecfdf5" stroke="#94a3b8" stroke-width="2"/>
+<text x="488" y="154" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="700" fill="#16324f">Student object @S101</text>
+<text x="488" y="187" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="400" fill="#16324f">name = Asha</text>
+<text x="488" y="217" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="400" fill="#16324f">courses = [@C7]</text>
+<rect x="470" y="385" width="440" height="120" rx="10" fill="#ecfdf5" stroke="#94a3b8" stroke-width="2"/>
+<text x="488" y="419" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="700" fill="#16324f">Course object @C7</text>
+<text x="488" y="452" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="400" fill="#16324f">title = Database Systems</text>
+<path d="M380 180 L465 180" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)" stroke-dasharray="7 6"/>
+<text x="385" y="158" text-anchor="start" font-family="Arial,sans-serif" font-size="19" font-weight="400" fill="#0f766e">instance</text>
+<path d="M690 280 L690 380" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<text x="710" y="336" text-anchor="start" font-family="Arial,sans-serif" font-size="19" font-weight="400" fill="#0f766e">object reference</text>
+<text x="40" y="590" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">@S101 and @C7 denote illustrative object identities, not SQL row numbers.</text>
+<text x="40" y="617" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Identity, state, references, and class structure are part of the object model.</text>
+</svg>

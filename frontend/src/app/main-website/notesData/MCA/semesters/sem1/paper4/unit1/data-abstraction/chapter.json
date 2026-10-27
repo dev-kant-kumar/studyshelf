@@ -1,0 +1,108 @@
+{
+  "intro": "Data abstraction presents the details needed for a task while hiding lower-level representation. It lets a student request a result, a designer reason about relationships, and an engine manage pages without requiring each person to work at every level.",
+  "outcomes": [
+    "Explain physical, logical, and view levels of abstraction.",
+    "Follow one fact across all three levels.",
+    "Distinguish abstraction, data independence, and security."
+  ],
+  "sections": [
+    {
+      "title": "1. Abstraction as selective detail",
+      "paragraphs": [
+        "Abstraction is a deliberate description that preserves relevant meaning while omitting other details. A course roster shows who is enrolled, not how text bytes are compressed on disk. Hidden details still exist and affect implementation, but the roster user does not need them to interpret the result.",
+        "The same data can support several correct abstractions. A teacher groups records by course; accounts groups obligations by student. Different perspectives do not imply contradictory facts if they derive from the same defined sources and rules."
+      ],
+      "diagram": "abstraction-user-projections",
+      "diagramHeight": 700,
+      "alt": "Shared student, mark, and fee facts feed a teacher view of names and marks and an accounts view of student identifiers and fees due.",
+      "caption": "Follow the selected columns into each perspective. Omitting detail simplifies a task but does not by itself enforce permission."
+    },
+    {
+      "title": "2. Physical or internal level",
+      "paragraphs": [
+        "The physical level describes how data is stored and accessed, including record representation, pages, indexes, and file organisation. It answers questions such as where an identifier is encoded and how the engine locates matching records.",
+        "A student name may be represented as encoded text within a record, stored on a page, and located through an index entry. A request for a name need not expose any of these details. Physical does not mean only the hardware device; software storage structures also belong to this level."
+      ]
+    },
+    {
+      "title": "3. Logical or conceptual level",
+      "paragraphs": [
+        "The logical level describes what facts exist and how they relate. Student has a student_id and name; Enrolment connects a student to a course and may hold a mark. Constraints express meaning such as a student identifier being unique.",
+        "Database designers work heavily at this level. The logical description should remain understandable without knowing a disk format. A table is a logical structure; its physical organisation need not resemble a visible spreadsheet."
+      ]
+    },
+    {
+      "title": "4. View or external level",
+      "paragraphs": [
+        "The view level presents a subset or transformation for a user group. A student result page might show course titles and marks but omit internal identifiers and financial records. The view can combine several logical structures and derive values such as an outstanding balance.",
+        "A view-level interface can simplify use and reduce unnecessary exposure. To enforce confidentiality, however, the system must prevent unauthorised access through other routes. Abstraction describes a perspective; authorisation controls permitted actions. A hidden UI field is not a secure permission boundary."
+      ],
+      "diagram": "abstraction",
+      "alt": "A student result interface abstracts logical enrolment relationships, which abstract physical records and indexes.",
+      "caption": "One result can be described at the user, logical, and storage levels without exposing every detail.",
+      "diagramHeight": 570
+    },
+    {
+      "title": "5. Worked fact and relationship to independence",
+      "paragraphs": [
+        "At the view level, Asha sees Database Systems: 82. At the logical level, Enrolment associates student 101 with course DB101 and mark 82; Student and Course supply display names. At the physical level, the engine locates the relevant stored records and decodes their values. Each description concerns the same result at a different level of detail.",
+        "Abstraction is the separation of concerns. Data independence is a property achieved when a change behind one of those boundaries does not require changes above it. A system can expose a clean interface yet still break clients whenever the underlying schema changes, so abstraction alone does not prove independence.",
+        "Three-level descriptions are conceptual tools. They should not be confused with presentation, application, and database deployment tiers or with three separate stored copies."
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "id": "define-levels",
+      "question": "Explain data abstraction and its three levels.",
+      "answer": [
+        "Data abstraction hides irrelevant representation details while retaining the meaning needed by a task. The physical level describes stored records and access structures. The logical level describes entities, attributes, relationships, and constraints. The view level describes a user-specific subset or transformation. For a result page, these correspond to storage pages, the Student-Course-Enrolment design, and the displayed course marks."
+      ],
+      "level": "medium",
+      "tags": [
+        "Concept check"
+      ]
+    },
+    {
+      "id": "security",
+      "question": "Is hiding a salary column in an application a sufficient security measure?",
+      "answer": [
+        "No. It changes the visible interface but does not establish that a user cannot read the underlying column through another query or endpoint. Proper authorisation must restrict accessible objects and operations, with carefully designed views or other access policies where appropriate. Abstraction can support a security design but does not enforce one by itself."
+      ],
+      "level": "medium",
+      "tags": [
+        "Practical"
+      ]
+    },
+    {
+      "id": "independence",
+      "question": "How are abstraction and data independence related?",
+      "answer": [
+        "Abstraction defines boundaries between levels of detail. Data independence measures whether a lower-level change can remain behind a boundary without requiring higher-level changes. Adding an index without changing the logical interface is physical independence enabled by the storage abstraction. A boundary that exposes unstable details may provide little independence."
+      ],
+      "level": "hard",
+      "tags": [
+        "Concept check"
+      ]
+    }
+  ],
+  "revision": [
+    "Describe one fact at physical, logical, and external levels.",
+    "Explain why abstraction does not delete underlying complexity.",
+    "Separate perspectives from permission enforcement and change compatibility."
+  ],
+  "references": [
+    {
+      "title": "Oracle Database Concepts: introduction and architecture",
+      "url": "https://docs.oracle.com/en/database/oracle/oracle-database/19/cncpt/introduction-to-oracle-database.html"
+    },
+    {
+      "title": "University of Cape Town: database schemas and data independence",
+      "url": "https://www.cs.uct.ac.za/mit_notes/database/htmls/chp01.html"
+    }
+  ],
+  "next": {
+    "id": "database-users",
+    "title": "Database users and their responsibilities"
+  }
+}

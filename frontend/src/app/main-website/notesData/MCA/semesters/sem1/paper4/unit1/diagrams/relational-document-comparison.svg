@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 730" role="img" aria-labelledby="title desc"><title id="title">The same enrolment fact in two representations</title><desc id="desc">Representation changes where facts live and how they are combined.</desc><defs><marker id="tip" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#0f766e"/></marker></defs><rect width="960" height="730" rx="16" fill="#f8fafc"/>
+<text x="40" y="48" text-anchor="start" font-family="Arial,sans-serif" font-size="27" font-weight="700" fill="#16324f">The same enrolment fact in two representations</text>
+<text x="40" y="82" text-anchor="start" font-family="Arial,sans-serif" font-size="19" font-weight="400" fill="#16324f">Representation changes where facts live and how they are combined.</text>
+<rect x="40" y="120" width="410" height="129" rx="9" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="52" y="152" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="700" fill="#16324f">Relational: Student</text>
+<path d="M40 169 L450 169" fill="none" stroke="#0f766e" stroke-width="3"/>
+<text x="51" y="197" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">id</text>
+<text x="231" y="197" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">name</text>
+<path d="M220 169 V249" stroke="#cbd5e1"/>
+<text x="51" y="237" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">101</text>
+<text x="231" y="237" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Asha</text>
+<path d="M220 169 V249" stroke="#cbd5e1"/>
+<path d="M40 209 H450" stroke="#cbd5e1"/>
+<rect x="40" y="345" width="410" height="129" rx="9" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="52" y="377" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="700" fill="#16324f">Relational: Enrolment</text>
+<path d="M40 394 L450 394" fill="none" stroke="#0f766e" stroke-width="3"/>
+<text x="51" y="422" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">student_id</text>
+<text x="231" y="422" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">course</text>
+<path d="M220 394 V474" stroke="#cbd5e1"/>
+<text x="361" y="422" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">mark</text>
+<path d="M350 394 V474" stroke="#cbd5e1"/>
+<text x="51" y="462" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">101</text>
+<text x="231" y="462" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">DB101</text>
+<path d="M220 394 V474" stroke="#cbd5e1"/>
+<text x="361" y="462" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">82</text>
+<path d="M350 394 V474" stroke="#cbd5e1"/>
+<path d="M40 434 H450" stroke="#cbd5e1"/>
+<path d="M245 340 L245 255" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<text x="55" y="300" text-anchor="start" font-family="Arial,sans-serif" font-size="19" font-weight="400" fill="#0f766e">match identifier</text>
+<rect x="510" y="120" width="410" height="410" rx="9" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="526" y="152" text-anchor="start" font-family="Arial,sans-serif" font-size="21" font-weight="700" fill="#16324f">Document: student 101</text>
+<text x="532" y="205" text-anchor="start" font-family="Consolas,monospace" font-size="21" font-weight="400" fill="#16324f">{</text>
+<text x="532" y="241" text-anchor="start" font-family="Consolas,monospace" font-size="21" font-weight="400" fill="#16324f">  id: 101,</text>
+<text x="532" y="277" text-anchor="start" font-family="Consolas,monospace" font-size="21" font-weight="400" fill="#16324f">  name: &quot;Asha&quot;,</text>
+<text x="532" y="313" text-anchor="start" font-family="Consolas,monospace" font-size="21" font-weight="400" fill="#16324f">  enrolments: [</text>
+<text x="532" y="349" text-anchor="start" font-family="Consolas,monospace" font-size="21" font-weight="400" fill="#16324f">    { course: &quot;DB101&quot;,</text>
+<text x="532" y="385" text-anchor="start" font-family="Consolas,monospace" font-size="21" font-weight="400" fill="#16324f">      mark: 82 }</text>
+<text x="532" y="421" text-anchor="start" font-family="Consolas,monospace" font-size="21" font-weight="400" fill="#16324f">  ]</text>
+<text x="532" y="457" text-anchor="start" font-family="Consolas,monospace" font-size="21" font-weight="400" fill="#16324f">}</text>
+<text x="40" y="670" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Left: combine separate facts by matching values. Right: embed the association.</text>
+<text x="40" y="697" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Neither picture establishes transaction, security, or concurrency guarantees.</text>
+</svg>

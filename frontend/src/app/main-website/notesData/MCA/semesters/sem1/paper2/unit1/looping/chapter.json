@@ -1,0 +1,92 @@
+{
+  "intro": "Loops repeatedly update program state. Learn when while, do-while, and for execute, and prove that their bounds, updates, and termination match the intended algorithm.",
+  "outcomes": [
+    "Trace pre-test and post-test loops.",
+    "State a loop invariant and termination argument.",
+    "Use break and continue without losing updates."
+  ],
+  "prerequisites": "A loop body is a repeated statement or block. An iteration is one execution of the body. An invariant is a property that holds at a chosen point on every iteration.",
+  "sections": [
+    {
+      "title": "1. Three loop forms",
+      "paragraphs": [
+        "while checks before the body and may execute zero times. do-while checks after the body and executes at least once; its trailing semicolon is required. for(initialisation; condition; update) performs initialisation once, then checks, executes the body, and updates repeatedly.",
+        "Use for for a clear counted traversal, while when a condition governs an unknown number of repetitions, and do-while when one action must occur before checking. These are design preferences rather than restrictions on what each loop can express.",
+        "The update must move state toward termination. for(int i=0; i<n; ++i) visits indices 0 through n-1 for a nonnegative n. Using <=n visits one extra value and is wrong for an n-element array."
+      ],
+      "code": "#include <stdio.h>\n\nint main(void) {\n    int n = 5;\n    int sum = 0;\n    for (int i = 1; i <= n; ++i) {\n        sum += i;\n    }\n    printf(\"sum=%d\\n\", sum);\n    int remaining = 3;\n    while (remaining > 0) {\n        printf(\"%d \", remaining);\n        --remaining;\n    }\n    puts(\"\");\n    return 0;\n}",
+      "example": [
+        "Before the sum loop, sum=0. After bodies at i=1,2,3,4,5, sum is 1,3,6,10,15. The next test at i=6 fails. Output begins sum=15, followed by the countdown 3 2 1.",
+        "This fixed small range is safe. Generalising to large n requires checking both accumulation overflow and the final increment. n=INT_MAX makes ++i overflow at the last iteration of this particular <= loop."
+      ]
+    },
+    {
+      "title": "2. Invariant and termination reasoning",
+      "paragraphs": [
+        "For the sum loop, just before a condition check with index i, sum equals 1+...+(i-1). Initialisation establishes this at i=1. Adding i and then incrementing i preserves it. On exit at n+1, sum equals 1+...+n, provided all arithmetic is representable.",
+        "A termination measure is a quantity that moves toward a limit. For a bounded array traversal, remaining elements n-i decreases each iteration. Proving progress alone is insufficient if arithmetic can overflow or the bound can change unexpectedly.",
+        "The sum loop performs n body executions for nonnegative n and constant extra storage: time grows linearly and auxiliary storage stays constant. This is the foundation of later complexity analysis. A closed formula can reduce work but needs its own overflow reasoning."
+      ]
+    },
+    {
+      "title": "3. Nested loops, break, and continue",
+      "paragraphs": [
+        "Nested loops multiply work when each outer iteration runs a full inner traversal. Visiting r rows and c columns takes r*c element visits. A triangular loop with inner counts 1,2,...,n instead totals n(n+1)/2 visits.",
+        "break exits only the innermost enclosing loop or switch. continue skips the remaining body; in a for loop the update expression still executes. In while, an update below continue is skipped, potentially creating an infinite loop.",
+        "Test zero iterations, one iteration, ordinary counts, and the largest supported count. A sentinel loop stops when a special value arrives; define whether the sentinel contributes to the result and how end-of-input is handled. Never use an uninitialised value as the first condition."
+      ],
+      "example": [
+        "A while loop that says if(i==2) continue; before ++i gets stuck at 2. Move the required update to a guaranteed path or use a for loop whose update still runs after continue.",
+        "For a 2-by-3 rectangular traversal, body coordinates are (0,0), (0,1), (0,2), (1,0), (1,1), (1,2): six visits."
+      ]
+    }
+  ],
+  "revision": [
+    "Trace tests, body, and update in order.",
+    "State the invariant and arithmetic assumptions.",
+    "Explain where continue goes in each loop form.",
+    "Count nested-loop body executions."
+  ],
+  "questions": [
+    {
+      "id": "looping-1",
+      "question": "Which loop guarantees at least one body execution?",
+      "level": "easy",
+      "tags": [
+        "Concept check"
+      ],
+      "answer": [
+        "do-while, because its condition is checked after the body. while and for can fail their first condition check and execute no body iterations."
+      ]
+    },
+    {
+      "id": "looping-2",
+      "question": "How many times does for(i=0; i<4; ++i) execute?",
+      "level": "medium",
+      "tags": [
+        "Exam practice"
+      ],
+      "answer": [
+        "Four times, at i=0,1,2,3. The fifth condition check sees i=4 and fails. Condition checks are one more than body executions for this normal terminating loop."
+      ]
+    },
+    {
+      "id": "looping-3",
+      "question": "Why is a mathematical invariant alone insufficient for a C proof?",
+      "level": "hard",
+      "tags": [
+        "Curious learner"
+      ],
+      "answer": [
+        "The proof must also establish that C operations are defined: bounds are valid, values are initialised, and arithmetic stays representable. An invariant written over unbounded mathematical integers cannot justify an overflowing signed-int implementation."
+      ]
+    }
+  ],
+  "references": [
+    {
+      "title": "WG14 C11 committee draft N1570 - consult the clauses listed in this chapter",
+      "url": "https://www.open-std.org/jtc1/sc22/wg14/www/docs/n1570.pdf"
+    }
+  ],
+  "next": "One-dimensional arrays apply bounded traversal to collections. Verification: N1570 clause 6.8.5."
+}

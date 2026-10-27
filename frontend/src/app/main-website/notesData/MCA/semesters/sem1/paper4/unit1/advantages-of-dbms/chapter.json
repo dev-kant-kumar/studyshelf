@@ -1,0 +1,118 @@
+{
+  "intro": "A DBMS provides a shared set of services for managing data. Its value comes from making correctness, access, and recovery systematic across applications, while introducing costs that must also be understood.",
+  "outcomes": [
+    "Explain each major DBMS advantage through a mechanism and example.",
+    "Connect transactions to atomicity, consistency, isolation, and durability.",
+    "Evaluate overhead, administration, and shared failure risks."
+  ],
+  "sections": [
+    {
+      "title": "1. Controlled redundancy and consistent information",
+      "paragraphs": [
+        "Store a student name in Student rather than repeating it in every enrolment. An enrolment holds a student identifier and course identifier. Updating the name then changes one authoritative fact. This is controlled redundancy: duplication is reduced where it causes anomalies, while indexes, caches, and replicas may deliberately repeat data for performance or resilience.",
+        "An update anomaly occurs when changing a fact requires editing several records. An insertion anomaly occurs when a fact cannot be recorded without an unrelated one, such as being unable to add a new course until someone enrols. A deletion anomaly occurs when removing the last enrolment accidentally removes the only record of a course. Separating different facts into appropriate structures reduces these problems."
+      ],
+      "diagram": "redundancy-fact-ownership",
+      "diagramHeight": 700,
+      "alt": "Two enrolments for student 101 originally disagree on the phone. After redesign, one Student record owns the phone and Enrolment rows reference its identifier.",
+      "caption": "Compare where the phone lives. Repeated identifiers express a relationship, while the contact fact has one authoritative home."
+    },
+    {
+      "title": "2. Integrity, sharing, and security",
+      "paragraphs": [
+        "Integrity means data obeys declared rules. A primary key prevents duplicate student identifiers, a foreign key prevents an enrolment from referring to an absent student, and a check can limit a mark to 0 through 100. Rules enforced at the data boundary apply to multiple applications. They cannot prove a plausible mark is the mark actually awarded.",
+        "Sharing allows admissions, accounts, and teachers to work from related information. Views can expose task-specific subsets; permissions control who may read or modify objects. Authentication establishes identity, authorisation determines permitted actions, and auditing records relevant activity. These are distinct functions.",
+        "Central administration can standardise naming, types, ownership, retention, and access. A standard student identifier avoids joining by names that can change or be shared by different people. A DBMS provides enforcement tools; people must define and maintain the policies."
+      ],
+      "diagram": "integrity-check-gates",
+      "diagramHeight": 700,
+      "alt": "Missing student 999 fails a foreign key, mark 120 fails a value check, and a valid unused enrolment key passes. Repeating the composite enrolment key is separately rejected.",
+      "caption": "Identify which rule rejects each proposal. Referential integrity, value checks, and uniqueness address different errors."
+    },
+    {
+      "title": "3. Transactions and ACID",
+      "paragraphs": [
+        "Atomicity means a transaction takes effect as a whole or has none of its intended database changes take effect. Consistency means a correctly written transaction preserves the relevant integrity rules from one valid state to another. Isolation governs how concurrent transactions interact; serializable isolation aims for results equivalent to some serial order. Weaker levels allow specified anomalies. Durability means committed changes survive the failures covered by the configured storage and recovery guarantees.",
+        "For course registration, creating an enrolment and recording its associated obligation should succeed together. Atomicity avoids half-registration, integrity rules reject invalid identifiers, isolation coordinates competing requests, and durability protects acknowledged commits. ACID does not make wrong business logic correct or cover every external side effect, such as an email sent before a rollback."
+      ],
+      "diagram": "transaction",
+      "alt": "A transaction checks and changes related records before commit, or rolls back on failure.",
+      "caption": "A transaction gives related database changes one success or failure boundary.",
+      "diagramHeight": 570
+    },
+    {
+      "title": "4. Recovery, querying, and independence",
+      "paragraphs": [
+        "Recovery mechanisms use durable information such as logs to reconstruct an acceptable state after a crash. Backups provide a separate recoverable copy. Crash recovery and restoring accidentally deleted data are different tasks; an authorised DELETE can be fully durable and still unwanted. Tested backups and an appropriate recovery history are necessary.",
+        "A query language allows a user to ask which courses have no enrolments without writing low-level file traversal code. Optimisation can select suitable access paths. Data independence allows some storage or schema changes behind stable application interfaces, reducing maintenance. Neither optimisation nor independence guarantees that every change is invisible or every query is fast."
+      ]
+    },
+    {
+      "title": "5. Costs and a worked evaluation",
+      "paragraphs": [
+        "A DBMS consumes memory, CPU, storage, and operational effort. Permissions, patching, backup testing, capacity planning, monitoring, and migration require expertise. A common database can become a bottleneck or shared failure point. Networked deployment adds latency and connection management; licensing and hosting costs depend on the chosen system.",
+        "For a college portal, the cost of managing one database may be justified by preventing duplicate registrations and recovering fee records. For a tiny, read-only list shipped with an application, a static file may meet requirements with less complexity. Evaluate correctness and recovery needs as well as expected workload."
+      ],
+      "example": [
+        "Suppose a student pays 1,000 and the receipt insert fails after a fee balance update. Without a shared transaction the records disagree.",
+        "With one database transaction, either both records commit or both database changes roll back. A payment gateway outside the database requires an additional reliable integration design; the database transaction alone cannot undo an external payment."
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "id": "benefits",
+      "question": "Explain the major advantages of a DBMS.",
+      "answer": [
+        "A DBMS can reduce uncontrolled duplication through shared records, enforce integrity with central constraints, support concurrent access through transaction coordination, and restrict access using identities and permissions. Query facilities enable new reports without rewriting storage code, while metadata and stable interfaces support maintenance. Logging and backup facilities support recovery.",
+        "These benefits depend on sound schema design, correct transactions, configured security, and tested recovery procedures. They are capabilities of the system rather than automatic guarantees about every application."
+      ],
+      "level": "medium",
+      "tags": [
+        "Concept check"
+      ]
+    },
+    {
+      "id": "acid-registration",
+      "question": "Explain ACID using student registration.",
+      "answer": [
+        "Atomicity makes the enrolment and related fee obligation one unit. Consistency requires valid student and course references and any capacity rules correctly enforced by the transaction. Isolation prevents overlapping registrations from producing disallowed results; the chosen level and transaction design matter. Durability preserves a committed registration within the configured failure model.",
+        "A database cannot determine that a student selected the correct course merely because the identifiers are valid. Business correctness remains partly an application responsibility."
+      ],
+      "level": "medium",
+      "tags": [
+        "Practical"
+      ]
+    },
+    {
+      "id": "all-redundancy",
+      "question": "Why does a DBMS retain some redundant data?",
+      "answer": [
+        "Indexes repeat search values and references to speed access; replicas repeat data to support availability or read workloads; backups preserve recovery copies. These forms of redundancy have defined ownership and maintenance rules. The objective is to control duplication so that its benefits outweigh consistency, storage, and update costs."
+      ],
+      "level": "hard",
+      "tags": [
+        "Concept check"
+      ]
+    }
+  ],
+  "revision": [
+    "Explain benefits with their mechanisms and conditions.",
+    "Distinguish recovery, backup, replication, and integrity.",
+    "Apply all four ACID properties without assuming business logic is automatically correct."
+  ],
+  "references": [
+    {
+      "title": "Oracle Database Concepts: introduction and architecture",
+      "url": "https://docs.oracle.com/en/database/oracle/oracle-database/19/cncpt/introduction-to-oracle-database.html"
+    },
+    {
+      "title": "PostgreSQL: transactions",
+      "url": "https://www.postgresql.org/docs/current/tutorial-transactions.html"
+    }
+  ],
+  "next": {
+    "id": "dbms-types",
+    "title": "Classification and types of DBMS"
+  }
+}

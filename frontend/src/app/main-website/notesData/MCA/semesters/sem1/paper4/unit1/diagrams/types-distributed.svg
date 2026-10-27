@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 650" role="img" aria-labelledby="title desc"><title id="title">Distributed deployment: coordinated data across sites</title><desc id="desc">Fragmentation divides records; replication keeps copies. They can be combined.</desc><defs><marker id="tip" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#0f766e"/></marker></defs><rect width="960" height="650" rx="16" fill="#f8fafc"/>
+<text x="40" y="48" text-anchor="start" font-family="Arial,sans-serif" font-size="28" font-weight="700" fill="#16324f">Distributed deployment: coordinated data across sites</text>
+<text x="40" y="82" text-anchor="start" font-family="Arial,sans-serif" font-size="19" font-weight="400" fill="#16324f">Fragmentation divides records; replication keeps copies. They can be combined.</text>
+<rect x="40" y="135" width="400" height="150" rx="10" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="58" y="169" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="700" fill="#16324f">Campus A database</text>
+<text x="58" y="202" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="400" fill="#16324f">Partition A: students 101-199</text>
+<text x="58" y="232" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="400" fill="#16324f">Replica of shared Course data</text>
+<rect x="520" y="135" width="400" height="150" rx="10" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="538" y="169" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="700" fill="#16324f">Campus B database</text>
+<text x="538" y="202" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="400" fill="#16324f">Partition B: students 200-299</text>
+<text x="538" y="232" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="400" fill="#16324f">Replica of shared Course data</text>
+<path d="M445 210 L515 210" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<rect x="160" y="390" width="640" height="115" rx="10" fill="#ecfdf5" stroke="#94a3b8" stroke-width="2"/>
+<text x="178" y="424" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="700" fill="#16324f">Coordinated database access</text>
+<text x="178" y="457" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="400" fill="#16324f">Route requests and handle cross-site operations</text>
+<path d="M360 385 L240 290" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<path d="M600 385 L720 290" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<text x="40" y="590" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Student partitions differ; the shared Course copies represent replication.</text>
+<text x="40" y="617" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Consistency, network failures, and coordination need explicit policies.</text>
+</svg>

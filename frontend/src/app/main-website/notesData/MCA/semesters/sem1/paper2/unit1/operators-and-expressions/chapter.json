@@ -1,0 +1,87 @@
+{
+  "intro": "Expressions calculate values and sometimes change stored objects. Learn arithmetic, comparisons, logic, bit operations, and assignment while tracking their operand types and side effects.",
+  "outcomes": [
+    "Evaluate arithmetic and logical expressions.",
+    "Distinguish bitwise operations from truth operations.",
+    "Recognise invalid arithmetic and unsafe side effects."
+  ],
+  "prerequisites": "An operand is a value an operator acts on. A side effect changes program state, such as assigning a variable. A nonzero scalar value is true in a C condition; zero is false.",
+  "sections": [
+    {
+      "title": "1. Arithmetic and comparison",
+      "paragraphs": [
+        "+, -, *, /, and % supply addition, subtraction, multiplication, division, and integer remainder. % requires integer operands. Integer division truncates toward zero: -7 / 3 is -2 and -7 % 3 is -1. Division by zero is invalid; signed INT_MIN / -1 is also invalid when the quotient is not representable.",
+        "<, <=, >, >=, ==, and != yield int values 0 or 1. = assigns; == compares. Do not write 0 <= x <= 10 for a range: the first comparison yields 0 or 1, which is then compared with 10. Write 0 <= x && x <= 10.",
+        "Compound assignment such as total += value updates an object using an operation. ++ increments by one; postfix x++ yields the old value, whereas prefix ++x yields the new value. Prefer standalone updates when the expression would otherwise be difficult to trace."
+      ]
+    },
+    {
+      "title": "2. Logic, bits, and conditional selection",
+      "paragraphs": [
+        "&& means logical AND, || means logical OR, and ! negates truth. && and || short-circuit: the right operand is evaluated only when needed. denominator != 0 && numerator / denominator > 2 avoids division when the denominator is zero, assuming the other division cases are valid.",
+        "&, |, ^, and ~ combine or invert individual integer bits. They do not short-circuit. Use unsigned operands for bit manipulation and valid shift counts. A shift count must be nonnegative and less than the width of the promoted left operand; signed shifts have additional restrictions.",
+        "condition ? yes : no evaluates the condition and only the selected result operand. sizeof obtains a size, usually without evaluating its operand, but variable-length-array cases require care. The comma operator sequences its left expression before the right expression; argument-separating commas do not do that."
+      ],
+      "code": "#include <stdio.h>\n\nint main(void) {\n    int a = 7, b = 3;\n    unsigned flags = 5u;\n    unsigned mask = 2u;\n    printf(\"division=%d remainder=%d\\n\", a / b, a % b);\n    printf(\"range=%d\\n\", 0 <= a && a <= 10);\n    printf(\"AND=%u OR=%u XOR=%u\\n\", flags & mask, flags | mask, flags ^ mask);\n    int old = a++;\n    printf(\"old=%d now=%d max=%d\\n\", old, a, a > b ? a : b);\n    return 0;\n}",
+      "example": [
+        "7/3 is 2 and 7%3 is 1. 5u is binary 101 and 2u is binary 010, so AND=0, OR=7, XOR=7. Postfix increment stores 7 in old and then leaves a=8. The last line prints old=7 now=8 max=8."
+      ]
+    },
+    {
+      "title": "3. Side effects and safe expression design",
+      "paragraphs": [
+        "Avoid expressions such as i++ + i++: they contain unsequenced modifications to the same scalar object and have undefined behaviour. Do not guess the output from one compiler. Separate each modification into its own statement.",
+        "Address-of &x and dereference *p are unary operators that connect objects and pointers; multiplication and bitwise AND use the same symbols in binary contexts. The syntactic context determines the operation. Arrays and dynamic storage chapters introduce the needed pointer model.",
+        "For each expression ask: what are the operand types, what conversions occur, what value is produced, and which objects change? That checklist reveals errors hidden by a correct-looking mathematical formula."
+      ]
+    }
+  ],
+  "revision": [
+    "Trace integer quotient and remainder.",
+    "Use && for ranges and guarded operations.",
+    "Use unsigned values for bit operations.",
+    "Keep updates separate when sequencing is unclear."
+  ],
+  "questions": [
+    {
+      "id": "operators-and-expressions-1",
+      "question": "Why is 0 <= x <= 10 wrong as a range test?",
+      "level": "easy",
+      "tags": [
+        "Concept check"
+      ],
+      "answer": [
+        "It groups as (0 <= x) <= 10. The first result is 0 or 1, and both are <=10, so it is always true. Use 0 <= x && x <= 10."
+      ]
+    },
+    {
+      "id": "operators-and-expressions-2",
+      "question": "How do 5 & 2 and 5 && 2 differ?",
+      "level": "medium",
+      "tags": [
+        "Exam practice"
+      ],
+      "answer": [
+        "Bitwise AND combines 101 and 010 and produces 0. Logical AND observes that both numbers are nonzero and produces 1. Logical AND can skip its second operand; bitwise AND evaluates both operands."
+      ]
+    },
+    {
+      "id": "operators-and-expressions-3",
+      "question": "What is the output of printf(\"%d %d\", i++, i++)?",
+      "level": "hard",
+      "tags": [
+        "Interview practice"
+      ],
+      "answer": [
+        "There is no portable output to predict. The two unsequenced modifications of i cause undefined behaviour. Store each result in separate statements, then print those results."
+      ]
+    }
+  ],
+  "references": [
+    {
+      "title": "WG14 C11 committee draft N1570 - consult the clauses listed in this chapter",
+      "url": "https://www.open-std.org/jtc1/sc22/wg14/www/docs/n1570.pdf"
+    }
+  ],
+  "next": "Precedence and associativity explain grouping without confusing it with evaluation order. Verification: N1570 clause 6.5."
+}

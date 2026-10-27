@@ -1,0 +1,91 @@
+{
+  "intro": "Choose types from the values and operations a problem needs. Understand initialisation, conversion, scope, and lifetime instead of memorising one machine's type-size chart.",
+  "outcomes": [
+    "Declare and initialise objects with suitable types.",
+    "Distinguish literals, const objects, macros, and enumeration constants.",
+    "Reason about ranges, conversions, scope, and storage duration."
+  ],
+  "prerequisites": "A byte is C's smallest addressable storage unit. An object occupies storage and has a type. An identifier is its source-level name; values and addresses are different concepts.",
+  "sections": [
+    {
+      "title": "1. Scalar types and declarations",
+      "paragraphs": [
+        "Integer types include char, short, int, long, and long long, with signed and unsigned variants. Floating types include float, double, and long double. _Bool stores a truth value; <stdbool.h> supplies bool, true, and false in C11. void indicates absence of a value in interfaces such as main(void).",
+        "Do not assume int is 32 bits or a byte is exactly eight bits. sizeof reports storage size in bytes and sizeof(char) is always 1. <limits.h> supplies limits such as INT_MAX and CHAR_BIT; <float.h> describes floating characteristics. sizeof returns size_t, printed with %zu.",
+        "int score = 75; both declares and initialises an object. int score; in a block without static leaves an indeterminate value that must not be read before assignment. static objects are zero-initialised if no explicit initialiser is supplied. Declare close to use and initialise deliberately."
+      ],
+      "code": "#include <stdio.h>\n#include <limits.h>\n#include <stdbool.h>\n\nint main(void) {\n    int score = 75;\n    double ratio = score / 100.0;\n    bool passed = score >= 40;\n    printf(\"score=%d ratio=%.2f passed=%d\\n\", score, ratio, passed);\n    printf(\"int bytes=%zu, CHAR_BIT=%d\\n\", sizeof(int), CHAR_BIT);\n    printf(\"int range: %d to %d\\n\", INT_MIN, INT_MAX);\n    return 0;\n}",
+      "example": [
+        "The first line prints score=75 ratio=0.75 passed=1. The remaining lines depend on the implementation. Inspect them on your compiler rather than hard-coding a universal size claim."
+      ]
+    },
+    {
+      "title": "2. Constants and names",
+      "paragraphs": [
+        "42 is an integer constant; 3.5 is a double constant; 3.5f is a float constant; 'A' is an integer character constant in C. \"A\" is a string literal containing the character followed by a zero terminator. Suffixes such as U and LL affect integer constant types.",
+        "const int limit = 10; creates an object that cannot be modified through that name. #define LIMIT 10 performs preprocessing replacement. enum { LIMIT = 10 }; introduces an integer constant expression. A const-qualified int is not automatically an integer constant expression in C, unlike common expectations from C++.",
+        "Identifiers are case-sensitive and cannot be keywords. Prefer descriptive names such as item_count. A typedef supplies an alias for a type; it does not allocate storage or create a fundamentally new distinct type. Avoid reserved identifiers, especially names beginning with an underscore at file scope."
+      ]
+    },
+    {
+      "title": "3. Conversions, scope, and lifetime",
+      "paragraphs": [
+        "Integer division occurs when both operands are integers: 5 / 2 yields 2. Assigning that result to double yields 2.0, not 2.5. Convert an operand before division: (double)5 / 2. Floating-point values approximate many fractions, so exact decimal arithmetic needs a different representation.",
+        "Unsigned arithmetic wraps modulo one more than its maximum representable value. Signed integer overflow is undefined behaviour. Mixing signed and unsigned operands can convert a negative number to an unexpectedly large unsigned value. A cast does not repair an already-overflowed expression.",
+        "Scope is the region where a name is visible. Storage duration describes how long its object exists. Ordinary block locals have automatic duration; static locals persist for the program's execution while their names remain local. extern normally declares an object defined elsewhere; register is a storage-class specifier, not a guarantee of hardware-register placement."
+      ],
+      "example": [
+        "For int a=5, b=2, double x=a/b stores 2.0. double y=(double)a/b stores 2.5. The cast changes the division operands, while the assignment conversion happens after division.",
+        "On any implementation, do not compute INT_MAX + 1 as an int. To prevent nonnegative addition overflow, require b <= INT_MAX - a before computing a+b. That check itself is safe when a and b are known nonnegative."
+      ]
+    }
+  ],
+  "revision": [
+    "Check ranges using headers, not assumptions.",
+    "Distinguish initialisation from later assignment.",
+    "Explain conversion before versus after division.",
+    "Separate scope from lifetime."
+  ],
+  "questions": [
+    {
+      "id": "constants-variables-types-1",
+      "question": "Are 'A' and \"A\" the same type?",
+      "level": "easy",
+      "tags": [
+        "Concept check"
+      ],
+      "answer": [
+        "No. An ordinary single character constant has type int in C. A string literal is an array of char with a terminating zero. They are suitable for different operations and output formats."
+      ]
+    },
+    {
+      "id": "constants-variables-types-2",
+      "question": "Why can const int n=5 be unsuitable for a required compile-time array bound?",
+      "level": "medium",
+      "tags": [
+        "Exam practice"
+      ],
+      "answer": [
+        "A const object is read-only through its qualified name but is not an integer constant expression in C. Inside a block an array using n can become a variable-length array, whose support is optional in C11. Use an enumeration constant or an appropriate macro when a compile-time integer bound is needed."
+      ]
+    },
+    {
+      "id": "constants-variables-types-3",
+      "question": "Does assigning an overflowing int expression to long long prevent overflow?",
+      "level": "hard",
+      "tags": [
+        "Interview practice"
+      ],
+      "answer": [
+        "No. The operands determine the expression type before assignment. Convert an operand to long long before the operation and still check that the result fits the wider type. Assignment cannot retroactively change the arithmetic already performed."
+      ]
+    }
+  ],
+  "references": [
+    {
+      "title": "WG14 C11 committee draft N1570 - consult the clauses listed in this chapter",
+      "url": "https://www.open-std.org/jtc1/sc22/wg14/www/docs/n1570.pdf"
+    }
+  ],
+  "next": "Operators and expressions build computations using these values. Verification: N1570 clauses 6.2, 6.3, 6.4.4, and 6.7."
+}

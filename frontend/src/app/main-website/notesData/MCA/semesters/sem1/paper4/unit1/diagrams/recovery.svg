@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 570" role="img" aria-labelledby="title desc">
+<title id="title">Recovery history and availability</title><desc id="desc">A replica is a separate availability mechanism, not history.|It can reproduce accidental deletes and other unwanted changes.</desc>
+<defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0 L10 5 L0 10" fill="none" stroke="#475569" stroke-width="2"/></marker></defs>
+<rect width="960" height="570" rx="20" fill="#f8fafc"/>
+<text x="480" y="48" text-anchor="middle" font-family="Arial,sans-serif" font-size="26" font-weight="700" fill="#0f172a">Recovery history and availability</text>
+<rect x="40.0" y="80" width="430.0" height="90" rx="12" fill="#e0f2fe" stroke="#0369a1" stroke-width="2"/>
+<text x="255.0" y="115" text-anchor="middle" font-family="Arial,sans-serif" font-size="20" fill="#0c4a6e">Consistent base backup</text>
+<rect x="490.0" y="80" width="430.0" height="90" rx="12" fill="#e0f2fe" stroke="#0369a1" stroke-width="2"/>
+<text x="705.0" y="115" text-anchor="middle" font-family="Arial,sans-serif" font-size="20" fill="#0c4a6e">Archived recovery logs</text>
+
+
+<rect x="40.0" y="210" width="880.0" height="90" rx="12" fill="#e0f2fe" stroke="#0369a1" stroke-width="2"/>
+<text x="480.0" y="245" text-anchor="middle" font-family="Arial,sans-serif" font-size="20" fill="#0c4a6e">Restore backup and replay required history</text>
+<text x="480.0" y="272" text-anchor="middle" font-family="Arial,sans-serif" font-size="20" fill="#0c4a6e">Recover a supported chosen point</text>
+
+<rect x="40.0" y="340" width="880.0" height="90" rx="12" fill="#e0f2fe" stroke="#0369a1" stroke-width="2"/>
+<text x="480.0" y="375" text-anchor="middle" font-family="Arial,sans-serif" font-size="20" fill="#0c4a6e">Validate restored data and application behaviour</text>
+<text x="480.0" y="402" text-anchor="middle" font-family="Arial,sans-serif" font-size="20" fill="#0c4a6e">Measure loss and recovery time</text>
+<text x="480" y="522" text-anchor="middle" font-family="Arial,sans-serif" font-size="18" fill="#334155">A replica is a separate availability mechanism, not history.</text>
+<text x="480" y="547" text-anchor="middle" font-family="Arial,sans-serif" font-size="18" fill="#334155">It can reproduce accidental deletes and other unwanted changes.</text>
+<path d="M255.0 174.0 L480.0 203.0" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/>
+<path d="M705.0 174.0 L480.0 203.0" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/>
+<path d="M480.0 304.0 L480.0 333.0" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/>
+</svg>

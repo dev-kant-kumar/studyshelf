@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 650" role="img" aria-labelledby="title desc"><title id="title">Wide-column DBMS: query-oriented partitions</title><desc id="desc">Cassandra-style example: retrieve enrolments for one course.</desc><defs><marker id="tip" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#0f766e"/></marker></defs><rect width="960" height="650" rx="16" fill="#f8fafc"/>
+<text x="40" y="48" text-anchor="start" font-family="Arial,sans-serif" font-size="28" font-weight="700" fill="#16324f">Wide-column DBMS: query-oriented partitions</text>
+<text x="40" y="82" text-anchor="start" font-family="Arial,sans-serif" font-size="19" font-weight="400" fill="#16324f">Cassandra-style example: retrieve enrolments for one course.</text>
+<rect x="40" y="120" width="880" height="75" rx="10" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="58" y="154" text-anchor="start" font-family="Arial,sans-serif" font-size="24" font-weight="700" fill="#16324f">Logical key: ((course_code), student_id)</text>
+<rect x="40" y="240" width="420" height="169" rx="8" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="54" y="272" text-anchor="start" font-family="Arial,sans-serif" font-size="23" font-weight="700" fill="#16324f">Partition: DB101</text>
+<path d="M40 289 H460" stroke="#94a3b8"/>
+<text x="52" y="317" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">student_id</text>
+<text x="207" y="317" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">name</text>
+<path d="M195 289 V409" stroke="#cbd5e1"/>
+<text x="367" y="317" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">mark</text>
+<path d="M355 289 V409" stroke="#cbd5e1"/>
+<text x="52" y="357" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">101</text>
+<text x="207" y="357" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Asha</text>
+<path d="M195 289 V409" stroke="#cbd5e1"/>
+<text x="367" y="357" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">82</text>
+<path d="M355 289 V409" stroke="#cbd5e1"/>
+<path d="M40 329 H460" stroke="#e2e8f0"/>
+<text x="52" y="397" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">102</text>
+<text x="207" y="397" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Ravi</text>
+<path d="M195 289 V409" stroke="#cbd5e1"/>
+<text x="367" y="397" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">76</text>
+<path d="M355 289 V409" stroke="#cbd5e1"/>
+<path d="M40 369 H460" stroke="#e2e8f0"/>
+<rect x="500" y="240" width="420" height="129" rx="8" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="514" y="272" text-anchor="start" font-family="Arial,sans-serif" font-size="23" font-weight="700" fill="#16324f">Partition: CS101</text>
+<path d="M500 289 H920" stroke="#94a3b8"/>
+<text x="512" y="317" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">student_id</text>
+<text x="667" y="317" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">name</text>
+<path d="M655 289 V369" stroke="#cbd5e1"/>
+<text x="827" y="317" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">mark</text>
+<path d="M815 289 V369" stroke="#cbd5e1"/>
+<text x="512" y="357" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">101</text>
+<text x="667" y="357" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Asha</text>
+<path d="M655 289 V369" stroke="#cbd5e1"/>
+<text x="827" y="357" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">91</text>
+<path d="M815 289 V369" stroke="#cbd5e1"/>
+<path d="M500 329 H920" stroke="#e2e8f0"/>
+<text x="55" y="469" text-anchor="start" font-family="Arial,sans-serif" font-size="21" font-weight="400" fill="#16324f">course_code selects a partition.</text>
+<text x="55" y="504" text-anchor="start" font-family="Arial,sans-serif" font-size="21" font-weight="400" fill="#16324f">student_id orders rows within that partition.</text>
+<text x="40" y="590" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">This is one concrete wide-column design; other systems use different details.</text>
+<text x="40" y="617" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">It is not a diagram of column-oriented analytical storage.</text>
+</svg>

@@ -1,0 +1,127 @@
+{
+  "intro": "A view gives a name to a query so that applications can use its result as a relational interface. Views simplify access, expose selected information, and can preserve an interface while underlying structures evolve.",
+  "outcomes": [
+    "Distinguish ordinary views, base tables, and materialized views.",
+    "Read and construct filtered, joined, and aggregate views.",
+    "Explain update restrictions, access control, and performance limits."
+  ],
+  "sections": [
+    {
+      "title": "1. Base tables and virtual results",
+      "paragraphs": [
+        "A base table stores data as part of the database state. An ordinary view normally stores its query definition rather than an independent persisted copy of its result rows. When used, the DBMS evaluates the query under the applicable transaction snapshot. Intermediate execution may use memory or temporary storage; virtual does not mean computation has no cost.",
+        "A view may select columns, filter rows, combine tables, or calculate aggregates. SQL uses CREATE VIEW name AS query. The following self-contained example uses a fresh scratch database. VARCHAR stores bounded text; a primary key identifies a row; INSERT adds records; WHERE selects matching rows."
+      ],
+      "code": "CREATE TABLE Student (\n  student_id INTEGER PRIMARY KEY,\n  name VARCHAR(80) NOT NULL,\n  programme VARCHAR(20) NOT NULL\n);\nINSERT INTO Student VALUES\n  (101, 'Asha', 'MCA'),\n  (102, 'Ravi', 'MBA'),\n  (103, 'Mira', 'MCA');\n\nCREATE VIEW MCAStudents AS\nSELECT student_id, name\nFROM Student\nWHERE programme = 'MCA';\n\nSELECT student_id, name\nFROM MCAStudents\nORDER BY student_id;",
+      "example": [
+        "The result is (101, Asha) followed by (103, Mira). Ravi is filtered out, and programme is not a returned column.",
+        "If Asha is renamed in Student, a later query of the ordinary view sees the updated name when the change is visible to that query. No separate view refresh is required."
+      ],
+      "diagram": "view-filter-and-project",
+      "diagramHeight": 790,
+      "alt": "A Student table contains two MCA students and one MBA student. MCAStudents filters to MCA and returns student_id and name, leaving Asha and Mira only.",
+      "caption": "Trace the row filter and the chosen columns separately. The SQL example below performs this transformation."
+    },
+    {
+      "title": "2. Simplification and stable interfaces",
+      "paragraphs": [
+        "A TeacherRoster view could join Student, Enrolment, and Course once, allowing several applications to reuse the same relationship logic. Aggregating enrolments by course can provide a CourseCount view. Centralising definitions reduces repeated query code and makes the meaning of a result easier to govern.",
+        "A compatibility view can retain old names and projections after a schema change, supporting logical data independence. This is conditional on preserving cardinality, types, meaning, permissions, and required operations. Reusing an old name while changing its meaning does not establish compatibility."
+      ],
+      "diagram": "views",
+      "alt": "Student, Course, and Enrolment base tables feed different teacher and accounts views.",
+      "caption": "Different external interfaces can derive from shared base data; ordinary views retain query definitions.",
+      "diagramHeight": 570
+    },
+    {
+      "title": "3. Access control and visibility",
+      "paragraphs": [
+        "A view can omit private fields or restrict rows. For example, a public roster may exclude phone numbers. Security requires appropriate permissions on the view and base objects and attention to how the engine evaluates view privileges, functions, and row policies. Merely creating a view does not revoke direct table access.",
+        "A view definition may be shared while different transactions see different visible data states. A view is not a permanent snapshot. A query over it is subject to the same concurrency and isolation considerations as other queries.",
+        "A view also does not promise row order. The final consuming query should specify ORDER BY when presentation order matters."
+      ]
+    },
+    {
+      "title": "4. Updatability and WITH CHECK OPTION",
+      "paragraphs": [
+        "Some simple single-table views can be updated automatically. Join, aggregate, DISTINCT, and grouped views commonly introduce ambiguity or restrictions, with exact rules varying by DBMS. If a CourseCount view says DB101 has 30 students, changing 30 to 31 does not identify which student should be enrolled.",
+        "WITH CHECK OPTION can constrain changes made through an eligible filtered view so that the new rows remain visible through that view. For MCAStudents, it can prevent a permitted update through the view from moving a row out of its MCA filter. It does not prevent all changes made directly to the base table or through other authorised routes.",
+        "A join view that supports reads may need triggers or explicit application operations for writes. Never infer update support merely because SELECT works."
+      ],
+      "diagram": "view-aggregate-update-ambiguity",
+      "diagramHeight": 730,
+      "alt": "Two DB101 enrolments produce a count of two. Asking the view to change that count to three does not identify the student for the new enrolment.",
+      "caption": "The summary value does not uniquely determine a base-table change. This explains a common restriction on aggregate-view updates."
+    },
+    {
+      "title": "5. Materialized views and performance",
+      "paragraphs": [
+        "A materialized view persists a query result for later reads. It can accelerate expensive summaries, but changes in the source may not be reflected until refresh under the chosen maintenance method. Ordinary views derive current visible results; materialized views trade freshness and refresh cost against read cost.",
+        "An ordinary view is not automatically faster than writing the same query directly. The optimiser may expand it into a similar plan, and deeply nested views can make expensive work difficult to see. Useful indexes on base data, appropriate filters, and plan inspection still matter.",
+        "Views are strong tools for abstraction, reuse, and controlled exposure. Their limitations include update ambiguity, dependencies on base objects, permission complexity, and the cost of the underlying query."
+      ],
+      "diagram": "view-materialization-freshness",
+      "diagramHeight": 730,
+      "alt": "Both views show two at t1. After a third enrolment commits, an ordinary query sees three when visible, while the stored materialized result remains two until refresh.",
+      "caption": "Compare what is stored and when it changes. A materialized result can be quick to read yet older than the current source."
+    }
+  ],
+  "questions": [
+    {
+      "id": "advantages",
+      "question": "Define a view and explain its advantages.",
+      "answer": [
+        "An ordinary view is a named query exposed as a relational interface. It can simplify complex joins, reuse a common definition, present user-specific columns and rows, and provide a compatibility layer during schema evolution. With correctly configured permissions, it can support restricted exposure of data. Its definition is stored, while its result is normally derived when queried. Performance and update support depend on the query and DBMS."
+      ],
+      "level": "medium",
+      "tags": [
+        "Concept check"
+      ]
+    },
+    {
+      "id": "materialized",
+      "question": "Compare an ordinary view with a materialized view.",
+      "answer": [
+        "An ordinary view generally stores a query definition and computes results from data visible to the consuming query. A materialized view stores result data, improving some reads at the cost of storage and maintenance. Its freshness depends on refresh or incremental maintenance. Neither kind guarantees an ordering of returned rows without an ordering clause in the consuming query."
+      ],
+      "level": "medium",
+      "tags": [
+        "Concept check"
+      ]
+    },
+    {
+      "id": "aggregate-update",
+      "question": "Why is increasing a course count through a grouped view ambiguous?",
+      "answer": [
+        "The displayed count is derived from multiple enrolment rows. Increasing the count does not specify which student, offering, or enrolment record to insert. Therefore the database cannot generally map that requested change to a unique base-table operation. Use a defined enrolment transaction and let the aggregate reflect its result."
+      ],
+      "level": "hard",
+      "tags": [
+        "Practical"
+      ]
+    }
+  ],
+  "revision": [
+    "Run the scratch example and predict the returned rows.",
+    "Distinguish a stored definition from a stored result.",
+    "Explain security conditions, update ambiguity, and freshness trade-offs."
+  ],
+  "references": [
+    {
+      "title": "PostgreSQL: views",
+      "url": "https://www.postgresql.org/docs/current/tutorial-views.html"
+    },
+    {
+      "title": "PostgreSQL: CREATE VIEW",
+      "url": "https://www.postgresql.org/docs/current/sql-createview.html"
+    },
+    {
+      "title": "PostgreSQL: Materialized view creation and refresh",
+      "url": "https://www.postgresql.org/docs/current/sql-creatematerializedview.html"
+    }
+  ],
+  "next": {
+    "id": "data-dictionary",
+    "title": "Data dictionary and database metadata"
+  }
+}

@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 650" role="img" aria-labelledby="title desc"><title id="title">Graph DBMS: vertices and labelled edges</title><desc id="desc">Read A --REQUIRES--&gt; B as: course A requires course B.</desc><defs><marker id="tip" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#0f766e"/></marker></defs><rect width="960" height="650" rx="16" fill="#f8fafc"/>
+<text x="40" y="48" text-anchor="start" font-family="Arial,sans-serif" font-size="28" font-weight="700" fill="#16324f">Graph DBMS: vertices and labelled edges</text>
+<text x="40" y="82" text-anchor="start" font-family="Arial,sans-serif" font-size="19" font-weight="400" fill="#16324f">Read A --REQUIRES--&gt; B as: course A requires course B.</text>
+<rect x="50" y="130" width="300" height="115" rx="10" fill="#ecfdf5" stroke="#94a3b8" stroke-width="2"/>
+<text x="68" y="164" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="700" fill="#16324f">Advanced DB</text>
+<text x="68" y="197" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="400" fill="#16324f">course: DB201</text>
+<rect x="610" y="130" width="300" height="115" rx="10" fill="#ecfdf5" stroke="#94a3b8" stroke-width="2"/>
+<text x="628" y="164" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="700" fill="#16324f">DB foundations</text>
+<text x="628" y="197" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="400" fill="#16324f">course: DB101</text>
+<rect x="610" y="360" width="300" height="115" rx="10" fill="#ecfdf5" stroke="#94a3b8" stroke-width="2"/>
+<text x="628" y="394" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="700" fill="#16324f">Programming</text>
+<text x="628" y="427" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="400" fill="#16324f">course: CS101</text>
+<rect x="50" y="360" width="300" height="115" rx="10" fill="#ecfdf5" stroke="#94a3b8" stroke-width="2"/>
+<text x="68" y="394" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="700" fill="#16324f">Algorithms</text>
+<text x="68" y="427" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="400" fill="#16324f">course: CS201</text>
+<path d="M350 187 L605 187" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<text x="397" y="166" text-anchor="start" font-family="Arial,sans-serif" font-size="19" font-weight="400" fill="#0f766e">REQUIRES</text>
+<path d="M760 245 L760 355" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<text x="775" y="310" text-anchor="start" font-family="Arial,sans-serif" font-size="19" font-weight="400" fill="#0f766e">REQUIRES</text>
+<path d="M350 417 L605 417" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<text x="397" y="395" text-anchor="start" font-family="Arial,sans-serif" font-size="19" font-weight="400" fill="#0f766e">REQUIRES</text>
+<text x="40" y="590" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">DB201 reaches CS101 through DB101: a prerequisite path of length two.</text>
+<text x="40" y="617" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Two courses can share a prerequisite without duplicating that course vertex.</text>
+</svg>

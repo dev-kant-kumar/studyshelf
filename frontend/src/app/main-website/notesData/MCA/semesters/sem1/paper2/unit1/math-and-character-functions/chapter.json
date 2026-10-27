@@ -1,0 +1,87 @@
+{
+  "intro": "Use standard library functions with their headers, valid domains, and argument contracts. Mathematical results and character classification both require more care than matching a function name.",
+  "outcomes": [
+    "Use common math and character functions.",
+    "Check domains and understand rounding.",
+    "Handle EOF and signed characters correctly."
+  ],
+  "prerequisites": "A function call passes arguments and obtains a return value. A header declares the interface. Floating-point arithmetic represents many values approximately; a character code is a numeric representation of a character.",
+  "sections": [
+    {
+      "title": "1. Mathematical library",
+      "paragraphs": [
+        "<math.h> declares sqrt, pow, fabs, floor, ceil, round, sin, cos, log, and other functions. sqrt(x) computes a square root for a nonnegative real input. log(x) is the natural logarithm and needs positive real input. Trigonometric functions take radians, not degrees.",
+        "floor rounds toward negative infinity; ceil toward positive infinity; round rounds to the nearest integer value with halfway cases away from zero. These functions return floating values. For -2.7, floor gives -3.0 and ceil gives -2.0. A cast to int truncates toward zero when the truncated value is representable.",
+        "pow is a floating-point power function; ^ is bitwise XOR, not exponentiation. abs in <stdlib.h> is for int, while fabs is for double. abs(INT_MIN) cannot be represented when the negative range has one extra magnitude. Check input ranges even for familiar library functions."
+      ],
+      "code": "#include <stdio.h>\n#include <math.h>\n#include <ctype.h>\n\nint main(void) {\n    double x = 81.0;\n    printf(\"root=%.1f power=%.1f\\n\", sqrt(x), pow(2.0, 3.0));\n    printf(\"floor=%.1f ceil=%.1f round=%.1f\\n\", floor(-2.7), ceil(-2.7), round(-2.5));\n    unsigned char ch = 'a';\n    printf(\"alpha=%d upper=%c\\n\", isalpha(ch) != 0, toupper(ch));\n    return 0;\n}",
+      "example": [
+        "Expected lines are root=9.0 power=8.0; floor=-3.0 ceil=-2.0 round=-3.0; alpha=1 upper=A in the default C locale. Some GCC systems need -lm when linking this example; place it after the source/object arguments."
+      ]
+    },
+    {
+      "title": "2. Character classification and conversion",
+      "paragraphs": [
+        "<ctype.h> provides isalpha, isdigit, isspace, isalnum, isupper, islower, toupper, and tolower. Classification returns zero for false and a nonzero value for true; do not assume the true result is exactly 1. Locale can affect classifications and case mappings.",
+        "Each ctype argument must be EOF or a value representable as unsigned char. A plain char can be negative. For a character stored in char c, use isalpha((unsigned char)c). This cast prevents negative byte values from violating the function contract.",
+        "getchar returns int so it can represent both byte values and EOF. Keep that result in int, test EOF before converting to a byte, and then classify it. These functions classify single byte values; they are not a complete Unicode text-processing system."
+      ]
+    },
+    {
+      "title": "3. Domains, approximation, and testing",
+      "paragraphs": [
+        "Before calling sqrt for a real calculation, reject negative inputs. Before log, reject zero and negative inputs. Checking the domain keeps error handling part of the algorithm rather than depending on a surprising result. math_errhandling describes library error-reporting support; domain failures can involve errno and/or floating exceptions.",
+        "Floating-point equality is suitable when equality of the represented values is actually intended, but approximate numerical algorithms need a tolerance justified by their scale and error model. A fixed magic tolerance is not universally valid.",
+        "Test positive, zero, and negative inputs where meaningful. For character functions test a letter, a digit, a space, and EOF. Do not use a negative char experiment as if its invalid library call had a defined answer."
+      ]
+    }
+  ],
+  "revision": [
+    "Match functions to headers and argument types.",
+    "Explain negative-number rounding.",
+    "Guard mathematical domains.",
+    "Apply the unsigned-char/EOF ctype rule."
+  ],
+  "questions": [
+    {
+      "id": "math-and-character-functions-1",
+      "question": "Is 2 ^ 3 equal to eight in C?",
+      "level": "easy",
+      "tags": [
+        "Concept check"
+      ],
+      "answer": [
+        "No. ^ performs bitwise XOR, so 2 ^ 3 equals 1. pow(2.0,3.0) computes the floating result 8.0. For small integer powers, checked multiplication may be the more appropriate representation."
+      ]
+    },
+    {
+      "id": "math-and-character-functions-2",
+      "question": "Why must getchar return int rather than char?",
+      "level": "medium",
+      "tags": [
+        "Exam practice"
+      ],
+      "answer": [
+        "It must distinguish every possible unsigned-char byte value from the separate EOF sentinel. A char may not preserve that distinction. Keep the result as int and check EOF before processing the byte."
+      ]
+    },
+    {
+      "id": "math-and-character-functions-3",
+      "question": "Why is isdigit(c) potentially invalid for a plain char?",
+      "level": "hard",
+      "tags": [
+        "Practical"
+      ],
+      "answer": [
+        "If char is signed, a non-ASCII byte may produce a negative value other than EOF. That is outside the ctype argument contract. Use isdigit((unsigned char)c) for stored bytes; preserve and separately handle EOF when reading through getchar."
+      ]
+    }
+  ],
+  "references": [
+    {
+      "title": "WG14 C11 committee draft N1570 - consult the clauses listed in this chapter",
+      "url": "https://www.open-std.org/jtc1/sc22/wg14/www/docs/n1570.pdf"
+    }
+  ],
+  "next": "Decision making and branching uses conditions to select actions. Verification: N1570 clauses 7.4 and 7.12."
+}

@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 730" role="img" aria-labelledby="title desc"><title id="title">Two-tier and three-tier application deployment</title><desc id="desc">These tiers locate software responsibilities; they are not schema levels.</desc><defs><marker id="tip" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#0f766e"/></marker></defs><rect width="960" height="730" rx="16" fill="#f8fafc"/>
+<text x="40" y="48" text-anchor="start" font-family="Arial,sans-serif" font-size="27" font-weight="700" fill="#16324f">Two-tier and three-tier application deployment</text>
+<text x="40" y="82" text-anchor="start" font-family="Arial,sans-serif" font-size="19" font-weight="400" fill="#16324f">These tiers locate software responsibilities; they are not schema levels.</text>
+<text x="40" y="145" text-anchor="start" font-family="Arial,sans-serif" font-size="24" font-weight="700" fill="#16324f">Two-tier example</text>
+<text x="40" y="395" text-anchor="start" font-family="Arial,sans-serif" font-size="24" font-weight="700" fill="#16324f">Three-tier example</text>
+<rect x="40" y="190" width="300" height="110" rx="9" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="56" y="222" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">Desktop client</text>
+<text x="56" y="254" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Presentation and app logic</text>
+<rect x="590" y="190" width="330" height="110" rx="9" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="606" y="222" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">Database service</text>
+<text x="606" y="254" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">DBMS and managed storage</text>
+<path d="M345 245 L585 245" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<text x="375" y="222" text-anchor="start" font-family="Arial,sans-serif" font-size="19" font-weight="400" fill="#0f766e">database protocol</text>
+<rect x="40" y="440" width="250" height="110" rx="9" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="56" y="472" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">Browser</text>
+<text x="56" y="504" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Presentation</text>
+<rect x="355" y="440" width="250" height="110" rx="9" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="371" y="472" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">App service</text>
+<text x="371" y="504" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Business workflows</text>
+<rect x="670" y="440" width="250" height="110" rx="9" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="686" y="472" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">DB service</text>
+<text x="686" y="504" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Database work</text>
+<path d="M295 495 L350 495" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<path d="M610 495 L665 495" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<text x="40" y="670" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Deployment tiers: presentation, application services, database service.</text>
+<text x="40" y="697" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Schema levels: external perspectives, conceptual meaning, internal storage.</text>
+</svg>

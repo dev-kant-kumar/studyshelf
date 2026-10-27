@@ -1,0 +1,927 @@
+{
+  "intro": "A database management system turns a request about logical data into controlled operations on stored records. Understanding its structure means knowing which component receives each request, what representation it produces, which services it consults, and how its work remains correct during concurrency and failure. This chapter follows both a SELECT and a data-changing transaction through those components.",
+  "outcomes": [
+    "Identify the query processor, catalogue, runtime controls, storage services, and persistent structures in a complete DBMS architecture.",
+    "Distinguish DDL interpretation, DML compilation, query rewriting, optimisation, and execution by their inputs and outputs.",
+    "Trace a SQL join from source rows through a physical operator tree to an exact result.",
+    "Explain page buffering, access paths, authorisation, constraints, scheduling, logging, and commit durability.",
+    "Compare access strategies using explicit assumptions, inspect an actual query plan, and classify failures by processing stage.",
+    "Separate functional architecture, application deployment tiers, and the three-schema abstraction model."
+  ],
+  "sections": [
+    {
+      "title": "1. Foundations: what the DBMS must coordinate",
+      "paragraphs": [
+        "A database is the related stored data; the DBMS is the software managing its definition, access, updates, and recovery. A database system also includes applications, users, infrastructure, and operating procedures. The client is the program sending requests. The server is the service processing them, unless an embedded engine runs inside the client application.",
+        "A statement is one command, such as SELECT or UPDATE. A transaction is a unit of work with a commit or abort outcome and can contain several statements. A session is an ongoing connection context; it can execute many transactions. These boundaries are different: opening a connection is not the same event as starting or committing a transaction.",
+        "A schema defines structures and rules, while a catalogue stores machine-readable descriptions of those definitions. A tuple is a logical row. A page or block is a unit through which an engine commonly transfers stored data. Several tuples can occupy one page, and one operation can touch many pages. Persistent storage survives a process ending; an ordinary memory buffer does not.",
+        "A logical request specifies the desired data. A physical plan specifies executable access and processing operations, such as scans, joins, and sorting. An operator is one such unit of plan work. The engine must produce the requested result while respecting permissions, integrity rules, transaction visibility, and its recovery guarantees."
+      ],
+      "table": {
+        "caption": "Terms used throughout the chapter",
+        "headers": [
+          "Term",
+          "Question it answers",
+          "College example"
+        ],
+        "rows": [
+          [
+            "Statement",
+            "What command is being requested?",
+            "SELECT a course roster"
+          ],
+          [
+            "Transaction",
+            "Which changes succeed or fail together?",
+            "Reserve a seat and create an enrolment"
+          ],
+          [
+            "Session",
+            "Which connected context submits work?",
+            "One authenticated application connection"
+          ],
+          [
+            "Catalogue",
+            "How is a database object defined?",
+            "Student columns, keys, permissions, and estimates"
+          ],
+          [
+            "Plan",
+            "How will this request be evaluated?",
+            "Scan Enrolment, join Student, sort the result"
+          ],
+          [
+            "Page",
+            "What stored unit is being transferred?",
+            "A block containing several Student tuples"
+          ]
+        ]
+      }
+    },
+    {
+      "title": "2. Complete functional architecture",
+      "paragraphs": [
+        "The diagram separates entry paths, compilation and query execution, shared metadata, runtime controls, and storage access. The boundaries are responsibilities rather than a claim that every product implements one separate process per box. In one engine several responsibilities may share code; another engine may distribute them across services.",
+        "The DBA or designer submits definitions and administrative commands. Interactive tools submit SQL directly. Applications use a driver, a database API, prepared statements, or in some environments precompiled embedded SQL. The entry path determines how a request reaches the DBMS, not which integrity or access rules it may bypass.",
+        "Follow a SELECT through the SQL parser and analyser into query rewriting, physical planning, and execution. During this work, components consult catalogue definitions and statistics. Runtime controls check access, govern concurrent transactions, and enforce applicable constraints. Execution uses record and index access methods, buffered pages, and file services to reach stored data.",
+        "A CREATE TABLE request has a different principal outcome: after validation and required control work, the DBMS records the new definition in its catalogue and creates the required structures. It does not generate result rows by scanning an existing table. DDL still participates in the engine transaction, lock, permission, and recovery rules; it is not a privileged shortcut around them."
+      ],
+      "diagram": "structure",
+      "diagramHeight": 1690,
+      "alt": "Detailed functional DBMS architecture. DBA, interactive-user, and application entry paths reach DDL interpretation and SQL analysis. Catalogue and access metadata support a query rewriter, optimiser, and execution engine. Runtime services cover authorisation, integrity, transactions, scheduling, and recovery. Buffer, record/index, and file managers connect this work to data files, indexes, catalogue data, and a durable log.",
+      "caption": "Trace the main request path downward and use the side services to explain its dependencies. Solid arrows show selected calls or transfers; dashed arrows show support and coordination. Return paths and many implementation-specific calls are omitted.",
+      "steps": [
+        {
+          "title": "Definition path.",
+          "text": "A validated DDL operation updates catalogue definitions and the required storage structures under appropriate transaction and security controls."
+        },
+        {
+          "title": "Query path.",
+          "text": "SQL becomes a resolved representation, a rewritten request, a physical plan, and finally operator execution."
+        },
+        {
+          "title": "Control path.",
+          "text": "Permission, constraint, visibility, conflict, and recovery checks govern operations wherever the engine needs them."
+        },
+        {
+          "title": "Storage path.",
+          "text": "Logical access methods work with cached pages and file services; not every logical read requires a physical storage read."
+        }
+      ],
+      "table": {
+        "caption": "Map common textbook names to responsibilities",
+        "headers": [
+          "Term",
+          "Responsibility",
+          "Important distinction"
+        ],
+        "rows": [
+          [
+            "DDL interpreter / compiler",
+            "Validate and install object definitions",
+            "Its principal output is a definition change"
+          ],
+          [
+            "DML compiler",
+            "Prepare data access or modification work",
+            "It need not emit CPU machine instructions"
+          ],
+          [
+            "Query evaluator / executor",
+            "Run the selected physical operators",
+            "Planning chooses work; execution performs it"
+          ],
+          [
+            "Command processor / runtime manager",
+            "Dispatch and coordinate requested operations",
+            "The exact module boundary is product-specific"
+          ],
+          [
+            "Data dictionary / catalogue manager",
+            "Maintain and expose system definitions",
+            "Metadata differs from ordinary student rows"
+          ],
+          [
+            "Scheduler / concurrency manager",
+            "Coordinate conflicting or versioned operations",
+            "It does more than order incoming SQL commands"
+          ],
+          [
+            "Data / storage manager",
+            "Bridge logical access with records, pages, and files",
+            "Buffer, access-method, and file work may be separate modules"
+          ]
+        ]
+      }
+    },
+    {
+      "title": "3. SQL entry paths: DDL, DML, and application calls",
+      "paragraphs": [
+        "Textbooks use compiler, interpreter, precompiler, and processor for related but distinct responsibilities. The useful distinction is the representation each stage receives and produces. A compiler need not emit CPU machine code: a DBMS may compile into an internal plan, bytecode, or another executable representation.",
+        "Data definition language (DDL) defines objects. Data manipulation language (DML) retrieves and changes data; SELECT is often included in DML, although some teaching classifications call it DQL. GRANT and REVOKE are commonly grouped as DCL; COMMIT and ROLLBACK as TCL. These categories describe purposes within the SQL interface, not necessarily four independent subsystems."
+      ],
+      "subsections": [
+        {
+          "title": "DDL interpreter or DDL compiler",
+          "paragraphs": [
+            "For CREATE TABLE Course, the DBMS must check that the definition is well formed, resolve names and types, check the right to create the object, establish constraints and dependencies, and record the definition. A primary key may require an associated unique index or another enforcing structure, depending on the engine.",
+            "The catalogue contains the resulting object identity, column definitions, constraint metadata, ownership, and other engine-maintained details. The object is then available to later name resolution subject to transaction visibility. Transactional DDL and implicit-commit behaviour differ across DBMSs, so the client must follow the target product rules."
+          ]
+        },
+        {
+          "title": "DML compiler and query processor",
+          "paragraphs": [
+            "For a SELECT or UPDATE, the compiler path resolves the request against the catalogue and constructs executable work. The query processor is a broader umbrella that commonly includes analysis, rewriting, optimisation, and execution. A DML compiler is therefore not a second database that stores user rows.",
+            "A prepared statement can separate preparation from repeated executions with different parameter values. This can reduce repeated compilation work, but a system may replan or invalidate prepared work when definitions or other conditions change. Parameter values are data; binding them does not grant additional privileges or replace object-name validation."
+          ]
+        },
+        {
+          "title": "Embedded DML precompiler and database drivers",
+          "paragraphs": [
+            "In embedded SQL systems, SQL statements written inside a host-language source program can be processed by a precompiler. The precompiler transforms the SQL portions into host-language calls or a product-specific intermediate form and leaves ordinary code for the host compiler. The resulting program still sends work through the DBMS runtime.",
+            "Many modern applications instead call a database driver directly without an embedded-SQL precompiler. A Python or Java program submitting a parameterised query is not evidence that a separate embedded DML precompiler was used. The architecture must distinguish an optional development-time tool from a required execution-time database component."
+          ]
+        }
+      ],
+      "table": {
+        "caption": "Entry processing by input and output",
+        "headers": [
+          "Responsibility",
+          "Input",
+          "Principal output"
+        ],
+        "rows": [
+          [
+            "DDL processing",
+            "CREATE / ALTER / DROP definition",
+            "Validated definition and catalogue/storage changes"
+          ],
+          [
+            "DML preparation",
+            "Query or data-changing statement",
+            "Resolved and planned executable work"
+          ],
+          [
+            "Embedded DML preprocessing",
+            "Host program containing embedded SQL",
+            "Transformed host calls and associated SQL information"
+          ],
+          [
+            "Driver / application interface",
+            "Application request and bound values",
+            "Protocol/API request and returned rows or status"
+          ]
+        ]
+      }
+    },
+    {
+      "title": "4. Query processing: representations and decisions",
+      "paragraphs": [
+        "Query processing is more than a single translation arrow. The stages answer different questions, and an error can prevent a request from reaching later stages. Their exact implementation and the placement of permission or constraint checks vary across engines."
+      ],
+      "subsections": [
+        {
+          "title": "Lexical analysis and syntax parsing",
+          "paragraphs": [
+            "Lexical analysis recognises tokens such as SELECT, an identifier, a literal, and an operator. Parsing checks whether those tokens form a permitted SQL structure and builds a syntax representation. SELECT FROM Student is not a request with an empty result; it is malformed SQL.",
+            "Successful parsing does not prove the named table exists. SELECT unknown_column FROM Student can have a grammatically valid structure while being semantically invalid. The parser represents the request; it does not locate all matching data pages."
+          ]
+        },
+        {
+          "title": "Semantic analysis and binding",
+          "paragraphs": [
+            "Analysis resolves Student and its column names to defined objects, determines expression types, checks ambiguous references, and validates the meaning of operations. In a join, an unqualified student_id can be ambiguous if both inputs have a column with that name. Aliases such as s.student_id and e.student_id identify the intended inputs.",
+            "Binding connects names to catalogue identities. Access checks use the applicable identity and privileges; engines may check permissions at more than one point. A table that exists is not automatically readable by every authenticated user. Type compatibility also matters: the engine must know which comparison or arithmetic operation is intended."
+          ]
+        },
+        {
+          "title": "Query rewriting and logical transformations",
+          "paragraphs": [
+            "Rewriting changes an internal expression while retaining the intended result. An ordinary view can be expanded into its defining query so that work is performed against its base objects. Predicates may also be simplified or moved when the transformation is valid.",
+            "Logical equivalence has conditions. Pushing a predicate across an outer join can change whether unmatched rows remain, and functions with side effects or other special semantics can restrict transformations. Rewriting is not arbitrary rearrangement of SQL text. The optimiser and rewriter must preserve the engine semantics, including duplicates and NULL where applicable."
+          ]
+        },
+        {
+          "title": "Planner and optimiser",
+          "paragraphs": [
+            "The planner considers physical alternatives such as sequential or index access, join order, join algorithms, and sorting strategies. Statistics describe estimates such as row counts and value distributions. Selectivity is the fraction of rows expected to satisfy a condition. A highly selective predicate returns relatively few rows and may make an index attractive.",
+            "Cost estimates commonly reflect storage access, CPU work, row width, memory limits, and other engine-specific assumptions. Estimated cost is not a universal unit of milliseconds. Searching every equivalent plan can be impractical for a large join, so real optimisers use search strategies and limits. The chosen plan is the best estimated option within that search, not proof of the globally fastest execution.",
+            "A logical join says which rows correspond. A physical nested-loop join, hash join, or merge join describes a mechanism for producing those matches. An existing index creates an option; it does not force the optimiser to use it. Statistics errors, parameter values, cached work, and changing data can affect the decision."
+          ]
+        },
+        {
+          "title": "Execution engine and operator state",
+          "paragraphs": [
+            "The executor drives the selected plan. A scan supplies rows, a filter keeps qualifying rows, a join combines matches, an aggregate computes a summary, and a sort establishes an ordering. Operators maintain state such as a scan position, a hash table, or buffered sort input. Many engines use a demand-driven iterator model; others use vectorised, compiled, parallel, or mixed execution.",
+            "A filter can often return a qualifying row as soon as it finds one. A full sort normally has to inspect its input before it can establish the first correctly ordered row, unless a useful pre-existing order or a different supported strategy avoids that work. This difference affects latency, memory use, and whether temporary storage is needed.",
+            "The executor requests logical data access; access methods and the buffer manager decide which pages must be found or loaded. Returned rows are then encoded for the client. The user result is not a dump of raw storage pages or an optimiser plan."
+          ]
+        }
+      ],
+      "table": {
+        "caption": "Representations across the query path",
+        "headers": [
+          "Stage",
+          "Receives",
+          "Produces"
+        ],
+        "rows": [
+          [
+            "Parsing",
+            "SQL text or tokens",
+            "A syntactic representation"
+          ],
+          [
+            "Analysis / binding",
+            "Parsed request and catalogue definitions",
+            "Resolved objects, types, and expressions"
+          ],
+          [
+            "Rewriting",
+            "Resolved request and applicable definitions",
+            "An equivalent logical request"
+          ],
+          [
+            "Planning",
+            "Logical request, access options, estimates",
+            "A physical operator plan"
+          ],
+          [
+            "Execution",
+            "Plan and transaction context",
+            "Rows, update status, or an execution error"
+          ],
+          [
+            "Client interface",
+            "Engine result",
+            "Protocol values or application-visible status"
+          ]
+        ]
+      }
+    },
+    {
+      "title": "5. Storage manager: from tuples to pages",
+      "paragraphs": [
+        "The storage manager connects logical operations with physical representations. A record access method can scan tuples; an index access method can navigate an auxiliary search structure. Neither requires the application to know the byte address of a row. An engine may use a heap of records, clustered structures, columnar layouts, or other designs; a visible SQL table does not dictate one physical layout.",
+        "The file or space manager allocates storage and maps page identifiers to stored locations. The buffer manager tracks copies of pages in memory. On a buffer hit, a needed page is already resident; on a miss, the engine must load it or obtain it through the relevant storage path. Operating-system caches can further affect physical I/O, so a DBMS buffer miss and a device read are not identical measurements.",
+        "A changed buffered page is dirty. The buffer manager must coordinate its eventual persistence with recovery rules rather than treating memory as durable storage. A replacement policy decides which resident pages are candidates for eviction; pages in active use or subject to other engine rules may not be immediately replaceable. Multiple logical row requests can reuse one resident page.",
+        "An index stores search keys with the information needed to locate or reconstruct matching data. It consumes storage and must be maintained when affected values change. It does not necessarily eliminate table access: a matching index entry can still lead to a base-record fetch. Index-only access requires the appropriate engine conditions, not just the existence of an index.",
+        "Queries can also require temporary storage. A sort or hash operation that exceeds its available memory may spill intermediate data. Temporary working files are different from permanent user tables, catalogue definitions, and recovery logs. Knowing which structure serves which purpose helps explain both performance and failure behaviour."
+      ],
+      "table": {
+        "caption": "Managed storage structures",
+        "headers": [
+          "Structure",
+          "Contains",
+          "Why it exists"
+        ],
+        "rows": [
+          [
+            "Data files",
+            "Persistent representation of user records",
+            "Retain the database contents"
+          ],
+          [
+            "Indexes",
+            "Search keys and access information",
+            "Provide alternative lookup paths"
+          ],
+          [
+            "Catalogue structures",
+            "Definitions, dependencies, privileges, estimates",
+            "Describe and manage objects"
+          ],
+          [
+            "Buffer pool",
+            "In-memory copies of database pages",
+            "Reuse data and reduce repeated storage work"
+          ],
+          [
+            "Temporary work area",
+            "Intermediate sort, hash, or other results",
+            "Support execution when working data must be buffered"
+          ],
+          [
+            "Recovery log",
+            "Records required by the recovery protocol",
+            "Reconstruct supported durable transaction outcomes"
+          ]
+        ]
+      }
+    },
+    {
+      "title": "6. Authorisation and integrity are different controls",
+      "paragraphs": [
+        "Authentication establishes an identity. Authorisation decides whether that identity may perform a requested operation. Integrity checks decide whether a proposed state satisfies declared data rules. A permitted operation can violate a constraint, and a perfectly valid row can still be inaccessible to the caller.",
+        "For example, an accounts role may have permission to read payment summaries but not update marks. A teacher role with suitable mark-update permission can still be prevented from writing mark = 120 by a CHECK rule. A foreign key prevents a new enrolment from referencing a nonexistent student. A primary key prevents a repeated student-course pair under this simplified design.",
+        "Access checks can involve object, column, and row rules. A database service identity is not necessarily the same as the human using the application. Some rules therefore live in application workflows as well as database policy. Constraint checks can occur at different execution points, and eligible checks may be deferred until a transaction boundary where the engine supports it.",
+        "Integrity is not a guarantee of real-world truth. Mark 82 is inside the declared range but could still be a recording mistake. The database enforces expressed rules; it cannot infer the intended assessment result. Similarly, merely hiding a field in a UI is not authorisation if another permitted route still exposes it."
+      ],
+      "table": {
+        "caption": "Different reasons for rejecting a request",
+        "headers": [
+          "Request or condition",
+          "Relevant responsibility",
+          "Reason"
+        ],
+        "rows": [
+          [
+            "SELECT a misspelled column",
+            "Semantic analysis",
+            "The requested name cannot be resolved"
+          ],
+          [
+            "Unauthorised UPDATE of mark",
+            "Authorisation",
+            "The caller lacks the required action permission"
+          ],
+          [
+            "UPDATE mark to 120",
+            "Constraint enforcement",
+            "The stored value would violate the declared range"
+          ],
+          [
+            "INSERT enrolment for student 999",
+            "Referential integrity",
+            "The referenced Student key does not exist"
+          ],
+          [
+            "Repeat an existing student-course pair",
+            "Key enforcement",
+            "The composite primary key must remain unique"
+          ]
+        ]
+      }
+    },
+    {
+      "title": "7. Transactions, scheduling, and concurrent work",
+      "paragraphs": [
+        "The transaction manager tracks the state of work: active, committed, or aborted, together with engine-specific intermediate states. The scheduler or concurrency-control machinery governs interactions among operations from different transactions. It is about legal interleavings and visibility, not merely deciding which SQL statement to run first in a queue.",
+        "Locks prevent conflicting operations from proceeding simultaneously according to the engine protocol. Multiversion concurrency control (MVCC) retains versions so readers can observe a defined state while other transactions change data. Many systems combine versioning with locks. Isolation determines the behaviours the application can rely on; using a database does not automatically make every multi-statement workflow serializable.",
+        "Consider two students attempting to reserve the last seat. If both independently read seats_available = 1 and later write 0, the counter alone can hide an oversubscription. A guarded database update expresses the condition and decrement as one operation. The application must inspect the affected-row count: one means it acquired a seat; zero means no matching available seat was changed.",
+        "The seat reservation and enrolment insert belong in one transaction. If the insert fails, the seat must not remain consumed. The application should roll back the whole intended unit, or follow a carefully defined savepoint strategy, and handle lock waits or retryable conflicts according to its target DBMS. A statement error does not imply identical transaction-state behaviour across products."
+      ],
+      "code": "BEGIN;\nUPDATE Course\nSET seats_available = seats_available - 1\nWHERE course_code = 'DB101' AND seats_available > 0;\n-- Continue only if the application observes one affected row.\nINSERT INTO Enrolment (student_id, course_code, mark)\nVALUES (104, 'DB101', NULL);\nCOMMIT;",
+      "example": [
+        "Student 104 exists in the supplied setup and has no enrolment yet. The application must still check that the guarded UPDATE affected one row before issuing the INSERT; the SQL comment is not executable branching logic.",
+        "If there are no available seats, do not perform the insert. If the insert violates a constraint, roll back instead of committing the seat decrement. Correct transactions connect business intent with the mechanisms in the architecture diagram."
+      ]
+    },
+    {
+      "title": "8. Recovery, write-ahead logging, and commit",
+      "paragraphs": [
+        "Recovery must account for work acknowledged as committed as well as work interrupted before completion. Write-ahead logging (WAL) establishes an ordering rule: the required log information is durable before the corresponding changed data pages are written. This gives recovery information a chance to survive even when the ordinary data files have not yet received all changes.",
+        "With synchronous durable commit, the engine makes the required commit-related log information durable before acknowledging success under its configured guarantees. It need not flush every changed data page at that moment. Later page writes can be decoupled from the transaction acknowledgement, while the durable log supplies the information needed to redo supported changes after a crash.",
+        "A checkpoint bounds or organises recovery work by recording a coordinated recovery position and advancing persistence according to the engine protocol. It is not a separate backup and does not automatically mean every user transaction has committed. Precise checkpoint, redo, undo, and version-cleanup mechanisms differ between DBMSs.",
+        "After a crash, recovery identifies which changes belong to valid committed outcomes and handles incomplete work according to the engine design. Some systems undo incomplete changes, some recover physical records and use visibility rules, and others combine mechanisms. Do not assume every WAL implementation performs the same undo algorithm.",
+        "Durability depends on the stated failure model and storage behaviour. Relaxed or asynchronous settings can change the risk of losing recent acknowledged work. Logs are not a substitute for protected historical backups: a valid but mistaken DELETE may itself be durable and replicated."
+      ],
+      "diagram": "buffer-wal-order",
+      "diagramHeight": 730,
+      "alt": "An update changes a memory buffer and creates log records. Required WAL records are persisted before the corresponding changed data page is written. The log supports crash recovery.",
+      "caption": "The ordering between persistent WAL and changed data pages matters. Read the log flush before the later page write; a dirty in-memory page alone is not a durable transaction.",
+      "table": {
+        "caption": "What a crash can leave behind",
+        "headers": [
+          "Moment of failure",
+          "What the engine can rely on",
+          "Consequence under the assumed protocol"
+        ],
+        "rows": [
+          [
+            "Before required commit durability",
+            "No acknowledged durable commit for this transaction",
+            "The client must not infer that all intended work committed"
+          ],
+          [
+            "After a durable commit but before all data-page writes",
+            "Durable log information for the committed outcome",
+            "Recovery can redo changes absent from data files"
+          ],
+          [
+            "After an unwanted but committed DELETE",
+            "A durable record of the delete itself",
+            "Crash recovery does not undo a valid business mistake"
+          ],
+          [
+            "After a connection drops during COMMIT",
+            "Outcome may be unknown to the client",
+            "Resolve the outcome before blindly repeating a non-idempotent action"
+          ]
+        ]
+      }
+    },
+    {
+      "title": "9. Worked SELECT: build the data and predict the result",
+      "paragraphs": [
+        "Use a fresh scratch database for this self-contained dataset. The key and CHECK syntax used here is supported by PostgreSQL and SQLite, but their execution plans and administrative commands differ. The course seat count denotes remaining seats, not the number already enrolled. NULL means a mark has not been recorded; it is not zero.",
+        "Create the tables and rows below before running the query. In SQLite, enable foreign-key enforcement for the connection with PRAGMA foreign_keys = ON before testing the referential-integrity cases. PostgreSQL enforces declared foreign keys without that SQLite-specific command.",
+        "The downloadable script contains the setup and the SELECT. It is ordinary SQL for a local database client. Editing a code block on this page changes the displayed example; it does not execute SQL or create a database."
+      ],
+      "code": "CREATE TABLE Student (\n  student_id INTEGER PRIMARY KEY,\n  name VARCHAR(80) NOT NULL,\n  programme VARCHAR(20) NOT NULL\n);\nCREATE TABLE Course (\n  course_code VARCHAR(10) PRIMARY KEY,\n  title VARCHAR(100) NOT NULL,\n  seats_available INTEGER NOT NULL CHECK (seats_available >= 0)\n);\nCREATE TABLE Enrolment (\n  student_id INTEGER REFERENCES Student(student_id),\n  course_code VARCHAR(10) REFERENCES Course(course_code),\n  mark INTEGER CHECK (mark BETWEEN 0 AND 100),\n  PRIMARY KEY (student_id, course_code)\n);\nINSERT INTO Student VALUES\n  (101, 'Asha', 'MCA'), (102, 'Ravi', 'MCA'),\n  (103, 'Mira', 'MBA'), (104, 'Neha', 'MCA');\nINSERT INTO Course VALUES\n  ('DB101', 'Database Systems', 2),\n  ('CS101', 'C Programming', 5);\nINSERT INTO Enrolment VALUES\n  (101, 'DB101', 82), (102, 'DB101', 88),\n  (103, 'DB101', NULL), (103, 'CS101', 91);",
+      "links": [
+        {
+          "href": "/examples/dbms-structure-lab.sql",
+          "label": "Download the complete scratch-database SQL example",
+          "download": "dbms-structure-lab.sql"
+        }
+      ],
+      "subsections": [
+        {
+          "title": "The query and its exact output",
+          "paragraphs": [
+            "The aliases s and e name Student and Enrolment inside this statement. The join condition matches the student identity; the WHERE clause restricts enrolments to DB101 with a known mark of at least 80. ORDER BY asks for the final name order. An Enrolment with mark = NULL does not satisfy mark >= 80."
+          ],
+          "code": "SELECT s.name, e.mark\nFROM Student AS s\nJOIN Enrolment AS e ON e.student_id = s.student_id\nWHERE e.course_code = 'DB101' AND e.mark >= 80\nORDER BY s.name;",
+          "table": {
+            "caption": "Expected result after the supplied setup",
+            "headers": [
+              "name",
+              "mark"
+            ],
+            "rows": [
+              [
+                "Asha",
+                "82"
+              ],
+              [
+                "Ravi",
+                "88"
+              ]
+            ]
+          }
+        },
+        {
+          "title": "Trace the request through the components",
+          "paragraphs": [
+            "The following trace describes responsibilities and intermediate meaning, not a promise that the engine materialises a new table at every row. An optimiser can combine compatible operations, push a valid predicate into a scan, or execute different parts in parallel."
+          ],
+          "table": {
+            "caption": "One SELECT, from request to client result",
+            "headers": [
+              "Stage",
+              "What happens to this request",
+              "Concrete checkpoint"
+            ],
+            "rows": [
+              [
+                "Parse",
+                "Recognise SELECT, JOIN, WHERE, ORDER BY and their expressions",
+                "A structurally valid query representation exists"
+              ],
+              [
+                "Bind and check",
+                "Resolve s.name, e.mark, identities and types; enforce required access",
+                "The engine knows the referenced objects and operations"
+              ],
+              [
+                "Rewrite",
+                "Apply valid simplifications or view expansion where relevant",
+                "No view expansion is needed for these base-table names"
+              ],
+              [
+                "Plan",
+                "Consider scans, access paths, join mechanisms, and sorting",
+                "Choose an executable operator tree"
+              ],
+              [
+                "Filter enrolments",
+                "Keep DB101 rows whose mark is at least 80",
+                "101/82 and 102/88 qualify; NULL and CS101 rows do not"
+              ],
+              [
+                "Join",
+                "Match each qualifying student_id to Student",
+                "101 becomes Asha; 102 becomes Ravi"
+              ],
+              [
+                "Project and order",
+                "Return name and mark sorted by name",
+                "Asha/82 followed by Ravi/88"
+              ],
+              [
+                "Return",
+                "Encode and send values to the client",
+                "The client receives two rows, not page bytes or a plan"
+              ]
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "title": "10. Read a physical operator tree",
+      "paragraphs": [
+        "The diagram gives one possible physical strategy for the worked SELECT. The Enrolment scan applies the course and mark predicates, and a hash operator organises qualifying rows by student_id. A scan of Student supplies names and identities. The hash join combines matching identities, and the sort establishes the requested name order.",
+        "Follow tuple flow from the leaves upward. The engine may drive the work by asking child operators for rows, by working in batches, or by using another execution model. The drawing shows the meaning and dependencies of operators, not an exact thread schedule.",
+        "A nested-loop join can compare a row from one input with rows or indexed matches from the other. A hash join builds and probes a hash structure on suitable equality keys. A merge join combines suitably ordered inputs. Each has requirements and costs; the name join in SQL does not choose the physical algorithm.",
+        "The two-row output is exact for the fixture, but the pictured plan is illustrative. A real PostgreSQL or SQLite version can choose a different tree, especially for tiny tables. Use the engine plan-inspection command to observe its selected strategy instead of treating this diagram as fabricated tool output."
+      ],
+      "diagram": "query-plan-operators",
+      "diagramHeight": 1120,
+      "alt": "An illustrative physical plan filters Enrolment to DB101 marks of at least 80, hashes student IDs, joins to scanned Student rows, sorts names, and returns Asha with 82 and Ravi with 88. Tuples flow upward from scan leaves to result.",
+      "caption": "Read operators from their input leaves toward the result. Hashing, joining, and sorting are distinct jobs. The exact plan is chosen by the target engine and is not asserted to match the small fixture.",
+      "table": {
+        "caption": "Operators and the work they perform",
+        "headers": [
+          "Operator",
+          "Consumes",
+          "Produces or retains"
+        ],
+        "rows": [
+          [
+            "Sequential scan",
+            "A relation and its visibility/access context",
+            "Visible tuples from that relation"
+          ],
+          [
+            "Filter",
+            "Tuples and a predicate",
+            "Only tuples for which the predicate is true"
+          ],
+          [
+            "Index access",
+            "A search condition and index structure",
+            "Matches or access information; a base fetch may still be needed"
+          ],
+          [
+            "Hash",
+            "Input tuples and equality keys",
+            "A keyed working structure"
+          ],
+          [
+            "Join",
+            "Two inputs and a relationship condition",
+            "Combined matching tuples under the specified join semantics"
+          ],
+          [
+            "Sort",
+            "Tuples and an ordering specification",
+            "The required ordered stream, possibly using temporary work"
+          ],
+          [
+            "Aggregate",
+            "Input tuples and grouping/aggregate definitions",
+            "Counts, sums, or other summaries, with defined NULL semantics"
+          ]
+        ]
+      }
+    },
+    {
+      "title": "11. Why one access path can be cheaper than another",
+      "paragraphs": [
+        "An access path is a way to reach candidate data, such as scanning a relation or navigating an index. The best choice depends on selectivity, data layout, caching, row width, available memory, and the work required after fetching. An index is especially useful when it avoids examining most irrelevant data, but its advantage is conditional.",
+        "For a deliberately simplified page-I/O model, suppose a table occupies 1,000 pages. A sequential scan reads those pages once. Suppose an indexed lookup needs 3 index-page reads and reaches rows on 8 distinct data pages; its assumed page work is 3 + 8 = 11. With no useful caching and ignoring other costs, this is much smaller than 1,000.",
+        "If the predicate instead matches rows spread across nearly all 1,000 data pages, the index route may pay for index work as well as broad table access. Random access and repeated visits can make the difference larger. This arithmetic demonstrates the trade-off, not a prediction of actual elapsed time. Cached pages, read-ahead, clustering, index-only scans, and concurrent load can invalidate the simple assumptions.",
+        "Statistics can be stale or fail to capture a correlation. For example, programme and course selection might be related, while an estimate treats them as independent. A large difference between estimated and observed cardinality is therefore a reason to investigate statistics and data distribution, not evidence that the SQL parser failed."
+      ],
+      "diagram": "query-alternative-plans",
+      "diagramHeight": 700,
+      "alt": "A scan-and-filter plan and an indexed-lookup plan both return Asha for student 101, but perform different work.",
+      "caption": "A separate single-student illustration compares scan and index work while preserving the result. An index is an alternative strategy, not a change in the requested meaning.",
+      "table": {
+        "caption": "Simplified cost comparison under stated assumptions",
+        "headers": [
+          "Route",
+          "Assumed page work",
+          "What this model leaves out"
+        ],
+        "rows": [
+          [
+            "Full scan",
+            "1,000 table pages",
+            "CPU work, caching, sequential read efficiency, and concurrency"
+          ],
+          [
+            "Selective indexed lookup",
+            "3 index pages + 8 data pages = 11",
+            "Actual index layout, repeated/cached pages, and operator cost"
+          ],
+          [
+            "Broad indexed lookup",
+            "Index work plus nearly all table pages",
+            "Access order and opportunities to avoid base-page reads"
+          ]
+        ]
+      }
+    },
+    {
+      "title": "12. Modification paths and failure boundaries",
+      "paragraphs": [
+        "A data-changing statement uses many of the same front-end stages as a SELECT but has a different effect. After analysis and planning, execution locates affected rows, checks applicable privileges and integrity, coordinates conflicts and visibility, modifies relevant records and indexes, and records recovery information. The enclosing transaction determines whether those changes commit.",
+        "The engine may perform a constraint check before or after a physical change, at statement end, or at a permitted deferred boundary. The conceptual architecture states the obligations, not an invariant placement of each check in one linear pipeline. What matters is that the declared constraints and transactional outcome hold at the promised boundaries.",
+        "Connection loss is a particularly important distinction. If a client disconnects while waiting for COMMIT, the transaction might have committed even though the application did not receive the acknowledgement. Retrying an enrolment or a payment-related database operation without resolving the outcome can repeat an action. A stable request identity and an appropriate idempotency design help applications reconcile retries.",
+        "Unexpected outcomes should be diagnosed from evidence: error category, affected-row count, selected plan, wait information, transaction status, and application logs. A slow SELECT alone does not identify whether the cause is an expensive plan, I/O, blocking, network delay, or client processing."
+      ],
+      "table": {
+        "caption": "Classify a failure before changing the system",
+        "headers": [
+          "Observation",
+          "Relevant area to investigate",
+          "What must not be inferred"
+        ],
+        "rows": [
+          [
+            "Syntax error",
+            "Parsing and SQL text construction",
+            "The table has no matching rows"
+          ],
+          [
+            "Unknown or ambiguous identifier",
+            "Name binding, schema, aliases",
+            "An index is missing"
+          ],
+          [
+            "Permission denied",
+            "Identity, grants, policies, execution context",
+            "The stored row is structurally invalid"
+          ],
+          [
+            "Constraint violation",
+            "Proposed values, referenced keys, declared rules",
+            "All earlier statements automatically rolled back in every DBMS"
+          ],
+          [
+            "Lock wait or deadlock report",
+            "Concurrent transactions and access order",
+            "The SQL grammar is wrong"
+          ],
+          [
+            "Slow execution with bad row estimates",
+            "Plan, statistics, data distribution, resources",
+            "Adding any index will fix the problem"
+          ],
+          [
+            "Disconnect while COMMIT is in flight",
+            "Transaction outcome and retry reconciliation",
+            "The operation certainly failed"
+          ]
+        ]
+      }
+    },
+    {
+      "title": "13. Try, observe, and explain the changes",
+      "paragraphs": [
+        "Run the downloadable setup once in a fresh local scratch database, then execute the variations below individually. Their purpose is to connect a visible outcome with an internal responsibility. Keep SQL execution separate from editing the displayed code on this page."
+      ],
+      "subsections": [
+        {
+          "title": "Observe an actual plan",
+          "paragraphs": [
+            "For PostgreSQL, the following command requests a plan without estimated cost numbers. It does not execute the SELECT. Read the scan, join, filter, and sort information that your engine actually returns; do not expect one predetermined operator tree for a four-row sample.",
+            "For SQLite, use EXPLAIN QUERY PLAN before the SELECT instead of PostgreSQL options. Its output uses SQLite-specific terminology. Two engines producing the same result can expose different compilation and execution arrangements."
+          ],
+          "code": "EXPLAIN (COSTS OFF)\nSELECT s.name, e.mark\nFROM Student AS s\nJOIN Enrolment AS e ON e.student_id = s.student_id\nWHERE e.course_code = 'DB101' AND e.mark >= 80\nORDER BY s.name;",
+          "example": [
+            "Observe the chosen access and join strategies. Then add CREATE INDEX enrolment_course_mark ON Enrolment(course_code, mark) and inspect the plan again. A small table may still use the same scan; that is a valid result.",
+            "EXPLAIN ANALYZE is different: in PostgreSQL it runs the statement and reports observations in addition to the plan. Do not apply it to data-changing statements while assuming that plan inspection is read-only."
+          ]
+        },
+        {
+          "title": "Change a predicate and predict the rows",
+          "paragraphs": [
+            "In the worked SELECT, change the threshold from mark >= 80 to mark >= 85. Only Ravi with 88 remains for DB101. Mira has no recorded DB101 mark, so that row still does not satisfy the numerical comparison. Her CS101 mark of 91 is excluded by the course condition.",
+            "Replace the mark predicate with e.mark IS NULL while retaining course DB101. The result is Mira with a NULL mark. This change affects the logical result, whereas choosing an alternative access path should preserve it."
+          ]
+        },
+        {
+          "title": "Check the error stage",
+          "paragraphs": [
+            "Replace e.mark with e.marks in the SELECT list without adding such a column. The request now references an unknown column. No amount of index tuning can make that name valid. Restore the name before continuing.",
+            "Try updating Asha DB101 mark to 120. The range constraint rejects the change. Query her original mark afterward: it remains 82 when the failed operation has been handled according to the engine transaction rules. This is an execution/integrity case, not a syntax failure."
+          ]
+        },
+        {
+          "title": "Prove rollback preserves the intended unit",
+          "paragraphs": [
+            "Begin a transaction, decrement the available DB101 seat count, and attempt an enrolment for student 999, which is absent. Handle the foreign-key error and issue ROLLBACK. The seat count must return to its earlier value. In SQLite, foreign-key enforcement must be enabled for this connection before starting the transaction.",
+            "Contrast this with a successful transaction for an existing, not-yet-enrolled student, while checking the guarded UPDATE affected exactly one row. The change should consume one available seat and create exactly one enrolment as one committed unit. Repeating the same pair must fail its key constraint rather than silently create a second enrolment."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "14. Functional architecture, deployment tiers, and schema levels",
+      "paragraphs": [
+        "The functional architecture in this chapter identifies which engine responsibilities cooperate. Two-tier and three-tier deployment locate presentation, application logic, and database services. The three-schema model separates external perspectives, conceptual structure, and internal representation. These are three different questions about the same overall system.",
+        "A three-tier college website can use a single database server whose engine contains parser, planner, buffer, transaction, and recovery work. That database can also expose teacher and accounts views over one conceptual design. None of these facts implies that a parser is an external schema or that a buffer manager is an application tier."
+      ],
+      "diagram": "deployment-tiers-versus-schemas",
+      "diagramHeight": 730,
+      "alt": "Two-tier deployment has a client with application logic connected to a database service. Three-tier deployment separates browser presentation, an application service, and a database service.",
+      "caption": "Count the application-service boundaries here. They are independent of both the engine component map and the three-schema descriptions."
+    }
+  ],
+  "questions": [
+    {
+      "id": "query-path",
+      "question": "Explain the structure of a DBMS and how its major components cooperate.",
+      "answer": [
+        "A DBMS receives schema definitions, interactive requests, and application calls through controlled interfaces. DDL processing validates definitions and installs catalogue and storage changes. The query-processing path parses and binds SQL, applies valid rewrites, compares physical strategies, and produces a plan for execution. Catalogue definitions, permissions, and estimates support those decisions.",
+        "The executor runs scans, filters, joins, sorts, and modifications. Authorisation limits permitted actions; integrity enforcement preserves declared rules. Transaction and concurrency services coordinate overlapping work and transaction outcomes. Recovery and logging support the promised durable outcomes after failure. Buffer, record/index, and file services map logical access to cached pages and persistent structures.",
+        "The architecture is cooperative, not a single pass through independent boxes. A module can consult metadata, wait for a conflict, load a missing page, or report an error. Product boundaries vary, but these responsibilities still need to be provided in some form."
+      ],
+      "level": "medium",
+      "tags": [
+        "Concept check"
+      ]
+    },
+    {
+      "id": "ddl-dml",
+      "question": "Differentiate DDL processing, DML compilation, and embedded DML preprocessing.",
+      "answer": [
+        "DDL processing receives object-definition commands and produces validated definition changes, associated catalogue metadata, and required storage structures. It is responsible for making a defined object available under the applicable controls.",
+        "DML compilation receives a retrieval or modification request and prepares executable work, often through binding, rewriting, and planning. Its output need not be machine code; an internal plan or bytecode is a valid implementation choice.",
+        "An embedded DML precompiler processes SQL embedded in host-language source before ordinary application compilation. It produces host calls or related SQL information. Applications using a driver directly need not use such a precompiler. All these paths still reach the DBMS security, transaction, and data-management services."
+      ],
+      "level": "medium",
+      "tags": [
+        "Concept check"
+      ]
+    },
+    {
+      "id": "syntax-semantics",
+      "question": "Why can a syntactically valid query still be rejected before data access?",
+      "answer": [
+        "Grammar establishes structure, not object meaning or permission. SELECT absent_column FROM Student has a valid SQL form but cannot be bound if that column is undefined. An unqualified name can also be ambiguous when several inputs expose the same name, and an operation can be invalid for the resolved types.",
+        "A valid resolved request may still be forbidden by the caller privileges. Parsing, semantic analysis, and authorisation answer different questions. An empty query result means a successfully evaluated request produced no qualifying rows, not that the request was malformed."
+      ],
+      "level": "medium",
+      "tags": [
+        "Concept check"
+      ]
+    },
+    {
+      "id": "rewrite-safety",
+      "question": "Why is query rewriting required to preserve semantics rather than just rearrange operations?",
+      "answer": [
+        "Rewriting can expand a view or simplify an expression, but the result must preserve meaning under the engine rules. Row duplication, NULL, outer-join preservation, functions, and type behaviour can affect equivalence.",
+        "For example, filtering a right-hand input before a left join is not always equivalent to applying the same right-side filter after the join. The latter can eliminate unmatched left rows. A transformation that loses those rows changes the logical request even if it appears to make a plan smaller."
+      ],
+      "level": "hard",
+      "tags": [
+        "Concept check"
+      ]
+    },
+    {
+      "id": "index-choice",
+      "question": "Why might a DBMS ignore an available index?",
+      "answer": [
+        "Index traversal and base-record fetches have a cost. When many matching rows are spread across much of the table, a sequential scan can be cheaper. Tiny tables, cached pages, predicates that do not suit the index, selected columns, ordering needs, and statistics all affect the choice.",
+        "An index creates a candidate access path rather than a promise of its use. Compare the actual plan and relevant estimates before changing structures. An unchanged plan after adding an index can be a legitimate outcome, especially for the small teaching fixture."
+      ],
+      "level": "hard",
+      "tags": [
+        "Practical"
+      ]
+    },
+    {
+      "id": "plan-roles",
+      "question": "What is the difference between a query optimiser and an execution engine?",
+      "answer": [
+        "The optimiser compares physical alternatives and selects work using its available statistics, cost model, and search strategy. It produces a plan. It does not fetch every result row merely by selecting that plan.",
+        "The executor runs the operators in the plan, manages their execution state, requests data through access methods, and returns rows or modification status. The optimiser selects an estimated strategy; the executor performs it under the transaction and access context. Planning and execution failures can therefore have different causes."
+      ],
+      "level": "medium",
+      "tags": [
+        "Concept check"
+      ]
+    },
+    {
+      "id": "pages-tuples",
+      "question": "Does reading three rows necessarily require three storage reads?",
+      "answer": [
+        "No. Several rows may occupy one page, and the required pages may already be buffered. An index can also add page accesses, while a sort or hash operation can add temporary work. Logical rows, logical page requests, DBMS cache misses, and actual device I/O are different measurements.",
+        "To explain performance, identify which measurement is available and what caching or storage assumptions apply. A three-row result alone says little about how many candidate rows or pages were examined."
+      ],
+      "level": "hard",
+      "tags": [
+        "Concept check"
+      ]
+    },
+    {
+      "id": "auth-integrity",
+      "question": "Distinguish authorisation failure from an integrity-constraint failure.",
+      "answer": [
+        "Authorisation asks whether an identity may perform the requested action. An accounts reader lacking UPDATE permission cannot change marks even to a perfectly valid value.",
+        "Integrity asks whether the proposed data obeys declared rules. A teacher with update permission may still be blocked from storing mark 120 when the allowed range is 0 through 100. Both controls are needed; neither one substitutes for the other or proves real-world accuracy."
+      ],
+      "level": "medium",
+      "tags": [
+        "Concept check"
+      ]
+    },
+    {
+      "id": "seat-transaction",
+      "question": "Explain why reserving a seat and inserting an enrolment need one correctly handled transaction.",
+      "answer": [
+        "If the seat decrement commits but the enrolment insert fails, capacity has been consumed without creating the intended registration. If an insert proceeds after a guarded decrement affects zero rows, the system can oversubscribe. These are workflow failures that table storage alone cannot solve.",
+        "Use one transaction, reserve conditionally, inspect the affected-row result, insert only after a successful reservation, and commit only when the intended work succeeds. On failure, restore the intended unit through rollback or another explicitly designed strategy. Handle conflicts and retries according to the target DBMS guarantees."
+      ],
+      "level": "hard",
+      "tags": [
+        "Practical"
+      ]
+    },
+    {
+      "id": "wal-durability",
+      "question": "How can a transaction be durable before all its changed data pages are written?",
+      "answer": [
+        "Under a WAL-based durable-commit protocol, required recovery and commit log information is made persistent before the success acknowledgement. The corresponding changed data pages may be persisted later, provided the required log-before-page ordering rule is maintained.",
+        "If a crash occurs in between, recovery can redo supported committed changes from durable log information. This depends on configured durability and reliable storage behaviour. A dirty memory page alone does not establish durability, and crash recovery does not reverse a valid but unwanted committed operation."
+      ],
+      "level": "hard",
+      "tags": [
+        "Concept check"
+      ]
+    },
+    {
+      "id": "query-result",
+      "question": "Derive the result of the worked SELECT and of changing its threshold to 85.",
+      "answer": [
+        "For DB101, Asha has 82, Ravi has 88, and Mira has NULL. The condition mark >= 80 keeps Asha and Ravi; a comparison with NULL is not true. Mira CS101 mark of 91 is excluded by course_code. Joining the qualifying student IDs to Student supplies the names, and ordering by name returns Asha/82 then Ravi/88.",
+        "At threshold 85, Asha no longer qualifies, leaving Ravi/88 only. This is a change to the logical request and its result, unlike choosing a different correct physical plan for the original threshold."
+      ],
+      "level": "medium",
+      "tags": [
+        "Practical"
+      ]
+    },
+    {
+      "id": "tiers-levels",
+      "question": "Distinguish functional DBMS architecture, three-tier deployment, and three-schema architecture.",
+      "answer": [
+        "Functional DBMS architecture identifies responsibilities such as parsing, planning, execution, storage access, concurrency, and recovery. Deployment tiers locate presentation, application logic, and database services in the application arrangement. Schema levels describe external user perspectives, the integrated conceptual structure, and internal representation.",
+        "A single service can implement many DBMS components, and a three-tier website can use that service while exposing several external database perspectives. The three descriptions can coexist; their labels must not be treated as interchangeable boxes."
+      ],
+      "level": "medium",
+      "tags": [
+        "Concept check"
+      ]
+    }
+  ],
+  "revision": [
+    "Identify the input and output of DDL, DML, preprocessing, parsing, binding, rewriting, planning, and execution.",
+    "Trace both a read request and a data change through the architecture without bypassing controls.",
+    "Read a physical operator tree and distinguish logical row flow from exact execution scheduling.",
+    "Explain catalogue definitions, permissions, statistics, data files, indexes, buffers, temporary work, and WAL separately.",
+    "Calculate the illustrative 1,000-page versus 11-page access comparison and state its simplifying assumptions.",
+    "Predict exact rows for the supplied fixture, including changed predicates and NULL marks.",
+    "Explain rollback, a guarded seat update, affected-row checking, and an uncertain commit outcome.",
+    "Distinguish deployment tiers and schema levels from the engine component map."
+  ],
+  "references": [
+    {
+      "title": "Oracle Database Concepts: introduction and architecture",
+      "url": "https://docs.oracle.com/en/database/oracle/oracle-database/19/cncpt/introduction-to-oracle-database.html"
+    },
+    {
+      "title": "PostgreSQL: Write-ahead logging",
+      "url": "https://www.postgresql.org/docs/current/wal-intro.html"
+    },
+    {
+      "title": "PostgreSQL: Understanding query plans",
+      "url": "https://www.postgresql.org/docs/current/using-explain.html"
+    },
+    {
+      "title": "PostgreSQL: query processing overview",
+      "url": "https://www.postgresql.org/docs/current/query-path.html"
+    },
+    {
+      "title": "PostgreSQL: parser and semantic transformation",
+      "url": "https://www.postgresql.org/docs/current/parser-stage.html"
+    },
+    {
+      "title": "PostgreSQL: planner and optimiser",
+      "url": "https://www.postgresql.org/docs/current/planner-optimizer.html"
+    },
+    {
+      "title": "PostgreSQL: plan execution",
+      "url": "https://www.postgresql.org/docs/current/executor.html"
+    }
+  ],
+  "next": {
+    "id": "three-schema-architecture",
+    "title": "Three-schema DBMS architecture"
+  }
+}

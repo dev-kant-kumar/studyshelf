@@ -1,6 +1,54 @@
 @import "tailwindcss";
 @config "../tailwind.config.js";
 
+.code-editor {
+  --editor-bg: #f8faff;
+  --editor-toolbar: #edf2fa;
+  --editor-fg: #17243b;
+  --editor-muted: #65748b;
+  --editor-line: #dce3ef;
+  --editor-active: #edf2fa;
+  --editor-selection: #ccdcfa;
+  --editor-focus: #2457c5;
+  --editor-keyword: #7443a5;
+  --editor-type: #126b77;
+  --editor-string: #216b3d;
+  --editor-number: #995015;
+  --editor-function: #2457c5;
+  background: var(--editor-bg);
+  color: var(--editor-fg);
+}
+[data-theme="dark"] .code-editor {
+  --editor-bg: #101a2b;
+  --editor-toolbar: #1d2a41;
+  --editor-fg: #e6edf8;
+  --editor-muted: #a1b0c7;
+  --editor-line: #33415a;
+  --editor-active: #1d2a41;
+  --editor-selection: #314d77;
+  --editor-focus: #93b4ff;
+  --editor-keyword: #ce9ffc;
+  --editor-type: #7fd4d5;
+  --editor-string: #9dd9a6;
+  --editor-number: #f4bc83;
+  --editor-function: #93b4ff;
+}
+.code-editor-toolbar { background: var(--editor-toolbar); }
+.code-editor-badge { border: 1px solid var(--editor-line); border-radius: 4px; padding: 1px 6px; font-size: 10px; font-weight: 500; color: var(--editor-muted); }
+.code-editor-action:hover:enabled { background: var(--editor-selection); }
+.code-editor-status { color: var(--editor-muted); }
+.code-editor-host { min-width: 0; }
+.code-editor .code-editor-fallback { margin: 0 !important; padding: 16px 0 !important; border-radius: 0 !important; background: var(--editor-bg) !important; font-size: 14px; line-height: 1.8; tab-size: 4; }
+.code-editor-source-line { display: flex; min-width: max-content; }
+.code-editor-source-line > span:last-child { padding: 0 20px 0 12px; }
+.code-editor-line-number { min-width: 40px; padding: 0 10px 0 8px; border-right: 1px solid var(--editor-line); color: var(--editor-muted); text-align: right; user-select: none; }
+.code-editor-line-number::before { content: attr(data-line); }
+@media print {
+  .code-editor .code-editor-fallback { overflow: visible; white-space: pre-wrap; }
+  .code-editor-source-line { min-width: 0; }
+  .code-editor-source-line > span:last-child { min-width: 0; overflow-wrap: anywhere; }
+}
+
 @keyframes search-topic-swap {
   0% { opacity: 0; transform: translateY(0.45em); }
   9%, 90% { opacity: 1; transform: translateY(0); }

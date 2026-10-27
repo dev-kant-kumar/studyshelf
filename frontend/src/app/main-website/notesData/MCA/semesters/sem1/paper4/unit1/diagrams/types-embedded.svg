@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 600" role="img" aria-labelledby="title desc"><title id="title">Embedded deployment: database engine inside the app</title><desc id="desc">The application calls a linked engine in the same process.</desc><defs><marker id="tip" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#0f766e"/></marker></defs><rect width="960" height="600" rx="16" fill="#f8fafc"/>
+<text x="40" y="48" text-anchor="start" font-family="Arial,sans-serif" font-size="28" font-weight="700" fill="#16324f">Embedded deployment: database engine inside the app</text>
+<text x="40" y="82" text-anchor="start" font-family="Arial,sans-serif" font-size="19" font-weight="400" fill="#16324f">The application calls a linked engine in the same process.</text>
+<rect x="40" y="130" width="880" height="225" rx="10" fill="#e0f2fe" stroke="#94a3b8" stroke-width="2"/>
+<text x="58" y="164" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="700" fill="#16324f">Application process</text>
+<rect x="75" y="205" width="330" height="105" rx="10" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="93" y="239" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="700" fill="#16324f">Application code</text>
+<text x="93" y="272" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="400" fill="#16324f">Local database API</text>
+<rect x="555" y="205" width="330" height="105" rx="10" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="573" y="239" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="700" fill="#16324f">Embedded DBMS</text>
+<text x="573" y="272" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="400" fill="#16324f">Engine in this process</text>
+<path d="M410 257 L550 257" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<text x="426" y="235" text-anchor="start" font-family="Arial,sans-serif" font-size="19" font-weight="400" fill="#0f766e">API call</text>
+<rect x="555" y="425" width="330" height="75" rx="10" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="573" y="459" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="700" fill="#16324f">Database file</text>
+<path d="M720 310 L720 420" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<text x="740" y="387" text-anchor="start" font-family="Arial,sans-serif" font-size="19" font-weight="400" fill="#0f766e">read / write</text>
+<text x="40" y="540" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">No separate database server process is required in this arrangement.</text>
+<text x="40" y="567" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Concurrency capabilities depend on the engine and access pattern.</text>
+</svg>

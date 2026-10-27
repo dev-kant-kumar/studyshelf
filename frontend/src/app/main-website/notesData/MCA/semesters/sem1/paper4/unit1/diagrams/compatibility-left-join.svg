@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 790" role="img" aria-labelledby="title desc"><title id="title">Why the compatibility view needs a LEFT JOIN</title><desc id="desc">Ravi has an identity row but no contact row.</desc><defs><marker id="tip" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#0f766e"/></marker></defs><rect width="960" height="790" rx="16" fill="#f8fafc"/>
+<text x="40" y="48" text-anchor="start" font-family="Arial,sans-serif" font-size="27" font-weight="700" fill="#16324f">Why the compatibility view needs a LEFT JOIN</text>
+<text x="40" y="82" text-anchor="start" font-family="Arial,sans-serif" font-size="19" font-weight="400" fill="#16324f">Ravi has an identity row but no contact row.</text>
+<rect x="40" y="120" width="400" height="169" rx="9" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="52" y="152" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="700" fill="#16324f">StudentIdentity</text>
+<path d="M40 169 L440 169" fill="none" stroke="#0f766e" stroke-width="3"/>
+<text x="51" y="197" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">id</text>
+<text x="221" y="197" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">name</text>
+<path d="M210 169 V289" stroke="#cbd5e1"/>
+<text x="51" y="237" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">101</text>
+<text x="221" y="237" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Asha</text>
+<path d="M210 169 V289" stroke="#cbd5e1"/>
+<path d="M40 209 H440" stroke="#cbd5e1"/>
+<text x="51" y="277" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">102</text>
+<text x="221" y="277" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Ravi</text>
+<path d="M210 169 V289" stroke="#cbd5e1"/>
+<path d="M40 249 H440" stroke="#cbd5e1"/>
+<rect x="520" y="120" width="400" height="129" rx="9" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="532" y="152" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="700" fill="#16324f">StudentContact</text>
+<path d="M520 169 L920 169" fill="none" stroke="#0f766e" stroke-width="3"/>
+<text x="531" y="197" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">id</text>
+<text x="701" y="197" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">phone</text>
+<path d="M690 169 V249" stroke="#cbd5e1"/>
+<text x="531" y="237" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">101</text>
+<text x="701" y="237" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">9001</text>
+<path d="M690 169 V249" stroke="#cbd5e1"/>
+<path d="M520 209 H920" stroke="#cbd5e1"/>
+<rect x="200" y="350" width="560" height="65" rx="9" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="216" y="382" text-anchor="start" font-family="Arial,sans-serif" font-size="21" font-weight="700" fill="#16324f">Both inputs; compare two different join rules</text>
+<path d="M240 290 L240 315 L390 315 L390 345" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<path d="M720 250 L720 315 L570 315 L570 345" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<rect x="40" y="480" width="400" height="129" rx="9" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="52" y="512" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="700" fill="#16324f">INNER JOIN result</text>
+<path d="M40 529 L440 529" fill="none" stroke="#0f766e" stroke-width="3"/>
+<text x="51" y="557" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">id</text>
+<text x="151" y="557" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">name</text>
+<path d="M140 529 V609" stroke="#cbd5e1"/>
+<text x="306" y="557" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">phone</text>
+<path d="M295 529 V609" stroke="#cbd5e1"/>
+<text x="51" y="597" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">101</text>
+<text x="151" y="597" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Asha</text>
+<path d="M140 529 V609" stroke="#cbd5e1"/>
+<text x="306" y="597" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">9001</text>
+<path d="M295 529 V609" stroke="#cbd5e1"/>
+<path d="M40 569 H440" stroke="#cbd5e1"/>
+<rect x="520" y="480" width="400" height="169" rx="9" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="532" y="512" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="700" fill="#16324f">LEFT JOIN result</text>
+<rect x="522" y="610" width="396" height="38" rx="0" fill="#dcfce7" stroke="#dcfce7" stroke-width="2"/>
+<path d="M520 529 L920 529" fill="none" stroke="#0f766e" stroke-width="3"/>
+<text x="531" y="557" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">id</text>
+<text x="631" y="557" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">name</text>
+<path d="M620 529 V649" stroke="#cbd5e1"/>
+<text x="786" y="557" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">phone</text>
+<path d="M775 529 V649" stroke="#cbd5e1"/>
+<text x="531" y="597" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">101</text>
+<text x="631" y="597" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Asha</text>
+<path d="M620 529 V649" stroke="#cbd5e1"/>
+<text x="786" y="597" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">9001</text>
+<path d="M775 529 V649" stroke="#cbd5e1"/>
+<path d="M520 569 H920" stroke="#cbd5e1"/>
+<text x="531" y="637" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">102</text>
+<text x="631" y="637" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Ravi</text>
+<path d="M620 529 V649" stroke="#cbd5e1"/>
+<text x="786" y="637" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">NULL</text>
+<path d="M775 529 V649" stroke="#cbd5e1"/>
+<path d="M520 609 H920" stroke="#cbd5e1"/>
+<path d="M390 415 L390 445 L240 445 L240 475" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<path d="M570 415 L570 445 L720 445 L720 475" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<text x="40" y="730" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">INNER JOIN keeps matching pairs; LEFT JOIN also retains unmatched left rows.</text>
+<text x="40" y="757" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">The green row uses NULL for the missing right-side value.</text>
+</svg>

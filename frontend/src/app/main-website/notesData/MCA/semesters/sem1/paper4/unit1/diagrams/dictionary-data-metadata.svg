@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 700" role="img" aria-labelledby="title desc"><title id="title">Business data and metadata answer different questions</title><desc id="desc">A student row records facts; metadata describes the structure those facts obey.</desc><defs><marker id="tip" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#0f766e"/></marker></defs><rect width="960" height="700" rx="16" fill="#f8fafc"/>
+<text x="40" y="48" text-anchor="start" font-family="Arial,sans-serif" font-size="27" font-weight="700" fill="#16324f">Business data and metadata answer different questions</text>
+<text x="40" y="82" text-anchor="start" font-family="Arial,sans-serif" font-size="19" font-weight="400" fill="#16324f">A student row records facts; metadata describes the structure those facts obey.</text>
+<rect x="40" y="130" width="390" height="169" rx="9" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="52" y="162" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="700" fill="#16324f">Business data: Student</text>
+<path d="M40 179 L430 179" fill="none" stroke="#0f766e" stroke-width="3"/>
+<text x="51" y="207" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">student_id</text>
+<text x="261" y="207" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">name</text>
+<path d="M250 179 V299" stroke="#cbd5e1"/>
+<text x="51" y="247" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">101</text>
+<text x="261" y="247" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Asha</text>
+<path d="M250 179 V299" stroke="#cbd5e1"/>
+<path d="M40 219 H430" stroke="#cbd5e1"/>
+<text x="51" y="287" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">102</text>
+<text x="261" y="287" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Ravi</text>
+<path d="M250 179 V299" stroke="#cbd5e1"/>
+<path d="M40 259 H430" stroke="#cbd5e1"/>
+<rect x="490" y="130" width="430" height="169" rx="9" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="502" y="162" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="700" fill="#16324f">Metadata about Student</text>
+<path d="M490 179 L920 179" fill="none" stroke="#0f766e" stroke-width="3"/>
+<text x="501" y="207" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">column</text>
+<text x="666" y="207" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">type</text>
+<path d="M655 179 V299" stroke="#cbd5e1"/>
+<text x="821" y="207" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">required</text>
+<path d="M810 179 V299" stroke="#cbd5e1"/>
+<text x="501" y="247" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">student_id</text>
+<text x="666" y="247" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">INTEGER</text>
+<path d="M655 179 V299" stroke="#cbd5e1"/>
+<text x="821" y="247" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">yes</text>
+<path d="M810 179 V299" stroke="#cbd5e1"/>
+<path d="M490 219 H920" stroke="#cbd5e1"/>
+<text x="501" y="287" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">name</text>
+<text x="666" y="287" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">TEXT</text>
+<path d="M655 179 V299" stroke="#cbd5e1"/>
+<text x="821" y="287" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">yes</text>
+<path d="M810 179 V299" stroke="#cbd5e1"/>
+<path d="M490 259 H920" stroke="#cbd5e1"/>
+<rect x="40" y="410" width="390" height="100" rx="9" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="56" y="442" text-anchor="start" font-family="Arial,sans-serif" font-size="21" font-weight="700" fill="#16324f">Data question</text>
+<text x="56" y="474" text-anchor="start" font-family="Arial,sans-serif" font-size="21" font-weight="400" fill="#16324f">Who is student 101?</text>
+<rect x="490" y="410" width="430" height="100" rx="9" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="506" y="442" text-anchor="start" font-family="Arial,sans-serif" font-size="21" font-weight="700" fill="#16324f">Metadata question</text>
+<text x="506" y="474" text-anchor="start" font-family="Arial,sans-serif" font-size="21" font-weight="400" fill="#16324f">What is the type of student_id?</text>
+<path d="M235 405 L235 305" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<path d="M705 405 L705 305" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<text x="40" y="640" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">A business glossary adds definitions, ownership, units, and policy.</text>
+<text x="40" y="667" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">It complements the technical catalogue rather than replacing it.</text>
+</svg>

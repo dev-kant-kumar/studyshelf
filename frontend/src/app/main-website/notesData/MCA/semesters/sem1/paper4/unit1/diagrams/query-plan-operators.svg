@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 1120" role="img" aria-labelledby="title desc"><title id="title">A physical plan is a tree of executable operators</title><desc id="desc">Illustrative plan for DB101 marks &gt;= 80, ordered by student name.</desc><defs><marker id="tip" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#0f766e"/></marker></defs><rect width="960" height="1120" rx="16" fill="#f8fafc"/>
+<text x="40" y="48" text-anchor="start" font-family="Arial,sans-serif" font-size="27" font-weight="700" fill="#16324f">A physical plan is a tree of executable operators</text>
+<text x="40" y="82" text-anchor="start" font-family="Arial,sans-serif" font-size="19" font-weight="400" fill="#16324f">Illustrative plan for DB101 marks &gt;= 80, ordered by student name.</text>
+<rect x="240" y="120" width="480" height="85" rx="9" fill="#ecfdf5" stroke="#94a3b8" stroke-width="2"/>
+<text x="256" y="152" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">Result: name, mark</text>
+<text x="256" y="184" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Asha, 82; Ravi, 88</text>
+<rect x="300" y="280" width="360" height="85" rx="9" fill="#dbeafe" stroke="#94a3b8" stroke-width="2"/>
+<text x="316" y="312" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">Sort</text>
+<text x="316" y="344" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Key: student name</text>
+<rect x="300" y="450" width="360" height="110" rx="9" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="316" y="482" text-anchor="start" font-family="Arial,sans-serif" font-size="19" font-weight="700" fill="#16324f">Hash join</text>
+<text x="316" y="514" text-anchor="start" font-family="Arial,sans-serif" font-size="19" font-weight="400" fill="#16324f">Match s.student_id to e.student_id</text>
+<text x="316" y="543" text-anchor="start" font-family="Arial,sans-serif" font-size="19" font-weight="400" fill="#16324f">Produce joined rows</text>
+<rect x="40" y="665" width="370" height="110" rx="9" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="56" y="697" text-anchor="start" font-family="Arial,sans-serif" font-size="19" font-weight="700" fill="#16324f">Sequential scan: Student</text>
+<text x="56" y="729" text-anchor="start" font-family="Arial,sans-serif" font-size="19" font-weight="400" fill="#16324f">Read student_id and name</text>
+<text x="56" y="758" text-anchor="start" font-family="Arial,sans-serif" font-size="19" font-weight="400" fill="#16324f">Use rows visible to the query</text>
+<rect x="555" y="665" width="365" height="90" rx="9" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="571" y="697" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">Hash</text>
+<text x="571" y="729" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Build by student_id</text>
+<rect x="555" y="870" width="365" height="115" rx="9" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="571" y="902" text-anchor="start" font-family="Arial,sans-serif" font-size="19" font-weight="700" fill="#16324f">Scan / filter: Enrolment</text>
+<text x="571" y="934" text-anchor="start" font-family="Arial,sans-serif" font-size="19" font-weight="400" fill="#16324f">course_code = DB101</text>
+<text x="571" y="963" text-anchor="start" font-family="Arial,sans-serif" font-size="19" font-weight="400" fill="#16324f">mark &gt;= 80</text>
+<path d="M480 275 L480 210" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<path d="M480 445 L480 370" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<path d="M225 660 L225 610 L390 610 L390 565" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<path d="M737 660 L737 610 L570 610 L570 565" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<path d="M737 865 L737 760" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<text x="40" y="850" text-anchor="start" font-family="Arial,sans-serif" font-size="21" font-weight="700" fill="#16324f">Read row flow from leaves upward.</text>
+<text x="40" y="893" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">The executor drives operators;</text>
+<text x="40" y="925" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">it does not merely run SQL text.</text>
+<text x="40" y="1060" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">The optimiser may choose a different join, access path, or sort arrangement.</text>
+<text x="40" y="1087" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">This tree explains operator roles; it is not a captured EXPLAIN from the tiny fixture.</text>
+</svg>

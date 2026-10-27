@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 700" role="img" aria-labelledby="title desc"><title id="title">Control redundancy by storing each fact with its owner</title><desc id="desc">Two enrolments can refer to one student contact record.</desc><defs><marker id="tip" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#0f766e"/></marker></defs><rect width="960" height="700" rx="16" fill="#f8fafc"/>
+<text x="40" y="48" text-anchor="start" font-family="Arial,sans-serif" font-size="27" font-weight="700" fill="#16324f">Control redundancy by storing each fact with its owner</text>
+<text x="40" y="82" text-anchor="start" font-family="Arial,sans-serif" font-size="19" font-weight="400" fill="#16324f">Two enrolments can refer to one student contact record.</text>
+<rect x="40" y="120" width="880" height="169" rx="9" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="52" y="152" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="700" fill="#16324f">Before: phone repeated per enrolment</text>
+<path d="M40 169 L920 169" fill="none" stroke="#0f766e" stroke-width="3"/>
+<text x="51" y="197" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">student_id</text>
+<text x="311" y="197" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">course</text>
+<path d="M300 169 V289" stroke="#cbd5e1"/>
+<text x="591" y="197" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">phone</text>
+<path d="M580 169 V289" stroke="#cbd5e1"/>
+<text x="51" y="237" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">101</text>
+<text x="311" y="237" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">DB101</text>
+<path d="M300 169 V289" stroke="#cbd5e1"/>
+<text x="591" y="237" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">9001</text>
+<path d="M580 169 V289" stroke="#cbd5e1"/>
+<path d="M40 209 H920" stroke="#cbd5e1"/>
+<text x="51" y="277" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">101</text>
+<text x="311" y="277" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">CS101</text>
+<path d="M300 169 V289" stroke="#cbd5e1"/>
+<text x="591" y="277" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">9002</text>
+<path d="M580 169 V289" stroke="#cbd5e1"/>
+<path d="M40 249 H920" stroke="#cbd5e1"/>
+<text x="40" y="345" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="700" fill="#9a3412">The same student has conflicting phone values.</text>
+<rect x="40" y="390" width="410" height="129" rx="9" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="52" y="422" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="700" fill="#16324f">After: Student</text>
+<path d="M40 439 L450 439" fill="none" stroke="#0f766e" stroke-width="3"/>
+<text x="51" y="467" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">student_id</text>
+<text x="271" y="467" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">phone</text>
+<path d="M260 439 V519" stroke="#cbd5e1"/>
+<text x="51" y="507" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">101</text>
+<text x="271" y="507" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">9001</text>
+<path d="M260 439 V519" stroke="#cbd5e1"/>
+<path d="M40 479 H450" stroke="#cbd5e1"/>
+<rect x="530" y="390" width="390" height="169" rx="9" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="542" y="422" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="700" fill="#16324f">Enrolment</text>
+<path d="M530 439 L920 439" fill="none" stroke="#0f766e" stroke-width="3"/>
+<text x="541" y="467" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">student_id</text>
+<text x="756" y="467" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">course</text>
+<path d="M745 439 V559" stroke="#cbd5e1"/>
+<text x="541" y="507" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">101</text>
+<text x="756" y="507" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">DB101</text>
+<path d="M745 439 V559" stroke="#cbd5e1"/>
+<path d="M530 479 H920" stroke="#cbd5e1"/>
+<text x="541" y="547" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">101</text>
+<text x="756" y="547" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">CS101</text>
+<path d="M745 439 V559" stroke="#cbd5e1"/>
+<path d="M530 519 H920" stroke="#cbd5e1"/>
+<path d="M525 500 L455 500" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<text x="456" y="470" text-anchor="start" font-family="Arial,sans-serif" font-size="19" font-weight="400" fill="#0f766e">reference</text>
+<text x="40" y="640" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Change the authoritative contact once; enrolments retain the student identifier.</text>
+<text x="40" y="667" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Indexes, replicas, and backups may still duplicate data for defined purposes.</text>
+</svg>

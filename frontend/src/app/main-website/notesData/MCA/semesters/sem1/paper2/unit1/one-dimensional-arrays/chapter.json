@@ -1,0 +1,92 @@
+{
+  "intro": "An array groups a fixed number of same-type elements consecutively. Learn to initialise it, traverse only valid indices, and reason about occupied length separately from capacity.",
+  "outcomes": [
+    "Declare and initialise arrays.",
+    "Trace traversal, updates, and insertion.",
+    "Use valid bounds and explain contiguous storage."
+  ],
+  "prerequisites": "An index identifies an element position. A loop visits positions in order. sizeof reports an object's storage size; its result has type size_t.",
+  "sections": [
+    {
+      "title": "1. Declaration and initialisation rules",
+      "paragraphs": [
+        "int values[5] declares five int elements indexed 0 through 4. int values[5]={8,3}; initialises the first two to 8 and 3 and the rest to zero. int values[]={8,3,5}; infers a length of three. int values[5]={0}; zero-initialises every element.",
+        "An automatic array without an initialiser has indeterminate element values until written. Arrays are not assignable as whole objects: values=other is invalid. Copy elements in a loop or use an appropriate library byte-copy operation with valid sizes and overlap rules.",
+        "Within the same scope as the actual array, sizeof values / sizeof values[0] derives its element count. Most expressions convert an array name to a pointer to its first element. In a function parameter declared as int values[], the parameter is adjusted to a pointer, so this sizeof formula no longer obtains the caller's array length."
+      ],
+      "code": "#include <stdio.h>\n\nint main(void) {\n    int values[] = {8, 3, 5, 1};\n    size_t count = sizeof values / sizeof values[0];\n    int total = 0;\n    int largest = values[0];\n    for (size_t i = 0; i < count; ++i) {\n        total += values[i];\n        if (values[i] > largest) largest = values[i];\n    }\n    printf(\"count=%zu total=%d largest=%d\\n\", count, total, largest);\n    return 0;\n}",
+      "example": [
+        "Starting total=0 and largest=8, visits produce totals 8,11,16,17; largest remains 8. Output is count=4 total=17 largest=8. Initialising largest from element zero requires a nonempty collection.",
+        "All-negative values expose the error of initialising largest to zero. A single-element array checks the smallest nonempty case. General sums need an overflow policy even when every index is valid."
+      ]
+    },
+    {
+      "title": "2. Layout and bounds",
+      "paragraphs": [
+        "Elements are contiguous with spacing sizeof(element). Under a hypothetical four-byte int layout and base byte address 1000, values[3] begins at 1000+3*4=1012. This is a layout calculation, not a portable promise about int size or actual runtime addresses.",
+        "Valid access requires 0 <= index < count. C does not ordinarily check that requirement for you. values[count] is already outside the array. A pointer one past the array may be formed for traversal but must not be dereferenced.",
+        "Reading or writing a chosen element takes constant indexing work. Traversing all n elements takes n visits. Contiguity usually helps locality, but that performance observation is distinct from the language's correctness rules."
+      ]
+    },
+    {
+      "title": "3. Length, capacity, insertion, and deletion",
+      "paragraphs": [
+        "Capacity is the number of available slots; logical length is the number currently holding collection entries. To insert at position pos, require length<capacity and pos<=length, move occupied elements right from the end toward pos, write the new value, and increment length.",
+        "Moving right from the front overwrites values before they have been copied. To delete at a valid pos, move later values left and decrement length. The physical array size does not change; the logical occupied prefix does.",
+        "Insertion and deletion can move a number of elements proportional to length. Append uses no shifts when capacity remains. This distinction explains why choosing an array affects data-structure operations later."
+      ],
+      "example": [
+        "With capacity 5 and occupied [10,20,30], insert 15 at pos=1. Copy slot 2 to 3, then slot 1 to 2, then write slot 1. The occupied result is [10,15,20,30], length 4.",
+        "Deleting pos=2 from that result moves slot 3 to 2 and reduces length to 3, giving [10,15,30]. The stale fourth slot is outside the logical collection and must not be treated as an entry."
+      ]
+    }
+  ],
+  "revision": [
+    "Explain zero-based bounds and partial initialisation.",
+    "Distinguish array objects from adjusted parameters.",
+    "Keep occupied length separate from capacity.",
+    "Trace insertion in the safe copy direction."
+  ],
+  "questions": [
+    {
+      "id": "one-dimensional-arrays-1",
+      "question": "What are the elements of int a[4]={2,7}?",
+      "level": "easy",
+      "tags": [
+        "Concept check"
+      ],
+      "answer": [
+        "They are 2,7,0,0. Omitted elements in this initialised array receive zero initialisation. That rule does not apply to an uninitialised automatic array."
+      ]
+    },
+    {
+      "id": "one-dimensional-arrays-2",
+      "question": "Why is a loop using i<=count invalid for traversal?",
+      "level": "medium",
+      "tags": [
+        "Exam practice"
+      ],
+      "answer": [
+        "It includes index count, but the last element is count-1. Use i<count. For zero occupied elements this condition also prevents any access, whereas <= would incorrectly attempt element zero."
+      ]
+    },
+    {
+      "id": "one-dimensional-arrays-3",
+      "question": "Why shift right from the end during insertion?",
+      "level": "hard",
+      "tags": [
+        "Practical"
+      ],
+      "answer": [
+        "An element must be copied before its source slot is overwritten. Copying from the highest occupied index downward preserves those sources. Copying forward would propagate the overwritten earlier value into later slots."
+      ]
+    }
+  ],
+  "references": [
+    {
+      "title": "WG14 C11 committee draft N1570 - consult the clauses listed in this chapter",
+      "url": "https://www.open-std.org/jtc1/sc22/wg14/www/docs/n1570.pdf"
+    }
+  ],
+  "next": "Two-dimensional arrays extend this representation to rows and columns. Verification: N1570 clauses 6.5.2.1, 6.7.6.2, and 6.7.9."
+}

@@ -1,0 +1,92 @@
+{
+  "intro": "Make decisions with if, else, switch, and conditional expressions. Build disjoint cases and test values exactly at each decision boundary.",
+  "outcomes": [
+    "Construct simple, nested, and chained decisions.",
+    "Use switch with intentional break behaviour.",
+    "Trace boundary conditions and reject invalid states."
+  ],
+  "prerequisites": "A condition interprets zero as false and nonzero as true. Comparison operators produce 0 or 1. A block groups statements inside braces.",
+  "sections": [
+    {
+      "title": "1. if, else, and interval partitions",
+      "paragraphs": [
+        "if evaluates a condition and executes its statement only when true. else selects the false path. An else-if chain checks later conditions only when earlier ones fail. Independent if statements can execute more than one branch, so they express a different algorithm.",
+        "Partition a mark into invalid, distinction, pass, and fail cases. Reject outside 0..100 first, then test >=75, then >=40, then the remaining valid interval. Ordering avoids requiring every later branch to repeat its upper bound.",
+        "else binds to the nearest unmatched if. Braces make nested intentions explicit. A semicolon directly after if(condition) creates an empty controlled statement, often making the following block unconditional."
+      ],
+      "code": "#include <stdio.h>\n\nint main(void) {\n    int marks = 75;\n    if (marks < 0 || marks > 100) {\n        puts(\"Invalid mark\");\n    } else if (marks >= 75) {\n        puts(\"Distinction\");\n    } else if (marks >= 40) {\n        puts(\"Pass\");\n    } else {\n        puts(\"Fail\");\n    }\n    return 0;\n}",
+      "example": [
+        "For marks=75 the validity check is false and the >=75 test is true, so only Distinction prints. For 74, the first two tests are false and >=40 is true, so Pass prints.",
+        "Use -1, 0, 39, 40, 74, 75, 100, and 101. These cases exercise both sides of each boundary and both invalid ends."
+      ]
+    },
+    {
+      "title": "2. switch and jump statements",
+      "paragraphs": [
+        "switch selects among integer-valued cases. Its controlling expression has integer type, and each case label is an integer constant expression. Strings and floating-point intervals require another method, such as if or string comparison.",
+        "Execution starts at the matching case, or default if present, and continues until break or another terminating control transfer. Without break it falls through to following statements. Intentional grouped cases can share an action; accidental fall-through causes extra actions.",
+        "break exits the nearest enclosing loop or switch. continue proceeds to the next loop iteration, not out of the function. return exits the current function. goto jumps to a label in the same function and is usually unnecessary for these simple decisions."
+      ],
+      "code": "#include <stdio.h>\n\nint main(void) {\n    char operation = '+';\n    int a = 8, b = 2;\n    switch (operation) {\n        case '+': printf(\"%d\\n\", a + b); break;\n        case '-': printf(\"%d\\n\", a - b); break;\n        default: puts(\"Unsupported operation\"); break;\n    }\n    return 0;\n}",
+      "example": [
+        "The + case prints 10 and break exits the switch. Removing that break would also execute the subtraction case and print 6. The labels do not automatically end each branch."
+      ]
+    },
+    {
+      "title": "3. Selection correctness",
+      "paragraphs": [
+        "Each branch should preserve the invariant needed by the work it performs. For division, check the divisor and representability before dividing. For indexing, establish 0 <= index < length before using an element. Rejecting invalid data early simplifies later reasoning.",
+        "Use ?: for a short value choice such as a>b ? a:b; use if/else for multiple actions. Do not hide complicated state updates inside conditions. if(x=0) assigns zero and takes the false path, while if(x==0) compares.",
+        "Test that every valid input belongs to exactly the intended category. Also test values that should be rejected. A branching solution with no invalid-input path often computes with assumptions it never established."
+      ]
+    }
+  ],
+  "revision": [
+    "Trace exactly which branch executes.",
+    "Test immediately below and at each threshold.",
+    "Explain break and fall-through.",
+    "Distinguish assignment from equality."
+  ],
+  "questions": [
+    {
+      "id": "decision-making-1",
+      "question": "Can two independent if statements both run?",
+      "level": "easy",
+      "tags": [
+        "Concept check"
+      ],
+      "answer": [
+        "Yes. Each evaluates its own condition. An if/else chain chooses at most one branch, whereas independent if statements may perform multiple actions. Choose based on whether your cases are exclusive."
+      ]
+    },
+    {
+      "id": "decision-making-2",
+      "question": "Why test >=75 before >=40 in the marks example?",
+      "level": "medium",
+      "tags": [
+        "Exam practice"
+      ],
+      "answer": [
+        "Every distinction mark also satisfies >=40. If the pass branch came first in an else-if chain, it would capture distinction marks. Checking the narrower high range first preserves the intended classification."
+      ]
+    },
+    {
+      "id": "decision-making-3",
+      "question": "Can switch directly compare a string to \"add\"?",
+      "level": "hard",
+      "tags": [
+        "Interview practice"
+      ],
+      "answer": [
+        "No. Its controlling expression must have integer type. Use strcmp to compare string contents and branch on its result, or first translate validated commands to integer enumeration values."
+      ]
+    }
+  ],
+  "references": [
+    {
+      "title": "WG14 C11 committee draft N1570 - consult the clauses listed in this chapter",
+      "url": "https://www.open-std.org/jtc1/sc22/wg14/www/docs/n1570.pdf"
+    }
+  ],
+  "next": "Looping repeats work while maintaining termination and correctness conditions. Verification: N1570 clauses 6.8.4 and 6.8.6."
+}

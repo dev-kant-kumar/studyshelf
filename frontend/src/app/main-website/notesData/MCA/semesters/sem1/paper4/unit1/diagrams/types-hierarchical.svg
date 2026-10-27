@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 600" role="img" aria-labelledby="title desc"><title id="title">Hierarchical DBMS: one parent per child</title><desc id="desc">Follow a tree path from the university to a department and its courses.</desc><defs><marker id="tip" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#0f766e"/></marker></defs><rect width="960" height="600" rx="16" fill="#f8fafc"/>
+<text x="40" y="48" text-anchor="start" font-family="Arial,sans-serif" font-size="28" font-weight="700" fill="#16324f">Hierarchical DBMS: one parent per child</text>
+<text x="40" y="82" text-anchor="start" font-family="Arial,sans-serif" font-size="19" font-weight="400" fill="#16324f">Follow a tree path from the university to a department and its courses.</text>
+<rect x="330" y="115" width="300" height="74" rx="10" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="348" y="149" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="700" fill="#16324f">College</text>
+<rect x="80" y="260" width="330" height="74" rx="10" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="98" y="294" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="700" fill="#16324f">Computing department</text>
+<rect x="550" y="260" width="330" height="74" rx="10" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="568" y="294" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="700" fill="#16324f">Management department</text>
+<path d="M480 189 L480 220 L245 220 L245 255" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<path d="M480 220 L715 220 L715 255" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<rect x="50" y="400" width="215" height="74" rx="10" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="68" y="434" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="700" fill="#16324f">DB101</text>
+<rect x="290" y="400" width="215" height="74" rx="10" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="308" y="434" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="700" fill="#16324f">CS101</text>
+<rect x="625" y="400" width="255" height="74" rx="10" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="643" y="434" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="700" fill="#16324f">MG101</text>
+<path d="M245 334 L245 365 L157 365 L157 395" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<path d="M245 365 L397 365 L397 395" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<path d="M715 334 L715 365 L752 365 L752 395" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<text x="40" y="540" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Each course record shown has one parent in this tree.</text>
+<text x="40" y="567" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Sharing one course across departments needs an additional design decision.</text>
+</svg>

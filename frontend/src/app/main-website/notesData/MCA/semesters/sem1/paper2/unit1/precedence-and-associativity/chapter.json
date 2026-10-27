@@ -1,0 +1,87 @@
+{
+  "intro": "Precedence and associativity determine expression grouping. They do not generally determine the temporal order in which operands execute.",
+  "outcomes": [
+    "Group mixed expressions correctly.",
+    "Separate grouping from sequencing.",
+    "Rewrite ambiguous expressions for reliable reasoning."
+  ],
+  "prerequisites": "Operators act on operands. Parentheses explicitly group expressions. Side effects include assignments and increments; their execution order must satisfy sequencing rules.",
+  "sections": [
+    {
+      "title": "1. Precedence from stronger to weaker",
+      "paragraphs": [
+        "A useful C11 grouping ladder is: postfix calls/subscripts/member access/postfix updates; unary operators and casts; multiplication/division/remainder; addition/subtraction; shifts; relational comparisons; equality; bitwise AND; bitwise XOR; bitwise OR; logical AND; logical OR; conditional ?:; assignment; comma.",
+        "Operators in stronger groups bind more tightly. Thus 2 + 3 * 4 groups as 2 + (3 * 4), yielding 14. Parentheses can replace that default: (2 + 3) * 4 yields 20.",
+        "Bitwise AND has lower precedence than equality. flags & mask == 0 groups as flags & (mask == 0), which usually is not the desired bit test. Write (flags & mask) == 0. Remembering this failure pattern is more useful than merely reciting a list."
+      ]
+    },
+    {
+      "title": "2. Associativity at the same precedence",
+      "paragraphs": [
+        "Most binary arithmetic operators group left to right: 20 / 5 * 2 means (20 / 5) * 2 and yields 8. Assignment groups right to left: a = b = 4 means a = (b = 4). Both objects receive 4, subject to their types.",
+        "Unary operations, assignment, and the conditional operator have rightward grouping rules. The middle expression of ?: is treated as if parenthesised. Do not use a compact chain of conditional operators when explicit if/else branches communicate the decision more clearly.",
+        "Associativity describes the parse tree, not an instruction schedule. In f() + g(), + groups the operands but does not promise that f executes first. Function argument order is likewise not generally fixed in C11."
+      ],
+      "code": "#include <stdio.h>\n\nint main(void) {\n    int a = 0, b = 0;\n    unsigned flags = 4u, mask = 2u;\n    a = b = 4;\n    printf(\"arithmetic=%d grouped=%d\\n\", 2 + 3 * 4, (2 + 3) * 4);\n    printf(\"left=%d a=%d b=%d\\n\", 20 / 5 * 2, a, b);\n    printf(\"bit absent=%d\\n\", (flags & mask) == 0);\n    return 0;\n}",
+      "example": [
+        "The first line yields arithmetic=14 grouped=20; the second yields left=8 a=4 b=4. Since 100 AND 010 is 000, the last comparison yields bit absent=1."
+      ]
+    },
+    {
+      "title": "3. Sequencing and readable repairs",
+      "paragraphs": [
+        "Logical && and || sequence the left operand before any evaluated right operand. The conditional operator sequences the condition before the selected branch. Separate full expressions, such as consecutive expression statements, give a clear boundary for updates.",
+        "Parentheses cannot repair unsequenced updates. (i++) + (i++) is still undefined. Repair it with int first=i++; followed by int second=i++; and then compute first+second if the increments and sum stay in range.",
+        "For exam traces, first add grouping parentheses, then determine operand types, then identify short-circuit paths and side effects. If the execution violates a language rule, explain the violation instead of inventing a numeric answer."
+      ]
+    }
+  ],
+  "revision": [
+    "Reconstruct the precedence ladder.",
+    "Explain why parentheses do not impose general execution order.",
+    "Repair a bit test with explicit grouping.",
+    "Identify undefined traces before calculating."
+  ],
+  "questions": [
+    {
+      "id": "precedence-and-associativity-1",
+      "question": "What does 18 - 6 - 3 produce?",
+      "level": "easy",
+      "tags": [
+        "Concept check"
+      ],
+      "answer": [
+        "Subtraction groups left to right: (18-6)-3 = 9. It does not group as 18-(6-3), which would produce 15."
+      ]
+    },
+    {
+      "id": "precedence-and-associativity-2",
+      "question": "Why does flags & mask == 0 need parentheses?",
+      "level": "medium",
+      "tags": [
+        "Exam practice"
+      ],
+      "answer": [
+        "Equality binds more strongly than bitwise AND. Without parentheses the comparison happens as a grouped operand of &: flags & (mask==0). The intended expression compares the result of AND, so write (flags & mask)==0."
+      ]
+    },
+    {
+      "id": "precedence-and-associativity-3",
+      "question": "Does (f()) + (g()) force f to run first?",
+      "level": "hard",
+      "tags": [
+        "Interview practice"
+      ],
+      "answer": [
+        "No. Those parentheses only group the call expressions. C does not impose that operand order for +. Use separate statements when one call must precede the other."
+      ]
+    }
+  ],
+  "references": [
+    {
+      "title": "WG14 C11 committee draft N1570 - consult the clauses listed in this chapter",
+      "url": "https://www.open-std.org/jtc1/sc22/wg14/www/docs/n1570.pdf"
+    }
+  ],
+  "next": "Mathematical and character functions add standard library operations to expressions. Verification: N1570 clauses 6.5 and 6.8."
+}

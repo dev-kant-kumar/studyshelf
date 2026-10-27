@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 600" role="img" aria-labelledby="title desc"><title id="title">Centralised deployment: data at one principal site</title><desc id="desc">Many application clients can use the same central database service.</desc><defs><marker id="tip" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#0f766e"/></marker></defs><rect width="960" height="600" rx="16" fill="#f8fafc"/>
+<text x="40" y="48" text-anchor="start" font-family="Arial,sans-serif" font-size="28" font-weight="700" fill="#16324f">Centralised deployment: data at one principal site</text>
+<text x="40" y="82" text-anchor="start" font-family="Arial,sans-serif" font-size="19" font-weight="400" fill="#16324f">Many application clients can use the same central database service.</text>
+<rect x="40" y="135" width="260" height="75" rx="10" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="58" y="169" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="700" fill="#16324f">Admissions</text>
+<path d="M170 210 L170 285 L480 285 L480 340" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<rect x="350" y="135" width="260" height="75" rx="10" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="368" y="169" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="700" fill="#16324f">Library</text>
+<path d="M480 210 L480 285 L480 285 L480 340" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<rect x="660" y="135" width="260" height="75" rx="10" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="678" y="169" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="700" fill="#16324f">Accounts</text>
+<path d="M790 210 L790 285 L480 285 L480 340" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<rect x="250" y="345" width="460" height="135" rx="10" fill="#ecfdf5" stroke="#94a3b8" stroke-width="2"/>
+<text x="268" y="379" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="700" fill="#16324f">Central college database</text>
+<text x="268" y="412" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="400" fill="#16324f">One principal database site</text>
+<text x="40" y="540" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Centralised describes location and management, not the number of users.</text>
+<text x="40" y="567" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Availability depends on the actual infrastructure and recovery design.</text>
+</svg>

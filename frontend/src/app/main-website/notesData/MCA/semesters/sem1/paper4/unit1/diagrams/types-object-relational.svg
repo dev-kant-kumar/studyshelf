@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 600" role="img" aria-labelledby="title desc"><title id="title">Object-relational DBMS: relations plus richer types</title><desc id="desc">A relational table can include a value of a user-defined structured type.</desc><defs><marker id="tip" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#0f766e"/></marker></defs><rect width="960" height="600" rx="16" fill="#f8fafc"/>
+<text x="40" y="48" text-anchor="start" font-family="Arial,sans-serif" font-size="28" font-weight="700" fill="#16324f">Object-relational DBMS: relations plus richer types</text>
+<text x="40" y="82" text-anchor="start" font-family="Arial,sans-serif" font-size="19" font-weight="400" fill="#16324f">A relational table can include a value of a user-defined structured type.</text>
+<rect x="40" y="130" width="880" height="169" rx="8" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="54" y="162" text-anchor="start" font-family="Arial,sans-serif" font-size="23" font-weight="700" fill="#16324f">Student</text>
+<path d="M40 179 H920" stroke="#94a3b8"/>
+<text x="52" y="207" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">student_id (PK)</text>
+<text x="297" y="207" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">name</text>
+<path d="M285 179 V299" stroke="#cbd5e1"/>
+<text x="457" y="207" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">address (AddressType)</text>
+<path d="M445 179 V299" stroke="#cbd5e1"/>
+<text x="52" y="247" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">101</text>
+<text x="297" y="247" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Asha</text>
+<path d="M285 179 V299" stroke="#cbd5e1"/>
+<text x="457" y="247" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">(Ranchi, 834001)</text>
+<path d="M445 179 V299" stroke="#cbd5e1"/>
+<path d="M40 219 H920" stroke="#e2e8f0"/>
+<text x="52" y="287" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">102</text>
+<text x="297" y="287" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Ravi</text>
+<path d="M285 179 V299" stroke="#cbd5e1"/>
+<text x="457" y="287" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">(Hazaribag, 825301)</text>
+<path d="M445 179 V299" stroke="#cbd5e1"/>
+<path d="M40 259 H920" stroke="#e2e8f0"/>
+<rect x="360" y="380" width="560" height="115" rx="10" fill="#ecfdf5" stroke="#94a3b8" stroke-width="2"/>
+<text x="378" y="414" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="700" fill="#16324f">Structured type: AddressType</text>
+<text x="378" y="447" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="400" fill="#16324f">city: text     postcode: text</text>
+<path d="M710 305 L710 375" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<text x="430" y="350" text-anchor="start" font-family="Arial,sans-serif" font-size="19" font-weight="400" fill="#0f766e">type of the address value</text>
+<text x="40" y="540" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">The table and its key remain relational; the address is one structured value.</text>
+<text x="40" y="567" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Exact type syntax and supported operations depend on the DBMS.</text>
+</svg>

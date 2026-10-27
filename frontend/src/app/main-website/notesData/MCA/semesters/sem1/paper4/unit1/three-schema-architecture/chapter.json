@@ -1,0 +1,109 @@
+{
+  "intro": "The three-schema architecture separates what individual users see, what the whole database means, and how data is physically stored. It provides a framework for explaining abstraction, mappings, and data independence.",
+  "outcomes": [
+    "Describe the external, conceptual, and internal schemas.",
+    "Trace requests and results through schema mappings.",
+    "Distinguish a reference architecture from a mandatory product implementation."
+  ],
+  "sections": [
+    {
+      "title": "1. Why separate descriptions?",
+      "paragraphs": [
+        "A teacher needs student names and course marks; accounts needs fee obligations and receipts. Both depend on shared student identities, but neither needs disk page addresses. A single description containing every user field and physical detail would tightly couple unrelated decisions.",
+        "A schema is a description of structure and rules. The three-schema model, often called the ANSI/SPARC architecture, distinguishes many external schemas, one integrated conceptual schema, and one internal schema in its reference description. Actual products do not necessarily expose three separately named schema objects that exactly implement this model."
+      ]
+    },
+    {
+      "title": "2. External level",
+      "paragraphs": [
+        "An external schema describes a user or application perspective. TeacherRoster may expose student_id, student_name, course_code, and mark, while AccountsSummary exposes student_id and outstanding_amount. Each view can omit irrelevant details and represent derived values.",
+        "An external schema is broader than one particular SQL VIEW object: an application interface or several SQL views may implement a perspective. Hiding a field in a screen is not access control if users can still directly query the base data. Permissions must support the intended boundary."
+      ]
+    },
+    {
+      "title": "3. Conceptual level",
+      "paragraphs": [
+        "The conceptual schema describes the database as a coherent whole: Student, Course, Enrolment, Payment, their attributes, relationships, and integrity rules. It captures shared meaning independently of a particular user presentation or file layout.",
+        "For the college, Enrolment connects Student to Course. A rule states that an enrolment references an existing student and course. These are conceptual concerns even when they are implemented using relational tables and foreign keys. A physical index on course_code is a different concern."
+      ]
+    },
+    {
+      "title": "4. Internal level and mappings",
+      "paragraphs": [
+        "The internal schema describes storage organisation: record formats, pages, file organisation, indexes, compression, and access paths. It answers how logical records are represented and reached. Internal details can differ between engines and change over time.",
+        "An external-conceptual mapping expresses how a user perspective derives from the conceptual schema. A conceptual-internal mapping connects conceptual objects to their stored representation. Requests are translated toward storage, and results are interpreted back toward the user. A mapping can be implemented through query rewriting, catalogue definitions, and engine mechanisms rather than a single visible mapping file."
+      ],
+      "diagram": "schemas",
+      "alt": "Teacher and accounts external schemas map to one college conceptual schema, which maps to internal records and indexes.",
+      "caption": "Mappings connect descriptions so some changes can be absorbed without changing the level above. Classification follows the concern being described, not the SQL command name.",
+      "diagramHeight": 570
+    },
+    {
+      "title": "5. Worked changes and limitations",
+      "paragraphs": [
+        "Adding an index on Enrolment(course_code) changes an access path at the internal level. If query meaning and conceptual definitions remain stable, applications keep the same queries. This illustrates physical data independence. Performance can still change.",
+        "Suppose Student is split into StudentIdentity and StudentContact. A compatibility view can reconstruct the earlier Student interface for a reader. That is a route toward logical data independence, but preserving updates and permissions may require additional work. A mapping cannot hide a genuine change of meaning such as replacing one contact address with several equally valid addresses.",
+        "The architecture reduces coupling; it does not create three copies of all the data. Multiple external perspectives commonly derive from the same stored facts. Nor does using three schemas automatically provide security or perfect portability."
+      ],
+      "diagram": "schema-mapping-round-trip",
+      "diagramHeight": 790,
+      "alt": "A TeacherRoster request maps to conceptual joins and filters and then internal record access. Retrieved records map back to logical rows and the teacher-facing result.",
+      "caption": "Read the request path down and the result path up. Both mapping boundaries connect a perspective with stored facts."
+    }
+  ],
+  "questions": [
+    {
+      "id": "levels",
+      "question": "Explain the three-schema architecture with a college database.",
+      "answer": [
+        "At the external level, teachers see course rosters while accounts sees fee summaries. At the conceptual level, the college defines shared students, courses, enrolments, payments, and their rules. At the internal level, the DBMS represents these facts as records, pages, indexes, and other storage structures.",
+        "External-conceptual mappings derive each perspective from the integrated design; conceptual-internal mappings connect that design to storage. This separation supports multiple views and reduces dependence on changes in lower-level representations."
+      ],
+      "level": "medium",
+      "tags": [
+        "Concept check"
+      ]
+    },
+    {
+      "id": "mapping-change",
+      "question": "Which mappings absorb a new index and a split Student relation?",
+      "answer": [
+        "A new physical index affects the conceptual-internal mapping while leaving the conceptual interface stable. Splitting Student into logically separate relations affects the conceptual design, so preserving an earlier external interface requires an external-conceptual mapping, such as a compatibility view. Update behaviour and permissions must be reviewed as well as read results."
+      ],
+      "level": "hard",
+      "tags": [
+        "Practical"
+      ]
+    },
+    {
+      "id": "copies",
+      "question": "Does the three-schema architecture require three stored copies of the database?",
+      "answer": [
+        "No. The levels are descriptions of data at different concerns. Multiple external schemas may derive from one conceptual design, which maps to the stored data. An implementation may use extra copies such as materialized views or replicas, but these are separate storage decisions."
+      ],
+      "level": "easy",
+      "tags": [
+        "Concept check"
+      ]
+    }
+  ],
+  "revision": [
+    "Name all three levels and both mappings.",
+    "Classify changes by whether they affect meaning, perspective, or storage.",
+    "Explain why multiple schemas do not imply multiple data copies."
+  ],
+  "references": [
+    {
+      "title": "Oracle Database Concepts: introduction and architecture",
+      "url": "https://docs.oracle.com/en/database/oracle/oracle-database/19/cncpt/introduction-to-oracle-database.html"
+    },
+    {
+      "title": "University of Cape Town: database schemas and data independence",
+      "url": "https://www.cs.uct.ac.za/mit_notes/database/htmls/chp01.html"
+    }
+  ],
+  "next": {
+    "id": "data-models",
+    "title": "Data models: structures, operations, and constraints"
+  }
+}

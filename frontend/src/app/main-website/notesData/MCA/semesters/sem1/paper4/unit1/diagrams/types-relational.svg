@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 650" role="img" aria-labelledby="title desc"><title id="title">Relational DBMS: tables connected by values</title><desc id="desc">Primary keys identify rows; foreign keys reference matching identifiers.</desc><defs><marker id="tip" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#0f766e"/></marker></defs><rect width="960" height="650" rx="16" fill="#f8fafc"/>
+<text x="40" y="48" text-anchor="start" font-family="Arial,sans-serif" font-size="28" font-weight="700" fill="#16324f">Relational DBMS: tables connected by values</text>
+<text x="40" y="82" text-anchor="start" font-family="Arial,sans-serif" font-size="19" font-weight="400" fill="#16324f">Primary keys identify rows; foreign keys reference matching identifiers.</text>
+<rect x="40" y="120" width="390" height="169" rx="8" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="54" y="152" text-anchor="start" font-family="Arial,sans-serif" font-size="23" font-weight="700" fill="#16324f">Student</text>
+<path d="M40 169 H430" stroke="#94a3b8"/>
+<text x="52" y="197" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">student_id (PK)</text>
+<text x="287" y="197" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">name</text>
+<path d="M275 169 V289" stroke="#cbd5e1"/>
+<text x="52" y="237" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">101</text>
+<text x="287" y="237" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Asha</text>
+<path d="M275 169 V289" stroke="#cbd5e1"/>
+<path d="M40 209 H430" stroke="#e2e8f0"/>
+<text x="52" y="277" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">102</text>
+<text x="287" y="277" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Ravi</text>
+<path d="M275 169 V289" stroke="#cbd5e1"/>
+<path d="M40 249 H430" stroke="#e2e8f0"/>
+<rect x="530" y="120" width="390" height="169" rx="8" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="544" y="152" text-anchor="start" font-family="Arial,sans-serif" font-size="23" font-weight="700" fill="#16324f">Course</text>
+<path d="M530 169 H920" stroke="#94a3b8"/>
+<text x="542" y="197" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">code (PK)</text>
+<text x="732" y="197" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">title</text>
+<path d="M720 169 V289" stroke="#cbd5e1"/>
+<text x="542" y="237" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">DB101</text>
+<text x="732" y="237" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Databases</text>
+<path d="M720 169 V289" stroke="#cbd5e1"/>
+<path d="M530 209 H920" stroke="#e2e8f0"/>
+<text x="542" y="277" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">CS101</text>
+<text x="732" y="277" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">C language</text>
+<path d="M720 169 V289" stroke="#cbd5e1"/>
+<path d="M530 249 H920" stroke="#e2e8f0"/>
+<rect x="230" y="390" width="500" height="169" rx="8" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="244" y="422" text-anchor="start" font-family="Arial,sans-serif" font-size="23" font-weight="700" fill="#16324f">Enrolment</text>
+<path d="M230 439 H730" stroke="#94a3b8"/>
+<text x="242" y="467" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">student_id (FK)</text>
+<text x="452" y="467" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">code (FK)</text>
+<path d="M440 439 V559" stroke="#cbd5e1"/>
+<text x="632" y="467" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">mark</text>
+<path d="M620 439 V559" stroke="#cbd5e1"/>
+<text x="242" y="507" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">101</text>
+<text x="452" y="507" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">DB101</text>
+<path d="M440 439 V559" stroke="#cbd5e1"/>
+<text x="632" y="507" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">82</text>
+<path d="M620 439 V559" stroke="#cbd5e1"/>
+<path d="M230 479 H730" stroke="#e2e8f0"/>
+<text x="242" y="547" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">102</text>
+<text x="452" y="547" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">DB101</text>
+<path d="M440 439 V559" stroke="#cbd5e1"/>
+<text x="632" y="547" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">76</text>
+<path d="M620 439 V559" stroke="#cbd5e1"/>
+<path d="M230 519 H730" stroke="#e2e8f0"/>
+<path d="M335 385 L335 320 L160 320 L160 294" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<text x="40" y="350" text-anchor="start" font-family="Arial,sans-serif" font-size="19" font-weight="400" fill="#0f766e">matches student_id</text>
+<path d="M535 385 L535 320 L650 320 L650 294" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<text x="640" y="350" text-anchor="start" font-family="Arial,sans-serif" font-size="19" font-weight="400" fill="#0f766e">matches course code</text>
+<text x="40" y="590" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">The pair (student_id, code) identifies one enrolment in this simplified example.</text>
+<text x="40" y="617" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">A join combines matching values; these arrows do not represent disk pointers.</text>
+</svg>

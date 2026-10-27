@@ -1,0 +1,148 @@
+{
+  "intro": "Database users include everyone who designs, operates, programs, or interacts with a database system. Their needs differ, so their interfaces and privileges should differ too.",
+  "outcomes": [
+    "Classify end users, developers, designers, analysts, and administrators.",
+    "Explain parameterised interaction and ad hoc querying.",
+    "Assign privileges using responsibility and least privilege."
+  ],
+  "sections": [
+    {
+      "title": "1. Parametric and casual end users",
+      "paragraphs": [
+        "Parametric users repeatedly perform predefined operations through forms or applications. An admissions clerk registers students; a librarian records loans; a student checks a result. The term naive user in some textbooks means the person need not understand the DBMS internals, not that the person lacks expertise in the task.",
+        "Casual users access data intermittently and may issue different queries each time. A department head might ask for course demand this month and completion rates next month. Interfaces include reports, query builders, and dashboards. Casual access still needs permissions and defined data meanings."
+      ]
+    },
+    {
+      "title": "2. Sophisticated and specialised users",
+      "paragraphs": [
+        "Sophisticated users understand query or analytical tools and formulate complex requests. Analysts may combine several relations, calculate trends, and inspect assumptions. They must understand missing values, duplicate-producing joins, and the meaning of aggregates to avoid plausible but wrong conclusions.",
+        "Specialised users or developers build applications with unusual data requirements, such as geographic systems, simulations, or scientific repositories. They may need specialised types and access methods. Stand-alone users manage personal databases using packaged tools, taking on some design and operational duties themselves."
+      ]
+    },
+    {
+      "title": "3. Designers, analysts, and application developers",
+      "paragraphs": [
+        "Database designers identify entities, relationships, constraints, and appropriate logical structures. They choose identifiers and decide which facts belong together. System analysts translate organisational workflows into requirements, such as whether students may retake courses or cancel an enrolment after payment.",
+        "Application developers implement the interfaces and transactions that fulfil those requirements. They bind input values as parameters rather than concatenating user text into SQL, coordinate transaction outcomes, handle errors, and preserve access boundaries. Parameter binding helps prevent SQL injection because input is treated as data, not executable query syntax. Dynamic identifiers require separate validation because value parameters do not generally replace table or column names.",
+        "Design and development overlap but are not identical. A well-designed schema can still be used incorrectly by an application that records only half a workflow or grants every user administrative access."
+      ],
+      "diagram": "users-design-development-operation",
+      "diagramHeight": 730,
+      "alt": "Requirements flow to database design, application development, and operations, with operational feedback returning to requirements. Each role produces a different artefact.",
+      "caption": "Follow what passes between roles. Choosing a schema, implementing a transaction, and operating the service are distinct responsibilities."
+    },
+    {
+      "title": "4. Administrators, operators, and separation of duties",
+      "paragraphs": [
+        "The database administrator manages operational health, access, backup, recovery, capacity, and controlled changes. Operators may run scheduled jobs and respond to alerts under defined procedures. Security officers or auditors review policy and evidence; data owners decide acceptable use and meaning. Responsibilities may be split among teams or combined in a small organisation.",
+        "Least privilege means giving each identity only the permissions needed for its task. A reporting role usually needs selected read access, while a registration service needs constrained changes. A deployment role may create objects but should not automatically become the everyday application identity. Shared administrator accounts make accountability harder."
+      ]
+    },
+    {
+      "title": "5. Worked college access design",
+      "paragraphs": [
+        "Students may view their own enrolments; teachers may enter marks for assigned courses; accounts may record payments; analysts may access approved summaries; administrators maintain the system. Object permissions alone may not express the own-record and assigned-course conditions, so application checks, row policies, or carefully designed views may be required.",
+        "An application often connects using a service account shared across requests. Database identity and human identity are then different. The service must carry and validate the end-user context correctly. A limited database service role reduces the damage of an application mistake but does not replace user-level authorisation."
+      ],
+      "table": {
+        "caption": "Roles and suitable boundaries",
+        "headers": [
+          "Role",
+          "Typical work",
+          "Access consideration"
+        ],
+        "rows": [
+          [
+            "Student",
+            "Check own results",
+            "Restrict rows and exposed fields"
+          ],
+          [
+            "Teacher",
+            "Manage assigned course marks",
+            "Restrict course scope and update columns"
+          ],
+          [
+            "Accounts clerk",
+            "Record receipts",
+            "Separate financial updates from academic changes"
+          ],
+          [
+            "Analyst",
+            "Aggregate trends",
+            "Use approved data and protect personal details"
+          ],
+          [
+            "Developer",
+            "Build workflows",
+            "Separate development and production privileges"
+          ],
+          [
+            "DBA",
+            "Operate and recover",
+            "Use controlled privileged identities and audit"
+          ]
+        ]
+      },
+      "diagram": "user-service-identity-boundary",
+      "diagramHeight": 780,
+      "alt": "Student 101 authenticates to an application that checks own-enrolment access. It connects using registration_app and returns only student 101 enrolments.",
+      "caption": "Keep the two identities separate. Broad read permission for a service account must not become broad access for every student."
+    }
+  ],
+  "questions": [
+    {
+      "id": "types",
+      "question": "Describe the main categories of database users.",
+      "answer": [
+        "Parametric users run predefined operations, casual users make occasional varied requests, sophisticated users formulate complex queries, and specialised users work with domain-specific applications. Designers define data structures and rules; analysts establish requirements; developers implement applications and transactions. DBAs operate, secure, tune, and recover the system. These categories describe responsibilities and may overlap in one person."
+      ],
+      "level": "medium",
+      "tags": [
+        "Concept check"
+      ]
+    },
+    {
+      "id": "least-privilege",
+      "question": "Why should a reporting application avoid a database administrator account?",
+      "answer": [
+        "A reporting task generally needs limited read access. An administrator account may also alter structures, change permissions, or delete data, so a defect or compromised request could have a much larger impact. A dedicated reporting identity with access only to approved objects implements least privilege and gives clearer audit attribution."
+      ],
+      "level": "medium",
+      "tags": [
+        "Practical"
+      ]
+    },
+    {
+      "id": "service-identity",
+      "question": "A service account can read every enrolment. Does that mean every student may do so?",
+      "answer": [
+        "No. The service identity is the database connection identity; the student is an application user. The service must enforce the student-level policy before returning rows, or use database mechanisms that enforce it using reliable user context. Confusing the two identities can expose other students' records even when database authentication succeeds."
+      ],
+      "level": "hard",
+      "tags": [
+        "Concept check"
+      ]
+    }
+  ],
+  "revision": [
+    "Recognise user categories by work rather than job title alone.",
+    "Assign read, write, structural, and administrative privileges separately.",
+    "Explain the difference between application user and database service identity."
+  ],
+  "references": [
+    {
+      "title": "Oracle Database Concepts: introduction and architecture",
+      "url": "https://docs.oracle.com/en/database/oracle/oracle-database/19/cncpt/introduction-to-oracle-database.html"
+    },
+    {
+      "title": "PostgreSQL: Row security policies and privilege boundaries",
+      "url": "https://www.postgresql.org/docs/current/ddl-rowsecurity.html"
+    }
+  ],
+  "next": {
+    "id": "schemas-and-instances",
+    "title": "Database schemas and database instances"
+  }
+}

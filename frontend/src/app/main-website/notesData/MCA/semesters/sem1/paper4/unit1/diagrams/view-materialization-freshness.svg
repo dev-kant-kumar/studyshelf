@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 730" role="img" aria-labelledby="title desc"><title id="title">Ordinary and materialized views after a source change</title><desc id="desc">Illustration: a materialized count is refreshed manually.</desc><defs><marker id="tip" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#0f766e"/></marker></defs><rect width="960" height="730" rx="16" fill="#f8fafc"/>
+<text x="40" y="48" text-anchor="start" font-family="Arial,sans-serif" font-size="27" font-weight="700" fill="#16324f">Ordinary and materialized views after a source change</text>
+<text x="40" y="82" text-anchor="start" font-family="Arial,sans-serif" font-size="19" font-weight="400" fill="#16324f">Illustration: a materialized count is refreshed manually.</text>
+<rect x="40" y="120" width="400" height="110" rx="9" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="56" y="152" text-anchor="start" font-family="Arial,sans-serif" font-size="21" font-weight="700" fill="#16324f">At t1: two enrolments</text>
+<text x="56" y="184" text-anchor="start" font-family="Arial,sans-serif" font-size="21" font-weight="400" fill="#16324f">Ordinary COUNT = 2</text>
+<text x="56" y="213" text-anchor="start" font-family="Arial,sans-serif" font-size="21" font-weight="400" fill="#16324f">Materialized COUNT = 2</text>
+<rect x="520" y="120" width="400" height="110" rx="9" fill="#e0f2fe" stroke="#94a3b8" stroke-width="2"/>
+<text x="536" y="152" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">At t2: third enrolment commits</text>
+<text x="536" y="184" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">New source count = 3</text>
+<path d="M445 175 L515 175" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<rect x="40" y="390" width="400" height="135" rx="9" fill="#ecfdf5" stroke="#94a3b8" stroke-width="2"/>
+<text x="56" y="422" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">Ordinary view queried at t2</text>
+<text x="56" y="454" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Derives a visible count of 3</text>
+<text x="56" y="483" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">No stored result refresh needed</text>
+<rect x="520" y="390" width="400" height="135" rx="9" fill="#fff7ed" stroke="#94a3b8" stroke-width="2"/>
+<text x="536" y="422" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">Materialized view at t2</text>
+<text x="536" y="454" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Still stores 2 until refresh</text>
+<text x="536" y="483" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Refresh can update it to 3</text>
+<path d="M720 230 L720 385" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<path d="M620 235 L620 310 L240 310 L240 385" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<text x="40" y="670" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Assume the new commit is visible to the queries and refresh used here.</text>
+<text x="40" y="697" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Refresh rules vary; stored results trade freshness and maintenance for read cost.</text>
+</svg>

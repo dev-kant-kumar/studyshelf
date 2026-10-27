@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 780" role="img" aria-labelledby="title desc"><title id="title">Human identity and database service identity</title><desc id="desc">A shared connection account does not grant every user access to every row.</desc><defs><marker id="tip" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#0f766e"/></marker></defs><rect width="960" height="780" rx="16" fill="#f8fafc"/>
+<text x="40" y="48" text-anchor="start" font-family="Arial,sans-serif" font-size="27" font-weight="700" fill="#16324f">Human identity and database service identity</text>
+<text x="40" y="82" text-anchor="start" font-family="Arial,sans-serif" font-size="19" font-weight="400" fill="#16324f">A shared connection account does not grant every user access to every row.</text>
+<rect x="40" y="120" width="380" height="110" rx="9" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="56" y="152" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">Human user: student 101</text>
+<text x="56" y="184" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Authenticated in the application</text>
+<rect x="40" y="335" width="380" height="140" rx="9" fill="#e0f2fe" stroke="#94a3b8" stroke-width="2"/>
+<text x="56" y="367" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">Application authorisation</text>
+<text x="56" y="399" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Verify who made the request</text>
+<text x="56" y="428" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Apply the own-enrolment rule</text>
+<text x="56" y="457" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Reject untrusted student IDs</text>
+<rect x="530" y="335" width="390" height="140" rx="9" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="546" y="367" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">Database connection</text>
+<text x="546" y="399" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Service role: registration_app</text>
+<text x="546" y="428" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Check database privileges</text>
+<text x="546" y="457" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Use trusted policy context</text>
+<path d="M230 230 L230 330" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<path d="M425 405 L525 405" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<rect x="530" y="535" width="390" height="129" rx="9" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="542" y="567" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="700" fill="#16324f">Allowed result for user 101</text>
+<path d="M530 584 L920 584" fill="none" stroke="#0f766e" stroke-width="3"/>
+<text x="541" y="612" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">student_id</text>
+<text x="761" y="612" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">course</text>
+<path d="M750 584 V664" stroke="#cbd5e1"/>
+<text x="541" y="652" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">101</text>
+<text x="761" y="652" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">DB101</text>
+<path d="M750 584 V664" stroke="#cbd5e1"/>
+<path d="M530 624 H920" stroke="#cbd5e1"/>
+<path d="M725 475 L725 530" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<text x="40" y="720" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">The human identity and the database connection identity are different.</text>
+<text x="40" y="747" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Own-row rules need enforcement in the application, the DB, or both as designed.</text>
+</svg>

@@ -1,0 +1,89 @@
+{
+  "intro": "Allocate array storage at runtime and resize it safely. This chapter introduces just enough pointers to explain ownership, allocation failure, and invalidated addresses.",
+  "outcomes": [
+    "Explain malloc, calloc, realloc, and free.",
+    "Check allocation-size arithmetic and failure.",
+    "Distinguish logical length, capacity, and storage lifetime."
+  ],
+  "prerequisites": "A pointer stores an address. int *items declares a pointer to int; items[i] selects an element when the pointer refers to a valid array-like allocated region. NULL is a null pointer value that does not refer to an object. sizeof *items obtains the size of one int without dereferencing items in this ordinary non-VLA case.",
+  "sections": [
+    {
+      "title": "1. Runtime storage and ownership",
+      "paragraphs": [
+        "<stdlib.h> declares malloc, calloc, realloc, and free. malloc requests a number of bytes and leaves their values indeterminate. calloc requests an element count and element size and zeroes the allocated bytes. All-bits-zero is suitable for integer zero but is not a universal promise of null-pointer or floating-point representation.",
+        "Check for a null allocation result before accessing storage. In C, malloc's void * result converts to the required object-pointer type without a cast. Include the header rather than adding a cast to conceal a missing declaration.",
+        "Before requesting n*sizeof *items bytes, require n <= SIZE_MAX / sizeof *items. <stdint.h> supplies SIZE_MAX and size_t comes from relevant standard headers. A wrapped multiplication can allocate too little storage even though malloc itself succeeds. Define a separate policy for an empty collection rather than relying on zero-size allocation behaviour."
+      ]
+    },
+    {
+      "title": "2. A complete allocation and resize",
+      "paragraphs": [
+        "This program starts with three occupied values and capacity three. It requests capacity six, keeps length separate, and appends one value only after successful resizing. realloc may move the allocation; always use the returned pointer after success.",
+        "Use a temporary pointer for realloc. On failure of a nonzero request, the old allocation remains available and must still be released. Directly assigning items=realloc(items, bytes) can lose that only reference on failure."
+      ],
+      "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <stdint.h>\n\nint main(void) {\n    size_t length = 3, capacity = 3;\n    int *items = NULL;\n    if (capacity > SIZE_MAX / sizeof *items) return 1;\n    items = malloc(capacity * sizeof *items);\n    if (items == NULL) return 1;\n    items[0] = 10; items[1] = 20; items[2] = 30;\n\n    size_t new_capacity = 6;\n    if (new_capacity > SIZE_MAX / sizeof *items) {\n        free(items);\n        return 1;\n    }\n    int *grown = realloc(items, new_capacity * sizeof *items);\n    if (grown == NULL) {\n        free(items);\n        return 1;\n    }\n    items = grown;\n    capacity = new_capacity;\n    items[length++] = 40;\n    printf(\"length=%zu capacity=%zu\\n\", length, capacity);\n    for (size_t i = 0; i < length; ++i) printf(\"%d \", items[i]);\n    puts(\"\");\n    free(items);\n    items = NULL;\n    return 0;\n}",
+      "example": [
+        "After the initial allocation, length=3 and capacity=3. After successful realloc, the first three values are preserved and capacity=6. Newly available slots have not been initialised. Appending writes slot 3 and makes length=4.",
+        "Expected success output is length=4 capacity=6, then 10 20 30 40. Allocation failure exits with nonzero status without accessing unavailable storage. Failure cannot be tested reliably by merely requesting an arbitrary large size; a controlled allocator failure mechanism is needed."
+      ]
+    },
+    {
+      "title": "3. Lifetime, growth, and invalid aliases",
+      "paragraphs": [
+        "After free, every pointer into the released allocation is invalid for access. Setting the owner to NULL helps avoid accidental reuse through that variable but does not repair other aliases. Double-free and use-after-free are undefined behaviour. free(NULL) is harmless.",
+        "Successful realloc ends the old allocation's lifetime; do not use old element pointers even if the returned address appears unchanged. Recompute addresses from the new owner. In the sample, no aliases survive the resize.",
+        "Doubling capacity when full makes occasional large copies instead of copying on every append. Over n appends, a geometric series of moves is proportional to n, yielding amortised constant work per append, though a single resizing append can still take linear work. Growth arithmetic must be checked before doubling as well as before byte multiplication.",
+        "A variable-length array such as int a[n] has a runtime-selected length but cannot be resized and has automatic duration in typical block use. C11 makes VLA support optional. It is different from malloc-managed storage; never call free on an automatic array."
+      ]
+    }
+  ],
+  "revision": [
+    "Check element-count multiplication before allocation.",
+    "Use a temporary realloc result.",
+    "Maintain length<=capacity.",
+    "Release exactly once and invalidate aliases.",
+    "Distinguish a VLA from a resizable allocation."
+  ],
+  "questions": [
+    {
+      "id": "dynamic-arrays-1",
+      "question": "What is the difference between length and capacity?",
+      "level": "easy",
+      "tags": [
+        "Concept check"
+      ],
+      "answer": [
+        "Length counts occupied entries; capacity counts available slots. After reserving six slots for four values, length is four and capacity is six. Traversal uses length, while an append checks capacity."
+      ]
+    },
+    {
+      "id": "dynamic-arrays-2",
+      "question": "Why store realloc's result in a temporary pointer?",
+      "level": "medium",
+      "tags": [
+        "Practical"
+      ],
+      "answer": [
+        "A nonzero realloc request can fail and return NULL while leaving the old block intact. A temporary keeps the old owner available for cleanup or continued use. Assign the new owner only after success."
+      ]
+    },
+    {
+      "id": "dynamic-arrays-3",
+      "question": "Does an element pointer remain valid when realloc returns the same numeric address?",
+      "level": "hard",
+      "tags": [
+        "Interview practice"
+      ],
+      "answer": [
+        "No. A successful realloc invalidates pointers to the previous allocation regardless of apparent address equality. Derive a new element pointer from the returned allocation. Code must reason about object lifetime, not only numeric addresses."
+      ]
+    }
+  ],
+  "references": [
+    {
+      "title": "WG14 C11 committee draft N1570 - consult the clauses listed in this chapter",
+      "url": "https://www.open-std.org/jtc1/sc22/wg14/www/docs/n1570.pdf"
+    }
+  ],
+  "next": "String handling uses byte arrays with an additional zero-termination invariant. Full pointer and user-defined-function treatment follows in Unit 2. Verification: N1570 clause 7.22.3."
+}

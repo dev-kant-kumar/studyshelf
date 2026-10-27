@@ -1,0 +1,89 @@
+{
+  "intro": "C connects algorithms to explicit data representation. Learn why it became useful for systems software and why its control over storage brings responsibilities for correctness.",
+  "outcomes": [
+    "Explain the progression from BCPL and B to C.",
+    "Relate portability, types, and explicit storage to data structures.",
+    "Distinguish language guarantees from machine assumptions."
+  ],
+  "prerequisites": "A program is a sequence of instructions. An algorithm is a finite method for solving a problem. Source code expresses that method in a programming language; a compiler translates it into another form that can ultimately run.",
+  "sections": [
+    {
+      "title": "1. Historical motivation",
+      "paragraphs": [
+        "BCPL influenced B, which Ken Thompson used in early Unix work. Dennis Ritchie developed C at Bell Labs in the early 1970s, adding a type system and other changes to B. C and Unix evolved together. Ritchie describes the central development period as 1971-1973.",
+        "A type tells the translator how a value is represented and which operations apply. Byte-oriented characters and typed objects helped express work that a single untyped machine-word model handled awkwardly. Rewriting much of Unix in C made moving systems software between machines more practical.",
+        "Standardisation later established a common language and library contract. C89/C90, C99, C11, C17, and C23 name successive editions. This unit deliberately uses a C11 baseline; it does not rely on the compiler default or teach edition-specific extensions as universal C."
+      ]
+    },
+    {
+      "title": "2. Why C matters for data structures",
+      "paragraphs": [
+        "A data structure organises values and the relationships between them. An array stores elements consecutively; a linked structure uses addresses to connect separate objects. C makes these representation choices visible rather than automatically managing them for the programmer.",
+        "Portability means source can be translated for different implementations when it uses the shared contract and accounts for implementation differences. It does not mean that an int has the same size everywhere or that an executable runs on every processor.",
+        "C supports procedural decomposition through functions, direct arithmetic, and explicit allocation. These capabilities suit low-level libraries and systems components. Bounds checks and automatic garbage collection are not generally provided by the language, so ownership, valid indices, and arithmetic limits must be designed."
+      ],
+      "example": [
+        "Suppose a sensor stores 100 readings. A fixed array reserves all 100 elements together; adding a 101st reading requires a different capacity strategy. A dynamically allocated array can reserve more storage, but the programmer must handle allocation failure and eventually release it. This choice changes both memory use and failure behaviour."
+      ]
+    },
+    {
+      "title": "3. Correctness before speed",
+      "paragraphs": [
+        "A syntax error violates the language grammar. A logic error is a valid program implementing the wrong method. Undefined behaviour means the language imposes no requirements on that execution, as with an out-of-bounds array access. A successful compilation does not establish that the program is correct.",
+        "Implementation-defined behaviour is a choice an implementation must document, such as whether plain char is signed. Unspecified behaviour allows more than one permitted choice without requiring documentation for each occurrence. Distinguish both from undefined behaviour.",
+        "The next chapters build small, inspectable programs before introducing larger representations. Read compiler diagnostics, state valid input ranges, and trace changes to each value. A fast program with invalid memory accesses has no dependable result."
+      ]
+    }
+  ],
+  "revision": [
+    "Explain why types were useful in C development.",
+    "Give a portability assumption that must be checked.",
+    "Separate syntax, logic, and undefined-behaviour failures."
+  ],
+  "questions": [
+    {
+      "id": "history-and-importance-1",
+      "question": "Why is C useful for learning data structures?",
+      "level": "easy",
+      "tags": [
+        "Concept check"
+      ],
+      "answer": [
+        "C exposes element layout, addresses, and allocation. You can connect an operation such as inserting an array element with the actual movement of values and the storage capacity required. This visibility also makes bounds and lifetime errors the programmer's responsibility."
+      ]
+    },
+    {
+      "id": "history-and-importance-2",
+      "question": "Does compiling a program prove that it is portable?",
+      "level": "medium",
+      "tags": [
+        "Exam practice"
+      ],
+      "answer": [
+        "No. It may use compiler extensions or assume a particular int size. It can also compile while containing undefined behaviour. Portability requires staying within the chosen language contract and checking assumptions about ranges, representation, and libraries."
+      ]
+    },
+    {
+      "id": "history-and-importance-3",
+      "question": "A program reads one element past an array and prints a plausible number. Is that evidence of correctness?",
+      "level": "hard",
+      "tags": [
+        "Interview practice"
+      ],
+      "answer": [
+        "No. That access is undefined behaviour. A plausible value in one run establishes no contract for another run, optimisation level, or machine. Fix the index and test the boundary rather than explaining the accidental result."
+      ]
+    }
+  ],
+  "references": [
+    {
+      "title": "WG14 C11 committee draft N1570 - consult the clauses listed in this chapter",
+      "url": "https://www.open-std.org/jtc1/sc22/wg14/www/docs/n1570.pdf"
+    },
+    {
+      "title": "Dennis Ritchie - The Development of the C Language",
+      "url": "https://www.nokia.com/bell-labs/about/dennis-m-ritchie/chist.html"
+    }
+  ],
+  "next": "Sample programming turns a simple algorithm into a complete C program."
+}

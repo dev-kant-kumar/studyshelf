@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 700" role="img" aria-labelledby="title desc"><title id="title">Conceptual ER model: a many-to-many association</title><desc id="desc">Students enrol in courses; a mark belongs to a particular association.</desc><defs><marker id="tip" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#0f766e"/></marker></defs><rect width="960" height="700" rx="16" fill="#f8fafc"/>
+<text x="40" y="48" text-anchor="start" font-family="Arial,sans-serif" font-size="27" font-weight="700" fill="#16324f">Conceptual ER model: a many-to-many association</text>
+<text x="40" y="82" text-anchor="start" font-family="Arial,sans-serif" font-size="19" font-weight="400" fill="#16324f">Students enrol in courses; a mark belongs to a particular association.</text>
+<rect x="40" y="240" width="250" height="100" rx="9" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="56" y="272" text-anchor="start" font-family="Arial,sans-serif" font-size="21" font-weight="700" fill="#16324f">Student</text>
+<text x="56" y="304" text-anchor="start" font-family="Arial,sans-serif" font-size="21" font-weight="400" fill="#16324f">student_id, name</text>
+<rect x="670" y="240" width="250" height="100" rx="9" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="686" y="272" text-anchor="start" font-family="Arial,sans-serif" font-size="21" font-weight="700" fill="#16324f">Course</text>
+<text x="686" y="304" text-anchor="start" font-family="Arial,sans-serif" font-size="21" font-weight="400" fill="#16324f">code, title</text>
+<polygon points="480,195 610,290 480,385 350,290" fill="#ecfdf5" stroke="#0f766e" stroke-width="2"/>
+<text x="480" y="298" text-anchor="middle" font-family="Arial,sans-serif" font-size="24" font-weight="700" fill="#16324f">ENROLS</text>
+<path d="M290 290 L350 290" fill="none" stroke="#0f766e" stroke-width="3"/>
+<path d="M610 290 L670 290" fill="none" stroke="#0f766e" stroke-width="3"/>
+<text x="305" y="265" text-anchor="start" font-family="Arial,sans-serif" font-size="24" font-weight="700" fill="#16324f">M</text>
+<text x="630" y="265" text-anchor="start" font-family="Arial,sans-serif" font-size="24" font-weight="700" fill="#16324f">N</text>
+<ellipse cx="480" cy="490" rx="115" ry="45" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="480" y="498" text-anchor="middle" font-family="Arial,sans-serif" font-size="24" font-weight="700" fill="#16324f">mark</text>
+<path d="M480 385 L480 445" fill="none" stroke="#0f766e" stroke-width="3"/>
+<text x="40" y="640" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">M:N describes maximum participation: many students can take many courses.</text>
+<text x="40" y="667" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Minimum participation is not shown; optionality must be stated separately.</text>
+</svg>

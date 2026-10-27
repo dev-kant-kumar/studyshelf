@@ -356,7 +356,290 @@ export default {
               syllabusText:
                 "History and Importance of C, Sample programming, Basic Structure and execution of C programs, Constants, Variables, and Data Types and various type of declarations, Different type operators and Expressions, Operator Precedence and Associability, Mathematical and Character Functi ons., Decision Making and Branching, Looping. One – dimensional Arrays and their declaration and Initializations, Two-dimensional Arrays and their initializations, Multidimensional Arrays, Dynamic Arrays, String handling functions. [Q-1]",
               sourcePage: 10,
-              notes: [],
+              topics: [
+                {
+                  "id": "history-and-importance",
+                  "title": "History and importance of C"
+                },
+                {
+                  "id": "sample-programming",
+                  "title": "Sample programming: algorithms, input, and output"
+                },
+                {
+                  "id": "structure-and-execution",
+                  "title": "Basic structure and execution of C programs"
+                },
+                {
+                  "id": "constants-variables-types",
+                  "title": "Constants, variables, data types, and declarations"
+                },
+                {
+                  "id": "operators-and-expressions",
+                  "title": "Operators and expressions"
+                },
+                {
+                  "id": "precedence-and-associativity",
+                  "title": "Operator precedence and associativity"
+                },
+                {
+                  "id": "math-and-character-functions",
+                  "title": "Mathematical and character functions"
+                },
+                {
+                  "id": "decision-making",
+                  "title": "Decision making and branching"
+                },
+                {
+                  "id": "looping",
+                  "title": "Looping: iteration, invariants, and termination"
+                },
+                {
+                  "id": "one-dimensional-arrays",
+                  "title": "One-dimensional arrays: declaration and initialisation"
+                },
+                {
+                  "id": "two-dimensional-arrays",
+                  "title": "Two-dimensional arrays and initialisation"
+                },
+                {
+                  "id": "multidimensional-arrays",
+                  "title": "Multidimensional arrays: shape and indexing"
+                },
+                {
+                  "id": "dynamic-arrays",
+                  "title": "Dynamic arrays: allocation, resizing, and lifetime"
+                },
+                {
+                  "id": "string-handling",
+                  "title": "Strings and string handling functions"
+                }
+              ],
+              notes: [
+                {
+                  "id": "history-and-importance",
+                  "title": "History and importance of C",
+                  "summary": "C connects algorithms to explicit data representation. Learn why it became useful for systems software and why its control over storage brings responsibilities for correctness.",
+                  "status": "published",
+                  "order": 1,
+                  "coveredTopics": [
+                    "history-and-importance"
+                  ],
+                  "updatedAt": "2026-10-14",
+                  "tags": [
+                    "c-programming",
+                    "data-structures",
+                    "history-and-importance"
+                  ]
+                },
+                {
+                  "id": "sample-programming",
+                  "title": "Sample programming: algorithms, input, and output",
+                  "summary": "Develop a complete program from a stated problem, then trace and test it. The example computes an average while making input assumptions and failure paths visible.",
+                  "status": "published",
+                  "order": 2,
+                  "coveredTopics": [
+                    "sample-programming"
+                  ],
+                  "updatedAt": "2026-10-14",
+                  "tags": [
+                    "c-programming",
+                    "data-structures",
+                    "sample-programming"
+                  ]
+                },
+                {
+                  "id": "structure-and-execution",
+                  "title": "Basic structure and execution of C programs",
+                  "summary": "Follow a C source file through preprocessing, compilation, assembly, linking, and execution. Learn to recognise which stage failed rather than treating every failure as a syntax error.",
+                  "status": "published",
+                  "order": 3,
+                  "coveredTopics": [
+                    "structure-and-execution"
+                  ],
+                  "updatedAt": "2026-10-14",
+                  "tags": [
+                    "c-programming",
+                    "data-structures",
+                    "structure-and-execution"
+                  ]
+                },
+                {
+                  "id": "constants-variables-types",
+                  "title": "Constants, variables, data types, and declarations",
+                  "summary": "Choose types from the values and operations a problem needs. Understand initialisation, conversion, scope, and lifetime instead of memorising one machine's type-size chart.",
+                  "status": "published",
+                  "order": 4,
+                  "coveredTopics": [
+                    "constants-variables-types"
+                  ],
+                  "updatedAt": "2026-10-14",
+                  "tags": [
+                    "c-programming",
+                    "data-structures",
+                    "constants-variables-types"
+                  ]
+                },
+                {
+                  "id": "operators-and-expressions",
+                  "title": "Operators and expressions",
+                  "summary": "Expressions calculate values and sometimes change stored objects. Learn arithmetic, comparisons, logic, bit operations, and assignment while tracking their operand types and side effects.",
+                  "status": "published",
+                  "order": 5,
+                  "coveredTopics": [
+                    "operators-and-expressions"
+                  ],
+                  "updatedAt": "2026-10-14",
+                  "tags": [
+                    "c-programming",
+                    "data-structures",
+                    "operators-and-expressions"
+                  ]
+                },
+                {
+                  "id": "precedence-and-associativity",
+                  "title": "Operator precedence and associativity",
+                  "summary": "Precedence and associativity determine expression grouping. They do not generally determine the temporal order in which operands execute.",
+                  "status": "published",
+                  "order": 6,
+                  "coveredTopics": [
+                    "precedence-and-associativity"
+                  ],
+                  "updatedAt": "2026-10-14",
+                  "tags": [
+                    "c-programming",
+                    "data-structures",
+                    "precedence-and-associativity"
+                  ]
+                },
+                {
+                  "id": "math-and-character-functions",
+                  "title": "Mathematical and character functions",
+                  "summary": "Use standard library functions with their headers, valid domains, and argument contracts. Mathematical results and character classification both require more care than matching a function name.",
+                  "status": "published",
+                  "order": 7,
+                  "coveredTopics": [
+                    "math-and-character-functions"
+                  ],
+                  "updatedAt": "2026-10-14",
+                  "tags": [
+                    "c-programming",
+                    "data-structures",
+                    "math-and-character-functions"
+                  ]
+                },
+                {
+                  "id": "decision-making",
+                  "title": "Decision making and branching",
+                  "summary": "Make decisions with if, else, switch, and conditional expressions. Build disjoint cases and test values exactly at each decision boundary.",
+                  "status": "published",
+                  "order": 8,
+                  "coveredTopics": [
+                    "decision-making"
+                  ],
+                  "updatedAt": "2026-10-14",
+                  "tags": [
+                    "c-programming",
+                    "data-structures",
+                    "decision-making"
+                  ]
+                },
+                {
+                  "id": "looping",
+                  "title": "Looping: iteration, invariants, and termination",
+                  "summary": "Loops repeatedly update program state. Learn when while, do-while, and for execute, and prove that their bounds, updates, and termination match the intended algorithm.",
+                  "status": "published",
+                  "order": 9,
+                  "coveredTopics": [
+                    "looping"
+                  ],
+                  "updatedAt": "2026-10-14",
+                  "tags": [
+                    "c-programming",
+                    "data-structures",
+                    "looping"
+                  ]
+                },
+                {
+                  "id": "one-dimensional-arrays",
+                  "title": "One-dimensional arrays: declaration and initialisation",
+                  "summary": "An array groups a fixed number of same-type elements consecutively. Learn to initialise it, traverse only valid indices, and reason about occupied length separately from capacity.",
+                  "status": "published",
+                  "order": 10,
+                  "coveredTopics": [
+                    "one-dimensional-arrays"
+                  ],
+                  "updatedAt": "2026-10-14",
+                  "tags": [
+                    "c-programming",
+                    "data-structures",
+                    "one-dimensional-arrays"
+                  ]
+                },
+                {
+                  "id": "two-dimensional-arrays",
+                  "title": "Two-dimensional arrays and initialisation",
+                  "summary": "A two-dimensional C array is an array of row arrays. Use its actual row and column dimensions to initialise matrices, derive addresses, and trace nested loops.",
+                  "status": "published",
+                  "order": 11,
+                  "coveredTopics": [
+                    "two-dimensional-arrays"
+                  ],
+                  "updatedAt": "2026-10-14",
+                  "tags": [
+                    "c-programming",
+                    "data-structures",
+                    "two-dimensional-arrays"
+                  ]
+                },
+                {
+                  "id": "multidimensional-arrays",
+                  "title": "Multidimensional arrays: shape and indexing",
+                  "summary": "Extend arrays of arrays to three or more dimensions. Derive indexing strides from the shape and keep each dimension's bounds visible.",
+                  "status": "published",
+                  "order": 12,
+                  "coveredTopics": [
+                    "multidimensional-arrays"
+                  ],
+                  "updatedAt": "2026-10-14",
+                  "tags": [
+                    "c-programming",
+                    "data-structures",
+                    "multidimensional-arrays"
+                  ]
+                },
+                {
+                  "id": "dynamic-arrays",
+                  "title": "Dynamic arrays: allocation, resizing, and lifetime",
+                  "summary": "Allocate array storage at runtime and resize it safely. This chapter introduces just enough pointers to explain ownership, allocation failure, and invalidated addresses.",
+                  "status": "published",
+                  "order": 13,
+                  "coveredTopics": [
+                    "dynamic-arrays"
+                  ],
+                  "updatedAt": "2026-10-14",
+                  "tags": [
+                    "c-programming",
+                    "data-structures",
+                    "dynamic-arrays"
+                  ]
+                },
+                {
+                  "id": "string-handling",
+                  "title": "Strings and string handling functions",
+                  "summary": "A C string is a character sequence terminated by a zero byte. Track length, capacity, and termination when reading, copying, comparing, and concatenating strings.",
+                  "status": "published",
+                  "order": 14,
+                  "coveredTopics": [
+                    "string-handling"
+                  ],
+                  "updatedAt": "2026-10-14",
+                  "tags": [
+                    "c-programming",
+                    "data-structures",
+                    "string-handling"
+                  ]
+                }
+              ],
             },
             {
               id: "unit2",
@@ -472,7 +755,310 @@ export default {
               syllabusText:
                 "File systems versus Database systems, Advantages of DBMS, DBMS classification/types, DBMS structure, three schema DBMS architecture, Data Models, Data Independence, Data abstraction, Database Users, Database Schemas and Database Instances, Views and its advantages, Data dictionary, DBA and its functions, RDBMS, Difference between DBMS and RDBMS. [Q-2]",
               sourcePage: 12,
-              notes: [],
+              topics: [
+                {
+                  "id": "file-systems-versus-databases",
+                  "title": "File systems versus database systems"
+                },
+                {
+                  "id": "advantages-of-dbms",
+                  "title": "Advantages and limitations of a DBMS"
+                },
+                {
+                  "id": "dbms-types",
+                  "title": "Classification and types of DBMS"
+                },
+                {
+                  "id": "dbms-structure",
+                  "title": "DBMS structure and query processing"
+                },
+                {
+                  "id": "three-schema-architecture",
+                  "title": "Three-schema DBMS architecture"
+                },
+                {
+                  "id": "data-models",
+                  "title": "Data models: structures, operations, and constraints"
+                },
+                {
+                  "id": "data-independence",
+                  "title": "Logical and physical data independence"
+                },
+                {
+                  "id": "data-abstraction",
+                  "title": "Data abstraction and levels of detail"
+                },
+                {
+                  "id": "database-users",
+                  "title": "Database users and their responsibilities"
+                },
+                {
+                  "id": "schemas-and-instances",
+                  "title": "Database schemas and database instances"
+                },
+                {
+                  "id": "views",
+                  "title": "Database views and their advantages"
+                },
+                {
+                  "id": "data-dictionary",
+                  "title": "Data dictionary and database metadata"
+                },
+                {
+                  "id": "dba-functions",
+                  "title": "Database administrator and DBA functions"
+                },
+                {
+                  "id": "rdbms",
+                  "title": "Relational database management systems"
+                },
+                {
+                  "id": "dbms-versus-rdbms",
+                  "title": "Difference between DBMS and RDBMS"
+                }
+              ],
+              notes: [
+                {
+                  "id": "file-systems-versus-databases",
+                  "title": "File systems versus database systems",
+                  "summary": "Compare independent files with shared databases through consistency, concurrency, recovery, and application maintenance.",
+                  "status": "published",
+                  "order": 1,
+                  "coveredTopics": [
+                    "file-systems-versus-databases"
+                  ],
+                  "updatedAt": "2026-10-27",
+                  "tags": [
+                    "dbms",
+                    "databases",
+                    "foundations"
+                  ]
+                },
+                {
+                  "id": "advantages-of-dbms",
+                  "title": "Advantages and limitations of a DBMS",
+                  "summary": "Understand controlled redundancy, integrity, access control, ACID transactions, recovery, and operational costs.",
+                  "status": "published",
+                  "order": 2,
+                  "coveredTopics": [
+                    "advantages-of-dbms"
+                  ],
+                  "updatedAt": "2026-10-27",
+                  "tags": [
+                    "dbms",
+                    "databases",
+                    "foundations"
+                  ]
+                },
+                {
+                  "id": "dbms-types",
+                  "title": "Classification and types of DBMS",
+                  "summary": "Compare database models, deployment arrangements, concurrent use, and transaction versus analytical workloads.",
+                  "status": "published",
+                  "order": 3,
+                  "coveredTopics": [
+                    "dbms-types"
+                  ],
+                  "updatedAt": "2026-10-27",
+                  "tags": [
+                    "dbms",
+                    "databases",
+                    "foundations"
+                  ]
+                },
+                {
+                  "id": "dbms-structure",
+                  "title": "DBMS structure and query processing",
+                  "summary": "Follow a query through validation, optimisation, execution, buffering, concurrency control, and recovery.",
+                  "status": "published",
+                  "order": 4,
+                  "coveredTopics": [
+                    "dbms-structure"
+                  ],
+                  "updatedAt": "2026-10-27",
+                  "tags": [
+                    "dbms",
+                    "databases",
+                    "foundations"
+                  ]
+                },
+                {
+                  "id": "three-schema-architecture",
+                  "title": "Three-schema DBMS architecture",
+                  "summary": "Understand external, conceptual, and internal schemas, their mappings, and the changes each boundary can hide.",
+                  "status": "published",
+                  "order": 5,
+                  "coveredTopics": [
+                    "three-schema-architecture"
+                  ],
+                  "updatedAt": "2026-10-27",
+                  "tags": [
+                    "dbms",
+                    "databases",
+                    "foundations"
+                  ]
+                },
+                {
+                  "id": "data-models",
+                  "title": "Data models: structures, operations, and constraints",
+                  "summary": "Model college entities and associations, then translate them into relations, keys, operations, and constraints.",
+                  "status": "published",
+                  "order": 6,
+                  "coveredTopics": [
+                    "data-models"
+                  ],
+                  "updatedAt": "2026-10-27",
+                  "tags": [
+                    "dbms",
+                    "databases",
+                    "foundations"
+                  ]
+                },
+                {
+                  "id": "data-independence",
+                  "title": "Logical and physical data independence",
+                  "summary": "Compare physical and logical independence and evaluate compatibility after storage and schema changes.",
+                  "status": "published",
+                  "order": 7,
+                  "coveredTopics": [
+                    "data-independence"
+                  ],
+                  "updatedAt": "2026-10-27",
+                  "tags": [
+                    "dbms",
+                    "databases",
+                    "foundations"
+                  ]
+                },
+                {
+                  "id": "data-abstraction",
+                  "title": "Data abstraction and levels of detail",
+                  "summary": "Follow one fact through user, logical, and physical perspectives and distinguish abstraction from security.",
+                  "status": "published",
+                  "order": 8,
+                  "coveredTopics": [
+                    "data-abstraction"
+                  ],
+                  "updatedAt": "2026-10-27",
+                  "tags": [
+                    "dbms",
+                    "databases",
+                    "foundations"
+                  ]
+                },
+                {
+                  "id": "database-users",
+                  "title": "Database users and their responsibilities",
+                  "summary": "Understand end-user categories, designers, developers, service identities, and least-privilege access.",
+                  "status": "published",
+                  "order": 9,
+                  "coveredTopics": [
+                    "database-users"
+                  ],
+                  "updatedAt": "2026-10-27",
+                  "tags": [
+                    "dbms",
+                    "databases",
+                    "foundations"
+                  ]
+                },
+                {
+                  "id": "schemas-and-instances",
+                  "title": "Database schemas and database instances",
+                  "summary": "Distinguish structural definitions from changing data states, valid instances, namespaces, and running servers.",
+                  "status": "published",
+                  "order": 10,
+                  "coveredTopics": [
+                    "schemas-and-instances"
+                  ],
+                  "updatedAt": "2026-10-27",
+                  "tags": [
+                    "dbms",
+                    "databases",
+                    "foundations"
+                  ]
+                },
+                {
+                  "id": "views",
+                  "title": "Database views and their advantages",
+                  "summary": "Create filtered views and understand reuse, permissions, update restrictions, and materialized results.",
+                  "status": "published",
+                  "order": 11,
+                  "coveredTopics": [
+                    "views"
+                  ],
+                  "updatedAt": "2026-10-27",
+                  "tags": [
+                    "dbms",
+                    "databases",
+                    "foundations"
+                  ]
+                },
+                {
+                  "id": "data-dictionary",
+                  "title": "Data dictionary and database metadata",
+                  "summary": "Explore technical metadata, active and passive dictionaries, catalogue statistics, and business definitions.",
+                  "status": "published",
+                  "order": 12,
+                  "coveredTopics": [
+                    "data-dictionary"
+                  ],
+                  "updatedAt": "2026-10-27",
+                  "tags": [
+                    "dbms",
+                    "databases",
+                    "foundations"
+                  ]
+                },
+                {
+                  "id": "dba-functions",
+                  "title": "Database administrator and DBA functions",
+                  "summary": "Understand database security, controlled changes, performance, capacity, recovery targets, and restore drills.",
+                  "status": "published",
+                  "order": 13,
+                  "coveredTopics": [
+                    "dba-functions"
+                  ],
+                  "updatedAt": "2026-10-27",
+                  "tags": [
+                    "dbms",
+                    "databases",
+                    "foundations"
+                  ]
+                },
+                {
+                  "id": "rdbms",
+                  "title": "Relational database management systems",
+                  "summary": "Learn relational vocabulary, keys, integrity, joins, and NULL through a complete college SQL example.",
+                  "status": "published",
+                  "order": 14,
+                  "coveredTopics": [
+                    "rdbms"
+                  ],
+                  "updatedAt": "2026-10-27",
+                  "tags": [
+                    "dbms",
+                    "databases",
+                    "foundations"
+                  ]
+                },
+                {
+                  "id": "dbms-versus-rdbms",
+                  "title": "Difference between DBMS and RDBMS",
+                  "summary": "Compare the general DBMS category with its relational subset and avoid misleading feature comparisons.",
+                  "status": "published",
+                  "order": 15,
+                  "coveredTopics": [
+                    "dbms-versus-rdbms"
+                  ],
+                  "updatedAt": "2026-10-27",
+                  "tags": [
+                    "dbms",
+                    "databases",
+                    "foundations"
+                  ]
+                }
+              ],
             },
             {
               id: "unit2",

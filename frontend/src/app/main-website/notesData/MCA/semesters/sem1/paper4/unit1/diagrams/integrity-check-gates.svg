@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 700" role="img" aria-labelledby="title desc"><title id="title">Integrity checks reject different kinds of errors</title><desc id="desc">Assume Student contains 101 and Course contains DB101.</desc><defs><marker id="tip" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#0f766e"/></marker></defs><rect width="960" height="700" rx="16" fill="#f8fafc"/>
+<text x="40" y="48" text-anchor="start" font-family="Arial,sans-serif" font-size="27" font-weight="700" fill="#16324f">Integrity checks reject different kinds of errors</text>
+<text x="40" y="82" text-anchor="start" font-family="Arial,sans-serif" font-size="19" font-weight="400" fill="#16324f">Assume Student contains 101 and Course contains DB101.</text>
+<rect x="40" y="120" width="880" height="75" rx="9" fill="#e0f2fe" stroke="#94a3b8" stroke-width="2"/>
+<text x="56" y="152" text-anchor="start" font-family="Arial,sans-serif" font-size="21" font-weight="700" fill="#16324f">Proposed Enrolment(student_id, course_code, mark)</text>
+<rect x="40" y="270" width="270" height="145" rx="9" fill="#fff7ed" stroke="#94a3b8" stroke-width="2"/>
+<text x="56" y="302" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">Referential integrity</text>
+<text x="56" y="334" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">(999, DB101, 82)</text>
+<text x="56" y="363" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">No Student 999</text>
+<text x="56" y="392" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">REJECT</text>
+<rect x="345" y="270" width="270" height="145" rx="9" fill="#fff7ed" stroke="#94a3b8" stroke-width="2"/>
+<text x="361" y="302" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">Value constraint</text>
+<text x="361" y="334" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">(101, DB101, 120)</text>
+<text x="361" y="363" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Outside 0-100</text>
+<text x="361" y="392" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">REJECT</text>
+<rect x="650" y="270" width="270" height="145" rx="9" fill="#ecfdf5" stroke="#94a3b8" stroke-width="2"/>
+<text x="666" y="302" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">All checks pass</text>
+<text x="666" y="334" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">(101, DB101, 82)</text>
+<text x="666" y="363" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Unused enrolment key</text>
+<text x="666" y="392" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">ACCEPT</text>
+<path d="M175 195 L175 265" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<path d="M480 195 L480 265" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<path d="M785 195 L785 265" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<rect x="170" y="485" width="620" height="80" rx="9" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="186" y="517" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">Repeating (101, DB101) is rejected by the primary key.</text>
+<text x="40" y="640" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Each proposal is considered independently.</text>
+<text x="40" y="667" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">A valid-looking score can still be wrong; constraints cannot prove real-world truth.</text>
+</svg>

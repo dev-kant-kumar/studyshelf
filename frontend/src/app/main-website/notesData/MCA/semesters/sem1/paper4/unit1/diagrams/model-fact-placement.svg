@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 740" role="img" aria-labelledby="title desc"><title id="title">Store a fact with the identity that determines it</title><desc id="desc">Student name, course title, and mark depend on different identifiers.</desc><defs><marker id="tip" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#0f766e"/></marker></defs><rect width="960" height="740" rx="16" fill="#f8fafc"/>
+<text x="40" y="48" text-anchor="start" font-family="Arial,sans-serif" font-size="27" font-weight="700" fill="#16324f">Store a fact with the identity that determines it</text>
+<text x="40" y="82" text-anchor="start" font-family="Arial,sans-serif" font-size="19" font-weight="400" fill="#16324f">Student name, course title, and mark depend on different identifiers.</text>
+<rect x="40" y="120" width="880" height="209" rx="9" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="52" y="152" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="700" fill="#16324f">Three observations</text>
+<path d="M40 169 L920 169" fill="none" stroke="#0f766e" stroke-width="3"/>
+<text x="51" y="197" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">student_id</text>
+<text x="276" y="197" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">name</text>
+<path d="M265 169 V329" stroke="#cbd5e1"/>
+<text x="496" y="197" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">course_code</text>
+<path d="M485 169 V329" stroke="#cbd5e1"/>
+<text x="746" y="197" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">mark</text>
+<path d="M735 169 V329" stroke="#cbd5e1"/>
+<text x="51" y="237" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">101</text>
+<text x="276" y="237" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Asha</text>
+<path d="M265 169 V329" stroke="#cbd5e1"/>
+<text x="496" y="237" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">DB101</text>
+<path d="M485 169 V329" stroke="#cbd5e1"/>
+<text x="746" y="237" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">82</text>
+<path d="M735 169 V329" stroke="#cbd5e1"/>
+<path d="M40 209 H920" stroke="#cbd5e1"/>
+<text x="51" y="277" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">101</text>
+<text x="276" y="277" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Asha</text>
+<path d="M265 169 V329" stroke="#cbd5e1"/>
+<text x="496" y="277" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">CS101</text>
+<path d="M485 169 V329" stroke="#cbd5e1"/>
+<text x="746" y="277" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">91</text>
+<path d="M735 169 V329" stroke="#cbd5e1"/>
+<path d="M40 249 H920" stroke="#cbd5e1"/>
+<text x="51" y="317" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">102</text>
+<text x="276" y="317" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Ravi</text>
+<path d="M265 169 V329" stroke="#cbd5e1"/>
+<text x="496" y="317" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">DB101</text>
+<path d="M485 169 V329" stroke="#cbd5e1"/>
+<text x="746" y="317" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">76</text>
+<path d="M735 169 V329" stroke="#cbd5e1"/>
+<path d="M40 289 H920" stroke="#cbd5e1"/>
+<rect x="40" y="430" width="270" height="135" rx="9" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="56" y="462" text-anchor="start" font-family="Arial,sans-serif" font-size="19" font-weight="700" fill="#16324f">Student fact</text>
+<text x="56" y="494" text-anchor="start" font-family="Arial,sans-serif" font-size="19" font-weight="400" fill="#16324f">101 determines Asha</text>
+<text x="56" y="523" text-anchor="start" font-family="Arial,sans-serif" font-size="19" font-weight="400" fill="#16324f">Name belongs in Student</text>
+<rect x="345" y="430" width="270" height="135" rx="9" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="361" y="462" text-anchor="start" font-family="Arial,sans-serif" font-size="19" font-weight="700" fill="#16324f">Course fact</text>
+<text x="361" y="494" text-anchor="start" font-family="Arial,sans-serif" font-size="19" font-weight="400" fill="#16324f">DB101 determines title</text>
+<text x="361" y="523" text-anchor="start" font-family="Arial,sans-serif" font-size="19" font-weight="400" fill="#16324f">Title belongs in Course</text>
+<rect x="650" y="430" width="270" height="135" rx="9" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="666" y="462" text-anchor="start" font-family="Arial,sans-serif" font-size="19" font-weight="700" fill="#16324f">Association fact</text>
+<text x="666" y="494" text-anchor="start" font-family="Arial,sans-serif" font-size="19" font-weight="400" fill="#16324f">(101, DB101) gives 82</text>
+<text x="666" y="523" text-anchor="start" font-family="Arial,sans-serif" font-size="19" font-weight="400" fill="#16324f">Mark is in Enrolment</text>
+<path d="M175 330 L175 425" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<path d="M480 330 L480 425" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<path d="M785 330 L785 425" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<text x="40" y="680" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">One student has several marks; one course has marks for several students.</text>
+<text x="40" y="707" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Retakes need an attempt or offering identifier in the association identity.</text>
+</svg>

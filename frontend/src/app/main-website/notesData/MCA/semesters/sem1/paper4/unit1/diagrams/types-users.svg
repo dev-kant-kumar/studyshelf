@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 650" role="img" aria-labelledby="title desc"><title id="title">Single-user and multi-user operation</title><desc id="desc">The classification concerns concurrent use, independently of representation.</desc><defs><marker id="tip" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#0f766e"/></marker></defs><rect width="960" height="650" rx="16" fill="#f8fafc"/>
+<text x="40" y="48" text-anchor="start" font-family="Arial,sans-serif" font-size="28" font-weight="700" fill="#16324f">Single-user and multi-user operation</text>
+<text x="40" y="82" text-anchor="start" font-family="Arial,sans-serif" font-size="19" font-weight="400" fill="#16324f">The classification concerns concurrent use, independently of representation.</text>
+<text x="40" y="135" text-anchor="start" font-family="Arial,sans-serif" font-size="24" font-weight="700" fill="#16324f">Single-user example</text>
+<text x="520" y="135" text-anchor="start" font-family="Arial,sans-serif" font-size="24" font-weight="700" fill="#16324f">Multi-user example</text>
+<rect x="40" y="180" width="350" height="75" rx="10" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="58" y="214" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="700" fill="#16324f">One active user</text>
+<rect x="40" y="395" width="350" height="100" rx="10" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="58" y="429" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="700" fill="#16324f">Personal database</text>
+<text x="58" y="462" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="400" fill="#16324f">One user at a time</text>
+<path d="M215 255 L215 390" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<rect x="520" y="180" width="180" height="75" rx="10" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="538" y="214" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="700" fill="#16324f">Student</text>
+<rect x="740" y="180" width="180" height="75" rx="10" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="758" y="214" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="700" fill="#16324f">Clerk</text>
+<rect x="520" y="395" width="400" height="100" rx="10" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="538" y="429" text-anchor="start" font-family="Arial,sans-serif" font-size="21" font-weight="700" fill="#16324f">Shared database</text>
+<text x="538" y="462" text-anchor="start" font-family="Arial,sans-serif" font-size="21" font-weight="400" fill="#16324f">Coordinate overlapping operations</text>
+<path d="M610 255 L610 390" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<path d="M830 255 L830 390" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<text x="40" y="590" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Multi-user systems need defined concurrency and isolation behaviour.</text>
+<text x="40" y="617" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">An embedded engine is not automatically restricted to one concurrent user.</text>
+</svg>

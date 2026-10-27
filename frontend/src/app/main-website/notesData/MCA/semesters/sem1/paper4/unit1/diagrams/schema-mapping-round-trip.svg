@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 790" role="img" aria-labelledby="title desc"><title id="title">A request and its result cross both mapping boundaries</title><desc id="desc">Follow a teacher request downward, then interpret the result upward.</desc><defs><marker id="tip" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#0f766e"/></marker></defs><rect width="960" height="790" rx="16" fill="#f8fafc"/>
+<text x="40" y="48" text-anchor="start" font-family="Arial,sans-serif" font-size="27" font-weight="700" fill="#16324f">A request and its result cross both mapping boundaries</text>
+<text x="40" y="82" text-anchor="start" font-family="Arial,sans-serif" font-size="19" font-weight="400" fill="#16324f">Follow a teacher request downward, then interpret the result upward.</text>
+<rect x="180" y="120" width="600" height="100" rx="9" fill="#e0f2fe" stroke="#94a3b8" stroke-width="2"/>
+<text x="196" y="152" text-anchor="start" font-family="Arial,sans-serif" font-size="21" font-weight="700" fill="#16324f">External: TeacherRoster</text>
+<text x="196" y="184" text-anchor="start" font-family="Arial,sans-serif" font-size="21" font-weight="400" fill="#16324f">Request: show names and marks for DB101</text>
+<rect x="180" y="335" width="600" height="100" rx="9" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="196" y="367" text-anchor="start" font-family="Arial,sans-serif" font-size="21" font-weight="700" fill="#16324f">Conceptual: shared college relations</text>
+<text x="196" y="399" text-anchor="start" font-family="Arial,sans-serif" font-size="21" font-weight="400" fill="#16324f">Join Student and Enrolment; filter the course</text>
+<rect x="180" y="550" width="600" height="100" rx="9" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="196" y="582" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">Internal: records and access structures</text>
+<text x="196" y="614" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Locate visible records using the selected access path</text>
+<path d="M280 220 L280 330" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<text x="50" y="285" text-anchor="start" font-family="Arial,sans-serif" font-size="19" font-weight="400" fill="#0f766e">map request</text>
+<path d="M280 435 L280 545" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<text x="50" y="500" text-anchor="start" font-family="Arial,sans-serif" font-size="19" font-weight="400" fill="#0f766e">map to storage</text>
+<path d="M680 545 L680 440" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<text x="695" y="500" text-anchor="start" font-family="Arial,sans-serif" font-size="19" font-weight="400" fill="#0f766e">logical rows</text>
+<path d="M680 330 L680 225" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<text x="695" y="285" text-anchor="start" font-family="Arial,sans-serif" font-size="19" font-weight="400" fill="#0f766e">teacher result</text>
+<text x="40" y="730" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Between external and conceptual: perspective mapping. Internal: storage mapping.</text>
+<text x="40" y="757" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">The levels are descriptions and mappings, not three stored database copies.</text>
+</svg>

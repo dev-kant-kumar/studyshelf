@@ -1,0 +1,88 @@
+{
+  "intro": "Develop a complete program from a stated problem, then trace and test it. The example computes an average while making input assumptions and failure paths visible.",
+  "outcomes": [
+    "Translate a small algorithm into statements.",
+    "Explain formatted output and checked input.",
+    "Choose ordinary, boundary, and invalid test cases."
+  ],
+  "prerequisites": "A variable is a named object that stores a value. A statement performs an action. A function is a named block of behaviour; main is the entry function for the hosted programs used here.",
+  "sections": [
+    {
+      "title": "1. Specify the problem before writing code",
+      "paragraphs": [
+        "Problem: read three integer marks, each from 0 through 100, and print their arithmetic mean to two decimal places. Inputs outside that range or inputs that cannot be read as three integers must fail. The range constraint guarantees that the sum is at most 300.",
+        "Algorithm: obtain the marks; verify successful conversion; check all three ranges; add the marks; divide by 3.0; print the result. The decimal divisor requests floating-point arithmetic, preserving a fractional mean.",
+        "The small scanf example assumes the input integers are representable as int. It checks conversion count, but is not a robust parser for arbitrary untrusted numeric text. Production text parsing normally reads a line with fgets and validates a conversion such as strtol, including overflow and trailing characters."
+      ]
+    },
+    {
+      "title": "2. A complete program",
+      "paragraphs": [
+        "#include <stdio.h> supplies declarations for input and output functions. int main(void) takes no arguments and returns an integer termination status. Braces enclose its body. Semicolons end declarations and expression statements.",
+        "scanf needs addresses of the destination objects. The & operator obtains an address; full pointer operations come later. Its return value is the number of successful assignments. printf uses %f to print a double; %.2f selects two digits after the decimal point. The newline escape \\n moves output to the next line."
+      ],
+      "code": "#include <stdio.h>\n\nint main(void) {\n    int a, b, c;\n    if (scanf(\"%d %d %d\", &a, &b, &c) != 3) {\n        puts(\"Expected three integer marks.\");\n        return 1;\n    }\n    if (a < 0 || a > 100 || b < 0 || b > 100 || c < 0 || c > 100) {\n        puts(\"Marks must be between 0 and 100.\");\n        return 1;\n    }\n    double average = (a + b + c) / 3.0;\n    printf(\"Average: %.2f\\n\", average);\n    return 0;\n}",
+      "example": [
+        "For input 70 80 90, the stored values are a=70, b=80, c=90; the sum is 240; the division yields 80.0; output is Average: 80.00.",
+        "For 0 0 1, division yields approximately 0.333333 and formatting prints 0.33. Replacing 3.0 with 3 would perform integer division first and print 0.00.",
+        "Test 0 0 0 and 100 100 100 for valid boundaries. Test -1 50 50 and 101 50 50 for range rejection. Test x 50 50 and end-of-input after two numbers for conversion failure."
+      ]
+    },
+    {
+      "title": "3. Read, run, and improve",
+      "paragraphs": [
+        "Create a source file, compile it with warnings, then run the executable and supply input. A source file is text; an executable is the translated program. The next chapter explains these stages and platform-specific commands.",
+        "A dry run records values after each statement without executing the program. Record the branch taken as well as arithmetic. If scanf fails, the program returns before it reads any uninitialised mark. That control-flow property is part of its correctness.",
+        "Do not add a semicolon after an if condition unless you intend an empty statement. Use braces even for short branches so later edits do not silently change which statements are conditional."
+      ]
+    }
+  ],
+  "revision": [
+    "State the accepted input range.",
+    "Explain why 3.0 preserves fractions.",
+    "Trace both success and failure paths.",
+    "Test incomplete input before using values."
+  ],
+  "questions": [
+    {
+      "id": "sample-programming-1",
+      "question": "Why does scanf receive &a while printf receives a?",
+      "level": "easy",
+      "tags": [
+        "Concept check"
+      ],
+      "answer": [
+        "scanf must modify a, so it receives its address. printf only needs the current value to display it. Passing a where scanf expects an address breaks the function's argument contract."
+      ]
+    },
+    {
+      "id": "sample-programming-2",
+      "question": "What is printed for input 99 100 100?",
+      "level": "medium",
+      "tags": [
+        "Practical"
+      ],
+      "answer": [
+        "The sum is 299 and 299 / 3.0 is approximately 99.666667. Formatting to two decimal places prints Average: 99.67. The formatting rounds the display; it does not change the stored double into an exact decimal fraction."
+      ]
+    },
+    {
+      "id": "sample-programming-3",
+      "question": "Why is checking scanf's count insufficient for arbitrary numeric text?",
+      "level": "hard",
+      "tags": [
+        "Curious learner"
+      ],
+      "answer": [
+        "A count checks successful assignments, not every aspect of an input grammar or a safe range conversion. Trailing text can remain unread, and a conversion result outside the destination type's range is unsafe. A line-based parser must check range errors, where conversion ended, and whether any unacceptable text remains."
+      ]
+    }
+  ],
+  "references": [
+    {
+      "title": "WG14 C11 committee draft N1570 - consult the clauses listed in this chapter",
+      "url": "https://www.open-std.org/jtc1/sc22/wg14/www/docs/n1570.pdf"
+    }
+  ],
+  "next": "Basic structure and execution explains translation, diagnostics, and running the program."
+}

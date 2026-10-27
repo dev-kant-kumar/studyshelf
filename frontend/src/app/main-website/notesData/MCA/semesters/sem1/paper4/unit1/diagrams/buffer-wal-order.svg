@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 730" role="img" aria-labelledby="title desc"><title id="title">Buffering and write-ahead logging</title><desc id="desc">A dirty memory page is not yet a durable stored data page.</desc><defs><marker id="tip" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#0f766e"/></marker></defs><rect width="960" height="730" rx="16" fill="#f8fafc"/>
+<text x="40" y="48" text-anchor="start" font-family="Arial,sans-serif" font-size="27" font-weight="700" fill="#16324f">Buffering and write-ahead logging</text>
+<text x="40" y="82" text-anchor="start" font-family="Arial,sans-serif" font-size="19" font-weight="400" fill="#16324f">A dirty memory page is not yet a durable stored data page.</text>
+<rect x="40" y="120" width="400" height="150" rx="9" fill="#e0f2fe" stroke="#94a3b8" stroke-width="2"/>
+<text x="56" y="152" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">In-memory buffer</text>
+<text x="56" y="184" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Student page loaded into memory</text>
+<text x="56" y="213" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">An update changes the page</text>
+<text x="56" y="242" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">The page is now dirty</text>
+<rect x="520" y="120" width="400" height="150" rx="9" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="536" y="152" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">Recovery log records</text>
+<text x="536" y="184" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Describe the required changes</text>
+<text x="536" y="213" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Required log data is flushed</text>
+<text x="536" y="242" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">before the changed page is written</text>
+<rect x="40" y="430" width="400" height="125" rx="9" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="56" y="462" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">Persistent data file</text>
+<text x="56" y="494" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Modified page can be written later</text>
+<text x="56" y="523" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">after the WAL rule is satisfied</text>
+<rect x="520" y="430" width="400" height="125" rx="9" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="536" y="462" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">Persistent WAL</text>
+<text x="536" y="494" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Supports redo after a crash</text>
+<text x="536" y="523" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">under the recovery protocol</text>
+<path d="M445 195 L515 195" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<path d="M720 270 L720 425" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<text x="735" y="350" text-anchor="start" font-family="Arial,sans-serif" font-size="19" font-weight="400" fill="#0f766e">1. log flush</text>
+<path d="M235 270 L235 425" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<text x="50" y="350" text-anchor="start" font-family="Arial,sans-serif" font-size="19" font-weight="400" fill="#0f766e">2. later page write</text>
+<text x="40" y="670" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Durable commit settings also require the needed commit log data to be durable.</text>
+<text x="40" y="697" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">The ordering rule does not require flushing every changed data page at commit.</text>
+</svg>

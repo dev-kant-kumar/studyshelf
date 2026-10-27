@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 600" role="img" aria-labelledby="title desc"><title id="title">Network DBMS: records in linked sets</title><desc id="desc">An enrolment member can belong to two different owner-member set types.</desc><defs><marker id="tip" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#0f766e"/></marker></defs><rect width="960" height="600" rx="16" fill="#f8fafc"/>
+<text x="40" y="48" text-anchor="start" font-family="Arial,sans-serif" font-size="28" font-weight="700" fill="#16324f">Network DBMS: records in linked sets</text>
+<text x="40" y="82" text-anchor="start" font-family="Arial,sans-serif" font-size="19" font-weight="400" fill="#16324f">An enrolment member can belong to two different owner-member set types.</text>
+<rect x="50" y="130" width="360" height="110" rx="10" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="68" y="164" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="700" fill="#16324f">Student record S101</text>
+<text x="68" y="197" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="400" fill="#16324f">name: Asha</text>
+<rect x="550" y="130" width="360" height="110" rx="10" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="568" y="164" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="700" fill="#16324f">Course record DB101</text>
+<text x="568" y="197" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="400" fill="#16324f">title: Database Systems</text>
+<rect x="270" y="365" width="420" height="110" rx="10" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="288" y="399" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="700" fill="#16324f">Enrolment record E1</text>
+<text x="288" y="432" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="400" fill="#16324f">mark: 82</text>
+<path d="M230 240 L230 310 L365 310 L365 360" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<text x="45" y="285" text-anchor="start" font-family="Arial,sans-serif" font-size="19" font-weight="400" fill="#0f766e">Student-Enrolments set</text>
+<path d="M730 240 L730 310 L595 310 L595 360" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<text x="570" y="285" text-anchor="start" font-family="Arial,sans-serif" font-size="19" font-weight="400" fill="#0f766e">Course-Enrolments set</text>
+<text x="40" y="540" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">E1 is the same member record, reached through two named set relationships.</text>
+<text x="40" y="567" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Lines show navigable record links, not computer network connections.</text>
+</svg>

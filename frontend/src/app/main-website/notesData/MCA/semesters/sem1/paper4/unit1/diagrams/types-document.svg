@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 650" role="img" aria-labelledby="title desc"><title id="title">Document DBMS: nested records in a collection</title><desc id="desc">A course document can embed the modules commonly read with that course.</desc><defs><marker id="tip" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#0f766e"/></marker></defs><rect width="960" height="650" rx="16" fill="#f8fafc"/>
+<text x="40" y="48" text-anchor="start" font-family="Arial,sans-serif" font-size="28" font-weight="700" fill="#16324f">Document DBMS: nested records in a collection</text>
+<text x="40" y="82" text-anchor="start" font-family="Arial,sans-serif" font-size="19" font-weight="400" fill="#16324f">A course document can embed the modules commonly read with that course.</text>
+<rect x="40" y="120" width="525" height="415" rx="10" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="58" y="154" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="700" fill="#16324f">Course document: DB101</text>
+<text x="62" y="207" text-anchor="start" font-family="Consolas,monospace" font-size="21" font-weight="400" fill="#16324f">{</text>
+<text x="62" y="242" text-anchor="start" font-family="Consolas,monospace" font-size="21" font-weight="400" fill="#16324f">  &quot;code&quot;: &quot;DB101&quot;,</text>
+<text x="62" y="277" text-anchor="start" font-family="Consolas,monospace" font-size="21" font-weight="400" fill="#16324f">  &quot;title&quot;: &quot;Database Systems&quot;,</text>
+<text x="62" y="312" text-anchor="start" font-family="Consolas,monospace" font-size="21" font-weight="400" fill="#16324f">  &quot;modules&quot;: [</text>
+<text x="62" y="347" text-anchor="start" font-family="Consolas,monospace" font-size="21" font-weight="400" fill="#16324f">    { &quot;name&quot;: &quot;Introduction&quot; },</text>
+<text x="62" y="382" text-anchor="start" font-family="Consolas,monospace" font-size="21" font-weight="400" fill="#16324f">    { &quot;name&quot;: &quot;Data models&quot; }</text>
+<text x="62" y="417" text-anchor="start" font-family="Consolas,monospace" font-size="21" font-weight="400" fill="#16324f">  ]</text>
+<text x="62" y="452" text-anchor="start" font-family="Consolas,monospace" font-size="21" font-weight="400" fill="#16324f">}</text>
+<rect x="610" y="120" width="310" height="315" rx="10" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="628" y="154" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="700" fill="#16324f">Course: CS101</text>
+<text x="630" y="207" text-anchor="start" font-family="Consolas,monospace" font-size="21" font-weight="400" fill="#16324f">{</text>
+<text x="630" y="242" text-anchor="start" font-family="Consolas,monospace" font-size="21" font-weight="400" fill="#16324f">  &quot;code&quot;: &quot;CS101&quot;,</text>
+<text x="630" y="277" text-anchor="start" font-family="Consolas,monospace" font-size="21" font-weight="400" fill="#16324f">  &quot;labHours&quot;: 4</text>
+<text x="630" y="312" text-anchor="start" font-family="Consolas,monospace" font-size="21" font-weight="400" fill="#16324f">}</text>
+<text x="630" y="398" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Another document</text>
+<text x="630" y="426" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">in the collection</text>
+<text x="40" y="590" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">modules is an embedded array of subdocuments inside DB101.</text>
+<text x="40" y="617" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Different shapes are possible; validation and shared meaning still matter.</text>
+</svg>

@@ -1,0 +1,149 @@
+{
+  "intro": "A database is an organised collection of related data. A database management system (DBMS) is software that defines, stores, retrieves, protects, and changes that data. The distinction becomes clear when several college departments need the same student information.",
+  "outcomes": [
+    "Distinguish data, information, databases, and database software.",
+    "Trace the problems caused by independent application files.",
+    "Choose between simple files and a managed database using concrete requirements."
+  ],
+  "sections": [
+    {
+      "title": "1. Data, records, and the database environment",
+      "paragraphs": [
+        "Data are recorded facts, such as student number 101, the name Asha, and a course code DB101. Information is the meaning obtained by interpreting facts in context: Asha is registered for DB101. A field holds one named item, a record groups related fields, and a file stores a collection of records. A database organises related collections together with rules about their meaning and relationships.",
+        "The database is the stored collection; the DBMS is the software managing it. A database system includes both, together with applications, users, hardware, and operating procedures. PostgreSQL is a DBMS; a particular college database is one collection managed by it. An admissions website is a database application, not the database itself."
+      ]
+    },
+    {
+      "title": "2. The traditional file-processing approach",
+      "paragraphs": [
+        "Suppose admissions stores students.csv, the library stores borrowers.csv, and accounts stores fees.csv. Each program defines its own record format and code for searching and updating it. Files may be perfectly suitable for a small, stable task. The difficulty appears when independent copies represent the same shared facts.",
+        "If Asha changes her phone number, three copies must be updated. Repetition is data redundancy; conflicting copies are data inconsistency. Redundancy can exist without inconsistency, but it creates extra opportunities for it. Data isolation means useful facts are scattered across formats or applications, making a combined report difficult.",
+        "Program-data dependence occurs when knowledge of the storage layout is embedded in application code. Moving a field in a fixed-length record can require changing every reader. Enforcing a rule such as a unique student number separately in many programs also risks different interpretations. File permissions protect files, but do not by themselves express rules such as a teacher being allowed to change only assigned course marks."
+      ],
+      "diagram": "files",
+      "alt": "Independent departmental files compared with applications sharing a managed database.",
+      "caption": "Independent copies require coordinated updates; a shared DBMS centralises the authoritative record.",
+      "diagramHeight": 570
+    },
+    {
+      "title": "3. Concurrency, partial failure, and the database approach",
+      "paragraphs": [
+        "Concurrency means operations overlap in time. If two clerks read 10 available seats, each registers a student, and each writes 9, the last write loses one decrement. This is a lost update. A simple read-modify-write sequence is not automatically safe because the file write itself succeeds.",
+        "A transaction groups related operations into a unit with a defined success or failure outcome. Registering a student may require checking capacity, creating an enrolment, and recording a fee obligation. A DBMS supplies mechanisms for coordinating transactions and recovering after failures. Applications must still choose transaction boundaries and suitable concurrency rules.",
+        "In a database approach, Student holds a shared student identity and contact record. LibraryLoan and FeePayment refer to it using student_id. Applications request data through a defined interface instead of each implementing physical storage management. The database catalogue describes the structures and rules, making the system self-describing."
+      ],
+      "diagram": "lost-update-timeline",
+      "diagramHeight": 700,
+      "alt": "Two clerks read 10 seats and each computes 9. Clerk A writes 9, then clerk B writes 9, leaving 9 instead of the correct count of 8.",
+      "caption": "Read from top to bottom. An individually successful write does not make the complete read-modify-write sequence safe."
+    },
+    {
+      "title": "4. Compare capabilities and costs",
+      "paragraphs": [
+        "A database system normally still uses files, storage devices, and operating-system services underneath. The difference is the managed layer for data structures, queries, constraints, transactions, and access. A plain file can be part of an application that implements some of these capabilities; doing so requires explicit engineering."
+      ],
+      "table": {
+        "caption": "File processing and managed databases",
+        "headers": [
+          "Aspect",
+          "Independent application files",
+          "DBMS approach"
+        ],
+        "rows": [
+          [
+            "Shared facts",
+            "Often copied between files",
+            "Can be stored once and referenced"
+          ],
+          [
+            "Queries",
+            "Custom parsing and traversal code",
+            "Query language and reusable plans"
+          ],
+          [
+            "Integrity",
+            "Application-specific checks",
+            "Declared constraints plus application rules"
+          ],
+          [
+            "Concurrent changes",
+            "Application must coordinate access",
+            "Transaction and concurrency mechanisms"
+          ],
+          [
+            "Recovery",
+            "Custom backup and repair logic",
+            "Logging and recovery facilities"
+          ],
+          [
+            "Cost",
+            "Simple setup for small tasks",
+            "Runtime, administration, and migration costs"
+          ]
+        ]
+      }
+    },
+    {
+      "title": "5. Worked decision and misconceptions",
+      "paragraphs": [
+        "A daily sensor export consumed once by one program may be easiest to keep as a CSV file. A college registration service used by hundreds of students requires coordinated updates, identities, access rules, and recoverable changes, so a DBMS is a stronger fit. Data volume alone does not decide the choice.",
+        "A shared database does not automatically remove duplicate people, incorrect addresses, or poor permissions. Those require design and validation. It also introduces a shared dependency: a database outage can affect many applications. Availability planning becomes part of the solution."
+      ],
+      "example": [
+        "Before: student 101 has phone 9001 in admissions and 9002 in the library. A report cannot know which is current without an ownership rule.",
+        "After: Student stores the authoritative phone; library and accounts reference student 101. An update changes that fact once. Backups and reporting copies may still contain earlier versions under deliberate policies."
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "id": "define-system",
+      "question": "What is a database system, and how does it differ from a DBMS?",
+      "answer": [
+        "A database is the related stored data. A DBMS is the software used to define, query, update, secure, and recover it. A database system includes the data, DBMS, applications, people, infrastructure, and procedures. For example, a college database, PostgreSQL, the registration portal, and its administration processes together form a database system."
+      ],
+      "level": "easy",
+      "tags": [
+        "Concept check"
+      ]
+    },
+    {
+      "id": "migration-case",
+      "question": "Why can moving three departmental files into a shared database improve consistency?",
+      "answer": [
+        "Independent files repeat facts such as student contact details, requiring coordinated edits. A shared Student record with a unique identifier gives each department a common reference. Changes to shared facts occur at one authoritative location, while foreign keys can prevent references to nonexistent students.",
+        "This improves consistency only if the migration resolves conflicting records and all applications use the shared source. Importing all three copies unchanged merely moves the duplication into a DBMS."
+      ],
+      "level": "medium",
+      "tags": [
+        "Practical"
+      ]
+    },
+    {
+      "id": "lost-update",
+      "question": "Two users both change a seat count from 10 to 9. What failed?",
+      "answer": [
+        "Both operations read the same old value and overwrite it with the same new value. Two allocations should leave 8 seats, so one update is lost. The application needs an atomic conditional update or an appropriate locking/serializable transaction design, together with retry handling where necessary. Merely storing the counter in a database is insufficient."
+      ],
+      "level": "hard",
+      "tags": [
+        "Concept check"
+      ]
+    }
+  ],
+  "revision": [
+    "Define database, DBMS, and database system separately.",
+    "Explain redundancy, inconsistency, isolation, and program-data dependence with one example.",
+    "Trace a lost update and justify when files remain useful."
+  ],
+  "references": [
+    {
+      "title": "Oracle Database Concepts: introduction and architecture",
+      "url": "https://docs.oracle.com/en/database/oracle/oracle-database/19/cncpt/introduction-to-oracle-database.html"
+    }
+  ],
+  "next": {
+    "id": "advantages-of-dbms",
+    "title": "Advantages and limitations of a DBMS"
+  }
+}

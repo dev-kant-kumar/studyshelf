@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 700" role="img" aria-labelledby="title desc"><title id="title">RPO and RTO measure different intervals</title><desc id="desc">Illustrative incident: only the 14:00 recovery point is available.</desc><defs><marker id="tip" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#0f766e"/></marker></defs><rect width="960" height="700" rx="16" fill="#f8fafc"/>
+<text x="40" y="48" text-anchor="start" font-family="Arial,sans-serif" font-size="27" font-weight="700" fill="#16324f">RPO and RTO measure different intervals</text>
+<text x="40" y="82" text-anchor="start" font-family="Arial,sans-serif" font-size="19" font-weight="400" fill="#16324f">Illustrative incident: only the 14:00 recovery point is available.</text>
+<path d="M100 300 L880 300" fill="none" stroke="#0f766e" stroke-width="3"/>
+<path d="M140 280 L140 320" fill="none" stroke="#0f766e" stroke-width="3"/>
+<text x="140" y="250" text-anchor="middle" font-family="Arial,sans-serif" font-size="25" font-weight="700" fill="#16324f">14:00</text>
+<text x="140" y="355" text-anchor="middle" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Recoverable point</text>
+<path d="M360 280 L360 320" fill="none" stroke="#0f766e" stroke-width="3"/>
+<text x="360" y="250" text-anchor="middle" font-family="Arial,sans-serif" font-size="25" font-weight="700" fill="#16324f">14:10</text>
+<text x="360" y="355" text-anchor="middle" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Failure</text>
+<path d="M820 280 L820 320" fill="none" stroke="#0f766e" stroke-width="3"/>
+<text x="820" y="250" text-anchor="middle" font-family="Arial,sans-serif" font-size="25" font-weight="700" fill="#16324f">15:00</text>
+<text x="820" y="355" text-anchor="middle" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Service restored</text>
+<rect x="140" y="420" width="220" height="55" rx="9" fill="#fff7ed" stroke="#fdba74" stroke-width="2"/>
+<text x="250" y="455" text-anchor="middle" font-family="Arial,sans-serif" font-size="21" font-weight="700" fill="#16324f">10 min loss</text>
+<rect x="360" y="510" width="460" height="55" rx="9" fill="#e0f2fe" stroke="#7dd3fc" stroke-width="2"/>
+<text x="590" y="545" text-anchor="middle" font-family="Arial,sans-serif" font-size="22" font-weight="700" fill="#16324f">50 min to restore service</text>
+<text x="55" y="160" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="400" fill="#16324f">RPO target: acceptable lost-data interval.</text>
+<text x="55" y="200" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="400" fill="#16324f">RTO target: acceptable time to restore service.</text>
+<text x="40" y="640" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Compare observed loss and restoration time with the agreed objectives.</text>
+<text x="40" y="667" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Spacing is illustrative; the clock labels determine each duration.</text>
+</svg>

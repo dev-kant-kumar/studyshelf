@@ -1,0 +1,123 @@
+{
+  "intro": "A database administrator (DBA) maintains a database service so that authorised users can depend on its data, performance, and recoverability. Administration combines preventive design, routine operation, and response to failure.",
+  "outcomes": [
+    "Explain the major technical and organisational DBA responsibilities.",
+    "Design a recovery plan around data-loss and downtime targets.",
+    "Distinguish backup, replication, recovery, and auditing."
+  ],
+  "sections": [
+    {
+      "title": "1. Definition, deployment, and controlled change",
+      "paragraphs": [
+        "A DBA helps establish databases, storage, object ownership, naming conventions, and configuration. Designers determine the domain model, while administrators assess operational implications such as indexes, growth, partitioning, and maintenance. In small teams the same person may do both.",
+        "Schema changes require review of data compatibility, dependent applications, lock duration, and rollback or forward-repair options. A migration should be tested against realistic data and workload. A syntactically valid ALTER can still block a busy service or fail because old rows violate the new rule.",
+        "Environment separation reduces accidental exposure and change risk. Development, test, and production should have appropriate identities and data handling procedures. Connection secrets belong in controlled configuration rather than source code or shared documents."
+      ]
+    },
+    {
+      "title": "2. Security and integrity administration",
+      "paragraphs": [
+        "The DBA provisions identities and roles, grants and revokes privileges, reviews excessive access, and helps implement auditing. Authentication verifies identity; authorisation restricts actions; audit evidence supports accountability. Encryption in transit protects the connection, and encryption at rest protects stored media under its key-management assumptions. Neither replaces permission checks.",
+        "Integrity administration includes implementing agreed constraints and monitoring unexpected failures. A DBA cannot decide business meaning alone: the data owner must define whether cancelled enrolments remain, whether marks can be revised, and how long financial records are retained. Privileged access itself needs controls because administrators may have broad technical power."
+      ]
+    },
+    {
+      "title": "3. Backup, recovery, and availability",
+      "paragraphs": [
+        "A backup is a recoverable copy made through a supported procedure. A recovery plan states which failures are covered, how copies and keys are protected, and how restoration is tested. Copying live database files without a consistent backup protocol can produce an unusable combination of states.",
+        "Recovery point objective (RPO) is the tolerated amount of lost data, often expressed as time. Recovery time objective (RTO) is the target duration for restoring service. A nightly backup alone may permit nearly a day of data loss and may take hours to restore. Logs and point-in-time recovery can reduce loss for supported failures, but require a complete, usable recovery chain.",
+        "Replication maintains another copy for availability or workloads. It is not a full substitute for backup: an accidental delete can quickly propagate to a replica. Failover also needs defined promotion, routing, and consistency procedures; a second server alone is not a tested availability plan."
+      ],
+      "diagram": "recovery",
+      "alt": "A base backup and subsequent archived logs restore a chosen point; replicas serve a separate availability purpose.",
+      "caption": "Backups and recovery history address restoration; replication addresses availability and can copy mistakes.",
+      "diagramHeight": 570,
+      "subsections": [
+        {
+          "title": "Read a recovery timeline",
+          "paragraphs": [],
+          "diagram": "recovery-rpo-rto-timeline",
+          "diagramHeight": 700,
+          "alt": "The recoverable point is 14:00, failure occurs at 14:10, and service returns at 15:00. Potential data loss is ten minutes; service restoration takes fifty minutes.",
+          "caption": "Orange marks the lost-data interval; blue marks restoration time. Meeting one objective does not prove the other is met."
+        }
+      ]
+    },
+    {
+      "title": "4. Performance and capacity",
+      "paragraphs": [
+        "Performance work starts by identifying slow or resource-intensive operations and measuring response time, throughput, waits, and resource use. Query plans, indexes, statistics, lock contention, connection pressure, memory, and storage latency can all matter. Adding indexes indiscriminately increases update cost and storage consumption.",
+        "Capacity planning forecasts data, index, log, temporary-space, and backup growth. Free disk space matters to correctness and availability because writes, recovery, and maintenance need room. Monitoring should detect conditions that require action before users are blocked. Maintenance tasks vary by engine and deployment."
+      ],
+      "diagram": "dba-index-tradeoff",
+      "diagramHeight": 700,
+      "alt": "A Student table has an auxiliary name index. A selective read can use the index to find a row, while inserts or name changes require maintaining both structures.",
+      "caption": "The lookup path is extra structure. Its read benefits must be weighed against storage and update work."
+    },
+    {
+      "title": "5. Worked incident and operational discipline",
+      "paragraphs": [
+        "Suppose a bulk operation deletes valid enrolments at 14:05 and the mistake is discovered at 14:20. A replica may already contain the delete. If a base backup and required logs exist, an administrator may restore a separate environment to just before 14:05, identify the lost records, and plan controlled recovery. Restoring production directly to an earlier time can also discard legitimate later work.",
+        "A runbook records steps, dependencies, required access, and verification for a recurring operation or incident. Restore drills validate backups, keys, tools, and timing. After an incident, investigate the cause and adjust privileges, workflow checks, or operational procedures rather than relying only on a successful restore."
+      ],
+      "example": [
+        "Target: at most 15 minutes of data loss and service recovery within 2 hours. A daily dump alone cannot meet the loss target.",
+        "A suitable engine-specific plan might combine consistent backups, frequent log archiving, protected copies, and measured restore drills. The actual archive lag and restore duration must be checked against the targets."
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "id": "functions",
+      "question": "Describe the main functions of a DBA.",
+      "answer": [
+        "A DBA manages database deployment and configuration, storage and capacity, access privileges, integrity implementation, controlled schema changes, performance monitoring and tuning, backups, recovery, availability procedures, and operational documentation. The role also supports incident investigation and policy enforcement. Designers, developers, data owners, and security teams share responsibilities, so administration requires coordination as well as technical access."
+      ],
+      "level": "medium",
+      "tags": [
+        "Concept check"
+      ]
+    },
+    {
+      "id": "replica-backup",
+      "question": "Why does replication not replace backup?",
+      "answer": [
+        "A replica commonly follows source changes, including valid but mistaken deletes and updates. It helps availability but may reproduce the very state from which recovery is needed. Protected historical backups and, where supported, retained logs provide separate restoration options. Their usefulness must be confirmed through restore tests."
+      ],
+      "level": "medium",
+      "tags": [
+        "Practical"
+      ]
+    },
+    {
+      "id": "rpo-rto",
+      "question": "A system has hourly backups but needs an RPO of five minutes. Is the plan sufficient?",
+      "answer": [
+        "Hourly backups alone allow close to an hour of lost changes, so they do not meet the five-minute loss target. Additional mechanisms such as sufficiently frequent durable log archiving may be needed. RTO must be assessed independently by measuring restoration, validation, and service cutover time. Meeting one objective does not establish the other."
+      ],
+      "level": "hard",
+      "tags": [
+        "Concept check"
+      ]
+    }
+  ],
+  "revision": [
+    "Explain DBA duties beyond creating tables.",
+    "Separate RPO from RTO and replication from historical recovery.",
+    "Describe a restore drill and the risks of reverting production blindly."
+  ],
+  "references": [
+    {
+      "title": "Oracle Database Concepts: introduction and architecture",
+      "url": "https://docs.oracle.com/en/database/oracle/oracle-database/19/cncpt/introduction-to-oracle-database.html"
+    },
+    {
+      "title": "PostgreSQL: backup and restore",
+      "url": "https://www.postgresql.org/docs/current/backup.html"
+    }
+  ],
+  "next": {
+    "id": "rdbms",
+    "title": "Relational database management systems"
+  }
+}

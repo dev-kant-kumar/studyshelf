@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 700" role="img" aria-labelledby="title desc"><title id="title">A new schema rule must fit the existing state</title><desc id="desc">Adding a unique email constraint checks data already stored.</desc><defs><marker id="tip" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#0f766e"/></marker></defs><rect width="960" height="700" rx="16" fill="#f8fafc"/>
+<text x="40" y="48" text-anchor="start" font-family="Arial,sans-serif" font-size="27" font-weight="700" fill="#16324f">A new schema rule must fit the existing state</text>
+<text x="40" y="82" text-anchor="start" font-family="Arial,sans-serif" font-size="19" font-weight="400" fill="#16324f">Adding a unique email constraint checks data already stored.</text>
+<rect x="40" y="120" width="880" height="169" rx="9" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="52" y="152" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="700" fill="#16324f">Existing Student rows</text>
+<path d="M40 169 L920 169" fill="none" stroke="#0f766e" stroke-width="3"/>
+<text x="51" y="197" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">student_id</text>
+<text x="331" y="197" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">email</text>
+<path d="M320 169 V289" stroke="#cbd5e1"/>
+<text x="51" y="237" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">101</text>
+<text x="331" y="237" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">shared@example.test</text>
+<path d="M320 169 V289" stroke="#cbd5e1"/>
+<path d="M40 209 H920" stroke="#cbd5e1"/>
+<text x="51" y="277" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">102</text>
+<text x="331" y="277" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">shared@example.test</text>
+<path d="M320 169 V289" stroke="#cbd5e1"/>
+<path d="M40 249 H920" stroke="#cbd5e1"/>
+<rect x="40" y="390" width="400" height="110" rx="9" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="56" y="422" text-anchor="start" font-family="Arial,sans-serif" font-size="21" font-weight="700" fill="#16324f">Requested schema change</text>
+<text x="56" y="454" text-anchor="start" font-family="Arial,sans-serif" font-size="21" font-weight="400" fill="#16324f">Add UNIQUE(email)</text>
+<rect x="520" y="390" width="400" height="110" rx="9" fill="#fff7ed" stroke="#94a3b8" stroke-width="2"/>
+<text x="536" y="422" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">Constraint check fails</text>
+<text x="536" y="454" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Two existing rows share the value</text>
+<path d="M445 445 L515 445" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<text x="40" y="640" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">No new row was inserted, but the new constraint conflicts with old data.</text>
+<text x="40" y="667" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Resolve the data or revise the business rule before applying the migration.</text>
+</svg>

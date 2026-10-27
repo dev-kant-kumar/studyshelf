@@ -1,0 +1,335 @@
+{
+  "intro": "Database systems can be classified along several independent dimensions. The data model describes how information is represented; deployment describes where work runs; workload describes what operations dominate. One product can belong to several categories at the same time.",
+  "outcomes": [
+    "Compare hierarchical, network, relational, object, and common NoSQL models.",
+    "Distinguish centralised, distributed, embedded, and client-server deployment.",
+    "Separate transaction processing from analytical workloads."
+  ],
+  "sections": [
+    {
+      "title": "1. Classification by data model",
+      "paragraphs": [
+        "A data model describes structures, relationships, operations, and constraints. Compare the following diagrams by asking what one stored item represents and how it connects to other items. The same college setting makes the differences visible."
+      ],
+      "subsections": [
+        {
+          "title": "Hierarchical DBMS",
+          "paragraphs": [
+            "A hierarchical DBMS organises records in a rooted tree of parent-child relationships. Each child has one parent within that hierarchy, while a parent can have several children. A path identifies the route used to reach a record.",
+            "In the diagram, College owns department records and each department owns its course records. To reach DB101, follow College to Computing department to DB101. A course shared by two departments cannot simply have two parents in this tree; the design must use duplication, references, or another supported mechanism."
+          ],
+          "diagram": "types-hierarchical",
+          "alt": "College branches into Computing and Management departments. Computing has DB101 and CS101; Management has MG101. Each child has one parent.",
+          "caption": "Read from the root downward. A tree represents nested ownership naturally, while shared membership needs extra design.",
+          "diagramHeight": 600
+        },
+        {
+          "title": "Network DBMS",
+          "paragraphs": [
+            "The historical network model represents records connected through named owner-member set relationships. A record can participate in multiple set types, allowing richer navigation than a simple tree. Applications follow defined links to find related records.",
+            "Enrolment E1 belongs to the Student-Enrolments set owned by student S101 and the Course-Enrolments set owned by course DB101. Both paths reach the same enrolment record. The two lines represent different set types, not two owners within one occurrence of the same set. This model concerns record navigation, not computer networks."
+          ],
+          "diagram": "types-network",
+          "alt": "Student S101 and Course DB101 are owners in two distinct named sets whose shared member is Enrolment E1.",
+          "caption": "One member record participates in different named sets. That shared record is the important difference from a simple parent-child tree.",
+          "diagramHeight": 600
+        },
+        {
+          "title": "Relational DBMS",
+          "paragraphs": [
+            "A relational DBMS represents facts using relations, commonly displayed as tables. Rows describe facts and columns describe attributes. Primary keys identify rows; foreign keys express references using matching values. Queries can combine relations without requiring a fixed record-navigation path.",
+            "Student 101 appears once in Student, and its identifier appears in Enrolment. The course code DB101 similarly matches a Course row. Joining these values produces Asha, Databases, 82. The arrows show logical value references rather than physical pointers."
+          ],
+          "diagram": "types-relational",
+          "alt": "Student and Course tables have primary keys. Enrolment contains student and course foreign-key values plus a mark, with arrows to matching parent keys.",
+          "caption": "Follow the repeated identifiers across the tables. Relationships are expressed through values, and joins reconstruct the combined information.",
+          "diagramHeight": 650
+        },
+        {
+          "title": "Object-oriented DBMS",
+          "paragraphs": [
+            "An object-oriented DBMS persists objects with identity and state, typically using concepts such as classes, references, methods, and inheritance. An object identity distinguishes an object even if its attribute values change. Features and method execution rules depend on the engine.",
+            "The diagram separates the Student class from a particular Student object, @S101. Its courses attribute refers to Course object @C7. A Postgraduate class inherits the Student structure and adds dissertation information. An object reference directly expresses which persistent object is associated with another."
+          ],
+          "diagram": "types-object",
+          "alt": "Student and Postgraduate class definitions show inheritance. Student object S101 has a courses reference to Course object C7.",
+          "caption": "Class, object, inheritance, and reference have different roles. The @ labels are illustrative persistent identities.",
+          "diagramHeight": 650
+        },
+        {
+          "title": "Object-relational DBMS",
+          "paragraphs": [
+            "An object-relational DBMS retains relational tables and operations while extending the type system with richer values or object-related features. It differs from replacing the entire relational representation with an object-only store.",
+            "Student remains a table with student_id as its key, but address holds a structured AddressType value containing city and postcode. The expanded type box explains the parts of that value. Such features can represent complex information without discarding relational keys and queries; exact facilities differ across products."
+          ],
+          "diagram": "types-object-relational",
+          "alt": "A Student relation has student_id, name, and a structured address column. The address type expands into city and postcode fields.",
+          "caption": "The relational table remains visible. The extension is the richer type of a column value.",
+          "diagramHeight": 600
+        }
+      ]
+    },
+    {
+      "title": "2. Key-value, document, column-family, and graph systems",
+      "paragraphs": [
+        "The following nonrelational models are often grouped under NoSQL. They make different representation and access choices. The label alone does not establish whether a product provides transactions, schemas, or a particular consistency guarantee."
+      ],
+      "table": {
+        "caption": "Model and a suitable college example",
+        "headers": [
+          "Model",
+          "Representation",
+          "Example and main consideration"
+        ],
+        "rows": [
+          [
+            "Hierarchical",
+            "Parent-child tree",
+            "Department course catalogue; shared children need care"
+          ],
+          [
+            "Network",
+            "Linked record sets",
+            "Multiple navigable ownership paths; path dependence"
+          ],
+          [
+            "Relational",
+            "Relations with keys",
+            "Students and enrolments; joins combine facts"
+          ],
+          [
+            "Object-oriented",
+            "Persistent objects",
+            "Complex object structures; identity and class evolution"
+          ],
+          [
+            "Object-relational",
+            "Relations plus richer types",
+            "Structured address values; extension support varies"
+          ],
+          [
+            "Document",
+            "Nested documents",
+            "Course content documents; cross-document rules need design"
+          ],
+          [
+            "Key-value",
+            "Key to value",
+            "Session lookup; field queries may be limited"
+          ],
+          [
+            "Wide-column",
+            "Query-oriented partitions and columns",
+            "Enrolments by course; key design determines supported reads"
+          ],
+          [
+            "Graph",
+            "Vertices and edges",
+            "Prerequisite traversal; model relationship direction carefully"
+          ]
+        ]
+      },
+      "subsections": [
+        {
+          "title": "Key-value DBMS",
+          "paragraphs": [
+            "A key-value store associates each unique key with a value. A direct lookup supplies the key and obtains the associated value. The value may be text, binary data, or a structured payload, but operations over internal fields depend on the engine.",
+            "For session:101, the returned value records user 101 and the student role. Looking up session:102 retrieves a different entry. Finding every value whose role is teacher is a different access pattern and may require indexing or another supported facility."
+          ],
+          "diagram": "types-key-value",
+          "alt": "Keys session:101 and session:102 point to separate session values containing user and role data.",
+          "caption": "A key lookup selects an entry. Do not assume field-based queries are provided merely because the stored payload is structured.",
+          "diagramHeight": 600
+        },
+        {
+          "title": "Document DBMS",
+          "paragraphs": [
+            "A document DBMS stores structured documents containing named fields, nested documents, and arrays. A collection groups documents. Flexible structure allows documents to have different fields, but applications still need consistent meanings and appropriate validation.",
+            "The DB101 document embeds two module documents in its modules array, so the course and its modules can be retrieved together. CS101 illustrates a different document shape with labHours. Facts shared across many documents may instead be referenced; embedding everything can create duplication and costly updates."
+          ],
+          "diagram": "types-document",
+          "alt": "Two course documents in one collection: DB101 embeds a modules array, while CS101 has a labHours field.",
+          "caption": "The braces and indentation show containment inside a document. Embedding and references are deliberate modelling choices.",
+          "diagramHeight": 650
+        },
+        {
+          "title": "Wide-column or column-family DBMS",
+          "paragraphs": [
+            "Wide-column systems organise data using keys and column-oriented groupings, with details varying across products. For a concrete Cassandra-style design, a partition key groups rows that are retrieved together, while clustering columns distinguish and order rows within a partition.",
+            "In enrolments_by_course, course_code is the partition key and student_id is the clustering column. Requesting DB101 retrieves its partition, with rows for Asha and Ravi. CS101 is a separate partition. This layout is chosen for the query enrolments for a course; a different query can need another table. It is not the same as analytical columnar storage, which groups values by column for efficient scans."
+          ],
+          "diagram": "types-wide-column",
+          "alt": "A course-partitioned enrolment table has a DB101 partition with students 101 and 102 and a CS101 partition with student 101. The key separates course partitioning from student clustering.",
+          "caption": "Read the partition boundary first, then the rows within it. This is a specific Cassandra-style example, not a universal physical layout for every wide-column engine.",
+          "diagramHeight": 650
+        },
+        {
+          "title": "Graph DBMS",
+          "paragraphs": [
+            "A graph DBMS represents entities as vertices and relationships as edges, often with properties on both. Edges can have labels and directions that give the relationship its meaning. Traversal follows paths to answer questions about connections.",
+            "Here, A REQUIRES B means B is a prerequisite of A. Advanced DB requires DB foundations, which requires Programming. Following two directed edges discovers the indirect prerequisite. Algorithms also requires Programming, so two courses share one prerequisite vertex instead of duplicating it. This course-prerequisite graph is an example; graph databases are not restricted to trees or acyclic graphs."
+          ],
+          "diagram": "types-graph",
+          "alt": "DB201 requires DB101, DB101 requires CS101, and CS201 also requires CS101. Directed REQUIRES edges show direct and indirect prerequisites.",
+          "caption": "Read arrow direction together with the relationship label. A path can answer questions that involve several connections.",
+          "diagramHeight": 650
+        }
+      ]
+    },
+    {
+      "title": "3. Classification by location and deployment",
+      "paragraphs": [
+        "Deployment describes where database work runs and how applications reach it. These categories overlap: a relational service may be client-server, distributed, multi-user, and managed in the cloud at the same time."
+      ],
+      "subsections": [
+        {
+          "title": "Centralised database",
+          "paragraphs": [
+            "A centralised database is managed at one principal site. The diagram shows admissions, library, and accounts applications reaching a common database. Several users and applications can share it; centralised does not mean single-user.",
+            "Shared management can simplify coordination, but the database site is an important dependency. The actual availability of the service depends on its infrastructure, backup, and failover arrangements."
+          ],
+          "diagram": "types-centralised",
+          "alt": "Admissions, library, and accounts connect to one central college database site.",
+          "caption": "Several clients share one principal database site. Client count and data model are separate classifications.",
+          "diagramHeight": 600
+        },
+        {
+          "title": "Distributed database",
+          "paragraphs": [
+            "A distributed database coordinates data across multiple sites or nodes. Fragmentation places different subsets at different sites; replication keeps copies. A system may use both.",
+            "Campus A holds one student partition and Campus B another, while both hold replicated Course data. A coordinated access layer locates data and handles cross-site work. Network interruptions, consistency, replication lag, and recovery require explicit policies; two disconnected databases do not automatically form one coordinated distributed database."
+          ],
+          "diagram": "types-distributed",
+          "alt": "Two campus database sites contain different student partitions and copies of shared Course data, coordinated by database access.",
+          "caption": "Different student subsets illustrate fragmentation. Repeated Course data illustrates replication.",
+          "diagramHeight": 650
+        },
+        {
+          "title": "Embedded database",
+          "paragraphs": [
+            "An embedded engine runs inside the application process. The application calls its database API rather than contacting a separate database server process. SQLite is a familiar relational example of this deployment style.",
+            "The process boundary encloses both application code and engine in the diagram; the engine reads and writes database storage. This describes placement, not a universal restriction to one user or one process accessing the data. Supported concurrency depends on the engine and access pattern."
+          ],
+          "diagram": "types-embedded",
+          "alt": "One application process contains application code and an embedded DBMS engine. Local API calls reach the engine, which accesses a database file.",
+          "caption": "The enclosing process boundary is the defining feature: application and engine run together.",
+          "diagramHeight": 600
+        },
+        {
+          "title": "Client-server database",
+          "paragraphs": [
+            "In client-server deployment, a client application or application service connects to a separate DBMS service. A driver transports requests and results through the database protocol. A server can manage many connections and coordinate their operations.",
+            "The arrows show a query travelling to the server and result rows or status returning to the client. A website often places an application service between the browser and database, rather than connecting the browser directly to the DBMS. The data model can still be relational or nonrelational."
+          ],
+          "diagram": "types-client-server",
+          "alt": "A client process sends SQL requests to a separate server process and receives rows or status; the server controls its storage.",
+          "caption": "Unlike embedded deployment, the database engine runs in a separate service process.",
+          "diagramHeight": 600
+        },
+        {
+          "title": "Managed cloud database",
+          "paragraphs": [
+            "A managed cloud database is hosted as a service with operational tasks supplied by a provider. Responsibility is divided: the application team still defines its data model, workflows, identities, and appropriate access.",
+            "The diagram shows the two responsibilities connected through a service interface. Which backup, maintenance, scaling, and availability tasks are handled by the provider depends on the service and configuration. Cloud hosting is independent of the logical model and does not remove the need to verify recovery and security settings."
+          ],
+          "diagram": "types-managed-cloud",
+          "alt": "Application-team responsibilities sit beside managed-service responsibilities; configuration and verification remain shared work.",
+          "caption": "Read this as a responsibility boundary. The provider operates facilities; the customer must configure and use them correctly.",
+          "diagramHeight": 650
+        },
+        {
+          "title": "Single-user and multi-user DBMS",
+          "paragraphs": [
+            "A single-user arrangement is intended for one active user at a time. A multi-user arrangement supports several users whose operations may overlap. A personal study database and a shared registration database illustrate the distinction.",
+            "The multi-user picture converges on one shared database because the users can change related facts. Concurrency control and isolation govern those interactions. Neither the relational model nor embedded placement alone determines the supported number of simultaneous users."
+          ],
+          "diagram": "types-users",
+          "alt": "One user accesses a personal database on the left. A student and a clerk concurrently access a shared database on the right.",
+          "caption": "The distinction is concurrent use, rather than the number of tables, machines, or application screens.",
+          "diagramHeight": 650
+        }
+      ]
+    },
+    {
+      "title": "4. Classification by workload",
+      "paragraphs": [
+        "Online transaction processing (OLTP) handles frequent, relatively small reads and changes, such as individual registrations. Online analytical processing (OLAP) examines large collections for summaries and trends, such as enrolment patterns across five years. OLTP often prioritises response time and write correctness; OLAP often prioritises efficient scanning and aggregation.",
+        "A data warehouse integrates data for analysis, often retaining history and using structures chosen for reporting. A production DBMS may support mixed workloads, but heavy reporting can compete with registration traffic for CPU, memory, and storage bandwidth. Classification is a guide to requirements, not a rigid product boundary."
+      ],
+      "diagram": "types-workloads",
+      "diagramHeight": 650,
+      "alt": "OLTP handles an individual registration with a few coordinated changes. OLAP scans historical datasets and aggregates enrolment trends.",
+      "caption": "Compare the work performed: many small operational transactions versus large analytical scans and summaries. One engine may support both."
+    },
+    {
+      "title": "5. Worked classification and selection",
+      "paragraphs": [
+        "Consider a relational registration database running as a managed cloud service, with replicas in two regions and many concurrent users. It is relational by model, client-server by interaction, distributed in its replicated topology, managed cloud by operation, and primarily OLTP by workload. Each label answers a different question.",
+        "Choose a model by the relationships and queries that must be supported, then evaluate transactions, failure handling, operational cost, and workload. A document with nested modules can be convenient for displaying a course, while cross-course reporting and enrolment integrity may favour relational structures. Product fashion is not a substitute for a requirements analysis."
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "id": "classification",
+      "question": "Classify DBMSs and explain why the categories overlap.",
+      "answer": [
+        "DBMSs can be grouped by model, including hierarchical, network, relational, object, document, key-value, wide-column, and graph systems. They can also be classified by deployment, including centralised, distributed, embedded, and client-server, and by workload, including OLTP and OLAP.",
+        "The dimensions overlap because representation, location, and purpose are different properties. A relational database can be distributed, multi-user, cloud-managed, and used for transaction processing at once."
+      ],
+      "level": "medium",
+      "tags": [
+        "Concept check"
+      ]
+    },
+    {
+      "id": "hierarchy-network",
+      "question": "How does a network model differ from a hierarchical model?",
+      "answer": [
+        "A hierarchical model organises parent-child records as a tree, making one-to-many paths natural. The network model supports more general linked ownership relationships so a record can participate in multiple paths. This can represent shared associations more directly but increases navigation and maintenance complexity. Neither label specifies whether the DBMS runs on a network of computers."
+      ],
+      "level": "medium",
+      "tags": [
+        "Concept check"
+      ]
+    },
+    {
+      "id": "nosql-transactions",
+      "question": "Does a nonrelational DBMS necessarily lack ACID transactions?",
+      "answer": [
+        "No. The data model determines how data and relationships are represented, while transactional guarantees determine how operations behave under concurrency and failure. A nonrelational product can provide transactions, and its guarantees may differ by operation, scope, configuration, or deployment. Evaluate documented guarantees rather than inferring them from the NoSQL label."
+      ],
+      "level": "hard",
+      "tags": [
+        "Concept check"
+      ]
+    }
+  ],
+  "revision": [
+    "Classify the same system along model, deployment, users, and workload.",
+    "Explain each model using a concrete representation.",
+    "Avoid equating cloud with a model or NoSQL with absence of transactions."
+  ],
+  "references": [
+    {
+      "title": "Oracle Database Concepts: introduction and architecture",
+      "url": "https://docs.oracle.com/en/database/oracle/oracle-database/19/cncpt/introduction-to-oracle-database.html"
+    },
+    {
+      "title": "SQLite: embedded and client-server use cases",
+      "url": "https://www.sqlite.org/whentouse.html"
+    },
+    {
+      "title": "Apache Cassandra: logical data modelling",
+      "url": "https://cassandra.apache.org/doc/latest/cassandra/developing/data-modeling/data-modeling_logical.html"
+    },
+    {
+      "title": "MongoDB: data modelling and document relationships",
+      "url": "https://www.mongodb.com/docs/manual/data-modeling/"
+    }
+  ],
+  "next": {
+    "id": "dbms-structure",
+    "title": "DBMS structure and query processing"
+  }
+}

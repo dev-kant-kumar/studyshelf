@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 750" role="img" aria-labelledby="title desc"><title id="title">Physical independence: same request, new access path</title><desc id="desc">An internal access change preserves the logical Student interface.</desc><defs><marker id="tip" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#0f766e"/></marker></defs><rect width="960" height="750" rx="16" fill="#f8fafc"/>
+<text x="40" y="48" text-anchor="start" font-family="Arial,sans-serif" font-size="27" font-weight="700" fill="#16324f">Physical independence: same request, new access path</text>
+<text x="40" y="82" text-anchor="start" font-family="Arial,sans-serif" font-size="19" font-weight="400" fill="#16324f">An internal access change preserves the logical Student interface.</text>
+<rect x="40" y="120" width="880" height="75" rx="9" fill="#e0f2fe" stroke="#94a3b8" stroke-width="2"/>
+<text x="56" y="152" text-anchor="start" font-family="Arial,sans-serif" font-size="23" font-weight="700" fill="#16324f">Unchanged query: find Student where student_id = 101</text>
+<rect x="40" y="290" width="400" height="140" rx="9" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="56" y="322" text-anchor="start" font-family="Arial,sans-serif" font-size="21" font-weight="700" fill="#16324f">Before: table scan</text>
+<text x="56" y="354" text-anchor="start" font-family="Arial,sans-serif" font-size="21" font-weight="400" fill="#16324f">Inspect stored Student rows</text>
+<text x="56" y="383" text-anchor="start" font-family="Arial,sans-serif" font-size="21" font-weight="400" fill="#16324f">Keep the matching row</text>
+<rect x="520" y="290" width="400" height="140" rx="9" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="536" y="322" text-anchor="start" font-family="Arial,sans-serif" font-size="21" font-weight="700" fill="#16324f">After: index lookup</text>
+<text x="536" y="354" text-anchor="start" font-family="Arial,sans-serif" font-size="21" font-weight="400" fill="#16324f">Find key 101 in an index</text>
+<text x="536" y="383" text-anchor="start" font-family="Arial,sans-serif" font-size="21" font-weight="400" fill="#16324f">Fetch the matching row</text>
+<path d="M240 195 L240 285" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<path d="M720 195 L720 285" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<rect x="250" y="505" width="460" height="129" rx="9" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="262" y="537" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="700" fill="#16324f">Same logical result</text>
+<path d="M250 554 L710 554" fill="none" stroke="#0f766e" stroke-width="3"/>
+<text x="261" y="582" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">student_id</text>
+<text x="511" y="582" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">name</text>
+<path d="M500 554 V634" stroke="#cbd5e1"/>
+<text x="261" y="622" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">101</text>
+<text x="511" y="622" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Asha</text>
+<path d="M500 554 V634" stroke="#cbd5e1"/>
+<path d="M250 594 H710" stroke="#cbd5e1"/>
+<path d="M240 430 L240 465 L380 465 L380 500" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<path d="M720 430 L720 465 L580 465 L580 500" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<text x="40" y="690" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Changed: internal access structures. Preserved: logical meaning and interface.</text>
+<text x="40" y="717" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Performance can change; unordered SQL results still have no promised order.</text>
+</svg>

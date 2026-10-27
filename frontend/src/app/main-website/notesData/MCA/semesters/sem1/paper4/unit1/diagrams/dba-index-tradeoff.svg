@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 700" role="img" aria-labelledby="title desc"><title id="title">An index adds a lookup path and maintenance work</title><desc id="desc">The benefit of an extra access structure depends on the workload.</desc><defs><marker id="tip" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#0f766e"/></marker></defs><rect width="960" height="700" rx="16" fill="#f8fafc"/>
+<text x="40" y="48" text-anchor="start" font-family="Arial,sans-serif" font-size="27" font-weight="700" fill="#16324f">An index adds a lookup path and maintenance work</text>
+<text x="40" y="82" text-anchor="start" font-family="Arial,sans-serif" font-size="19" font-weight="400" fill="#16324f">The benefit of an extra access structure depends on the workload.</text>
+<rect x="40" y="120" width="390" height="209" rx="9" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="52" y="152" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="700" fill="#16324f">Student table</text>
+<path d="M40 169 L430 169" fill="none" stroke="#0f766e" stroke-width="3"/>
+<text x="51" y="197" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">student_id</text>
+<text x="266" y="197" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">name</text>
+<path d="M255 169 V329" stroke="#cbd5e1"/>
+<text x="51" y="237" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">101</text>
+<text x="266" y="237" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Asha</text>
+<path d="M255 169 V329" stroke="#cbd5e1"/>
+<path d="M40 209 H430" stroke="#cbd5e1"/>
+<text x="51" y="277" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">102</text>
+<text x="266" y="277" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Ravi</text>
+<path d="M255 169 V329" stroke="#cbd5e1"/>
+<path d="M40 249 H430" stroke="#cbd5e1"/>
+<text x="51" y="317" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">103</text>
+<text x="266" y="317" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Mira</text>
+<path d="M255 169 V329" stroke="#cbd5e1"/>
+<path d="M40 289 H430" stroke="#cbd5e1"/>
+<rect x="530" y="120" width="390" height="209" rx="9" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="542" y="152" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="700" fill="#16324f">Illustrative name index</text>
+<path d="M530 169 L920 169" fill="none" stroke="#0f766e" stroke-width="3"/>
+<text x="541" y="197" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">name</text>
+<text x="721" y="197" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">row reference</text>
+<path d="M710 169 V329" stroke="#cbd5e1"/>
+<text x="541" y="237" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Asha</text>
+<text x="721" y="237" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">101</text>
+<path d="M710 169 V329" stroke="#cbd5e1"/>
+<path d="M530 209 H920" stroke="#cbd5e1"/>
+<text x="541" y="277" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Mira</text>
+<text x="721" y="277" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">103</text>
+<path d="M710 169 V329" stroke="#cbd5e1"/>
+<path d="M530 249 H920" stroke="#cbd5e1"/>
+<text x="541" y="317" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Ravi</text>
+<text x="721" y="317" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">102</text>
+<path d="M710 169 V329" stroke="#cbd5e1"/>
+<path d="M530 289 H920" stroke="#cbd5e1"/>
+<path d="M525 280 L435 280" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<text x="451" y="250" text-anchor="start" font-family="Arial,sans-serif" font-size="19" font-weight="400" fill="#0f766e">fetch</text>
+<rect x="40" y="450" width="390" height="110" rx="9" fill="#ecfdf5" stroke="#94a3b8" stroke-width="2"/>
+<text x="56" y="482" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">Selective read</text>
+<text x="56" y="514" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">May reduce search work</text>
+<rect x="530" y="450" width="390" height="110" rx="9" fill="#fff7ed" stroke="#94a3b8" stroke-width="2"/>
+<text x="546" y="482" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">Insert or name update</text>
+<text x="546" y="514" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Maintain the table and index</text>
+<text x="40" y="640" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Indexes occupy space and add work to changes affecting their entries.</text>
+<text x="40" y="667" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Measure query plans and read/write demand before adding more indexes.</text>
+</svg>

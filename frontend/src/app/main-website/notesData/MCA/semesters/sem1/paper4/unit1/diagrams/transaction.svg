@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 570" role="img" aria-labelledby="title desc">
+<title id="title">One transaction, one database outcome</title><desc id="desc">Commit or rollback applies to the related database changes.|External payment and email need additional coordination.</desc>
+<defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0 L10 5 L0 10" fill="none" stroke="#475569" stroke-width="2"/></marker></defs>
+<rect width="960" height="570" rx="20" fill="#f8fafc"/>
+<text x="480" y="48" text-anchor="middle" font-family="Arial,sans-serif" font-size="26" font-weight="700" fill="#0f172a">One transaction, one database outcome</text>
+<rect x="40.0" y="80" width="880.0" height="90" rx="12" fill="#e0f2fe" stroke="#0369a1" stroke-width="2"/>
+<text x="480.0" y="115" text-anchor="middle" font-family="Arial,sans-serif" font-size="20" fill="#0c4a6e">Begin registration</text>
+<text x="480.0" y="142" text-anchor="middle" font-family="Arial,sans-serif" font-size="20" fill="#0c4a6e">Check identity and capacity</text>
+
+<rect x="40.0" y="210" width="880.0" height="90" rx="12" fill="#e0f2fe" stroke="#0369a1" stroke-width="2"/>
+<text x="480.0" y="245" text-anchor="middle" font-family="Arial,sans-serif" font-size="20" fill="#0c4a6e">Create enrolment + fee obligation</text>
+<text x="480.0" y="272" text-anchor="middle" font-family="Arial,sans-serif" font-size="20" fill="#0c4a6e">Coordinate competing transactions</text>
+
+<rect x="40.0" y="340" width="430.0" height="90" rx="12" fill="#e0f2fe" stroke="#0369a1" stroke-width="2"/>
+<text x="255.0" y="375" text-anchor="middle" font-family="Arial,sans-serif" font-size="20" fill="#0c4a6e">COMMIT: retain all changes</text>
+<rect x="490.0" y="340" width="430.0" height="90" rx="12" fill="#e0f2fe" stroke="#0369a1" stroke-width="2"/>
+<text x="705.0" y="375" text-anchor="middle" font-family="Arial,sans-serif" font-size="20" fill="#0c4a6e">ROLLBACK: discard changes</text>
+<text x="480" y="522" text-anchor="middle" font-family="Arial,sans-serif" font-size="18" fill="#334155">Commit or rollback applies to the related database changes.</text>
+<text x="480" y="547" text-anchor="middle" font-family="Arial,sans-serif" font-size="18" fill="#334155">External payment and email need additional coordination.</text>
+<path d="M480.0 174.0 L480.0 203.0" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/>
+<path d="M480.0 304.0 L255.0 333.0" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/>
+<path d="M480.0 304.0 L705.0 333.0" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/>
+</svg>

@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 700" role="img" aria-labelledby="title desc"><title id="title">Active and passive dictionaries after a schema change</title><desc id="desc">Follow an added phone column into the engine catalogue and separate documentation.</desc><defs><marker id="tip" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#0f766e"/></marker></defs><rect width="960" height="700" rx="16" fill="#f8fafc"/>
+<text x="40" y="48" text-anchor="start" font-family="Arial,sans-serif" font-size="27" font-weight="700" fill="#16324f">Active and passive dictionaries after a schema change</text>
+<text x="40" y="82" text-anchor="start" font-family="Arial,sans-serif" font-size="19" font-weight="400" fill="#16324f">Follow an added phone column into the engine catalogue and separate documentation.</text>
+<rect x="40" y="120" width="880" height="75" rx="9" fill="#e0f2fe" stroke="#94a3b8" stroke-width="2"/>
+<text x="56" y="152" text-anchor="start" font-family="Arial,sans-serif" font-size="21" font-weight="700" fill="#16324f">DDL request: add an optional phone column to Student</text>
+<rect x="40" y="300" width="400" height="125" rx="9" fill="#ecfdf5" stroke="#94a3b8" stroke-width="2"/>
+<text x="56" y="332" text-anchor="start" font-family="Arial,sans-serif" font-size="21" font-weight="700" fill="#16324f">DBMS-managed catalogue</text>
+<text x="56" y="364" text-anchor="start" font-family="Arial,sans-serif" font-size="21" font-weight="400" fill="#16324f">Registers the column definition</text>
+<text x="56" y="393" text-anchor="start" font-family="Arial,sans-serif" font-size="21" font-weight="400" fill="#16324f">Maintained by supported DDL</text>
+<rect x="520" y="300" width="400" height="125" rx="9" fill="#fff7ed" stroke="#94a3b8" stroke-width="2"/>
+<text x="536" y="332" text-anchor="start" font-family="Arial,sans-serif" font-size="21" font-weight="700" fill="#16324f">Separate documentation</text>
+<text x="536" y="364" text-anchor="start" font-family="Arial,sans-serif" font-size="21" font-weight="400" fill="#16324f">Needs a synchronised edit</text>
+<text x="536" y="393" text-anchor="start" font-family="Arial,sans-serif" font-size="21" font-weight="400" fill="#16324f">Can become stale if omitted</text>
+<path d="M240 195 L240 295" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<text x="260" y="255" text-anchor="start" font-family="Arial,sans-serif" font-size="19" font-weight="400" fill="#0f766e">integrated update</text>
+<path d="M720 195 L720 295" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)" stroke-dasharray="7 5"/>
+<text x="740" y="255" text-anchor="start" font-family="Arial,sans-serif" font-size="19" font-weight="400" fill="#0f766e">separate maintenance</text>
+<rect x="40" y="485" width="400" height="80" rx="9" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="56" y="517" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">Later queries resolve Student.phone</text>
+<rect x="520" y="485" width="400" height="80" rx="9" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="536" y="517" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">Meaning, owner, and usage notes</text>
+<path d="M240 425 L240 480" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<path d="M720 425 L720 480" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<text x="40" y="640" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Solid arrow: integrated structural update. Dashed arrow: separate maintenance.</text>
+<text x="40" y="667" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Comments and optimiser statistics can have their own maintenance schedules.</text>
+</svg>

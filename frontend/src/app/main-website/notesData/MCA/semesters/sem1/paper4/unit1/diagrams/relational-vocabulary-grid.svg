@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 700" role="img" aria-labelledby="title desc"><title id="title">Relation vocabulary on one small table</title><desc id="desc">Student has three attributes and two tuples.</desc><defs><marker id="tip" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#0f766e"/></marker></defs><rect width="960" height="700" rx="16" fill="#f8fafc"/>
+<text x="40" y="48" text-anchor="start" font-family="Arial,sans-serif" font-size="27" font-weight="700" fill="#16324f">Relation vocabulary on one small table</text>
+<text x="40" y="82" text-anchor="start" font-family="Arial,sans-serif" font-size="19" font-weight="400" fill="#16324f">Student has three attributes and two tuples.</text>
+<rect x="95" y="185" width="690" height="169" rx="9" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="107" y="217" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="700" fill="#16324f">Student</text>
+<rect x="97" y="275" width="686" height="38" rx="0" fill="#dcfce7" stroke="#dcfce7" stroke-width="2"/>
+<path d="M95 234 L785 234" fill="none" stroke="#0f766e" stroke-width="3"/>
+<text x="106" y="262" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">student_id</text>
+<text x="346" y="262" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">name</text>
+<path d="M335 234 V354" stroke="#cbd5e1"/>
+<text x="576" y="262" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">programme</text>
+<path d="M565 234 V354" stroke="#cbd5e1"/>
+<text x="106" y="302" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">101</text>
+<text x="346" y="302" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Asha</text>
+<path d="M335 234 V354" stroke="#cbd5e1"/>
+<text x="576" y="302" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">MCA</text>
+<path d="M565 234 V354" stroke="#cbd5e1"/>
+<path d="M95 274 H785" stroke="#cbd5e1"/>
+<text x="106" y="342" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">102</text>
+<text x="346" y="342" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Ravi</text>
+<path d="M335 234 V354" stroke="#cbd5e1"/>
+<text x="576" y="342" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">MCA</text>
+<path d="M565 234 V354" stroke="#cbd5e1"/>
+<path d="M95 314 H785" stroke="#cbd5e1"/>
+<text x="95" y="145" text-anchor="start" font-family="Arial,sans-serif" font-size="24" font-weight="700" fill="#16324f">Degree = 3 attributes (columns)</text>
+<text x="95" y="445" text-anchor="start" font-family="Arial,sans-serif" font-size="24" font-weight="700" fill="#16324f">Cardinality = 2 tuples (rows)</text>
+<text x="95" y="488" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="400" fill="#16324f">Green row: one tuple, (101, Asha, MCA).</text>
+<text x="95" y="530" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="400" fill="#16324f">name is an attribute; Asha is one attribute value.</text>
+<text x="40" y="640" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Degree counts columns. Cardinality here counts rows.</text>
+<text x="40" y="667" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Relationship cardinality, such as one-to-many, uses the word differently.</text>
+</svg>

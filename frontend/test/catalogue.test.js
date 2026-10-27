@@ -12,15 +12,15 @@ function fixture(status = 'published') {
 
 test('supplied curriculum retains all semesters, papers, units and elective alternatives', () => {
   const unit = mca.semesters[0].papers[0].units[0]
-  const content = Object.fromEntries(unit.notes.map(note => [`./MCA/semesters/sem1/paper1/unit1/${note.id}/main.jsx`, load]))
+  const content = Object.fromEntries(mca.semesters.flatMap(semester => semester.papers.flatMap(paper => paper.units.flatMap(currentUnit => currentUnit.notes.filter(note => note.status === 'published').map(note => [`./MCA/semesters/${semester.id}/${paper.id}/${currentUnit.id}/${note.id}/main.jsx`, load])))))
   const { courses, notes } = buildCatalogue({ './MCA/syllabus.js': { default: mca } }, content)
   assert.equal(courses[0].semesters.length, 4)
   const papers = courses[0].semesters.flatMap(sem => sem.papers)
   assert.equal(papers.length, 36)
   assert.equal(papers.filter(paper => paper.kind === 'elective').length, 6)
   assert.equal(papers.flatMap(paper => paper.units).length, 120)
-  assert.equal(notes.length, 15)
-  assert.equal(courses[0].noteCount, 15)
+  assert.equal(notes.length, Object.keys(content).length)
+  assert.equal(courses[0].noteCount, Object.keys(content).length)
   for (const contentPath of Object.keys(content)) assert.ok(existsSync(new URL('../src/app/main-website/notesData/' + contentPath.slice(2), import.meta.url)))
   const coverage = courses[0].semesters[0].papers[0].units[0].topicCoverage
   assert.equal(coverage.length, 15)
@@ -29,6 +29,21 @@ test('supplied curriculum retains all semesters, papers, units and elective alte
     assert.equal(topic.notes[0].id, topic.id)
   }
   assert.equal(new Set(unit.notes.map(note => note.order)).size, 15)
+  const cUnit = courses[0].semesters[0].papers[1].units[0]
+  assert.equal(cUnit.topicCoverage.length, 14)
+  assert.equal(cUnit.notes.length, 14)
+  for (const topic of cUnit.topicCoverage) {
+    assert.equal(topic.notes.length, 1, `${topic.id} has its own C chapter`)
+    assert.equal(topic.notes[0].id, topic.id)
+  }
+  const dbmsUnit = courses[0].semesters[0].papers[3].units[0]
+  assert.equal(dbmsUnit.topicCoverage.length, 15)
+  assert.equal(dbmsUnit.notes.length, 15)
+  for (const topic of dbmsUnit.topicCoverage) {
+    assert.equal(topic.notes.length, 1, `${topic.id} has its own DBMS chapter`)
+    assert.equal(topic.notes[0].id, topic.id)
+  }
+  assert.equal(new Set(dbmsUnit.notes.map(note => note.order)).size, 15)
   assert.equal(notes[0].slug, 'mca-sem1-paper1-unit1-introduction')
   assert.equal(papers.find(paper => paper.code === 'MCA P4005').marks, 450)
   assert.equal(papers.find(paper => paper.code === 'MCA C2001').units.length, 6)

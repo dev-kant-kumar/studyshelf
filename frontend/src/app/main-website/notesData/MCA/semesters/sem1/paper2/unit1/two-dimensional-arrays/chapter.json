@@ -1,0 +1,87 @@
+{
+  "intro": "A two-dimensional C array is an array of row arrays. Use its actual row and column dimensions to initialise matrices, derive addresses, and trace nested loops.",
+  "outcomes": [
+    "Declare and initialise rectangular arrays.",
+    "Explain row-major layout and valid indices.",
+    "Perform and trace matrix operations."
+  ],
+  "prerequisites": "A one-dimensional array contains consecutive elements. A matrix is a rectangular collection indexed by row and column. Nested loops let one row traversal contain a column traversal.",
+  "sections": [
+    {
+      "title": "1. Arrays of rows",
+      "paragraphs": [
+        "int matrix[2][3] declares two rows, each an array of three int elements. Valid row indices are 0..1 and column indices 0..2. matrix[1][2] selects the last element. Both dimensions must be respected independently.",
+        "Nested initialisers expose rows: {{1,2,3},{4,5,6}}. Missing elements are zero-initialised. int a[][3]={{1,2,3},{4,5,6}} infers the first dimension, but the inner width is required to establish each row's type and stride.",
+        "int a[2][3]={{1},{4}} creates rows [1,0,0] and [4,0,0]. A flat initialiser {1,2,3,4,5,6} fills in row-major order, but braces make intended grouping easier to inspect."
+      ]
+    },
+    {
+      "title": "2. Matrix addition and trace",
+      "paragraphs": [
+        "Matrix addition requires equal dimensions. Each result element is the sum of the corresponding input elements. Loop over rows outside and columns inside to visit the consecutive elements of each row.",
+        "The example fixes small values whose sums fit int. A general implementation must establish compatible dimensions and a representable sum for each pair. Array bounds do not alone ensure arithmetic safety."
+      ],
+      "code": "#include <stdio.h>\n\nint main(void) {\n    int a[2][3] = {{1, 2, 3}, {4, 5, 6}};\n    int b[2][3] = {{6, 5, 4}, {3, 2, 1}};\n    int result[2][3] = {0};\n    for (size_t row = 0; row < 2; ++row) {\n        for (size_t col = 0; col < 3; ++col) {\n            result[row][col] = a[row][col] + b[row][col];\n            printf(\"%d%c\", result[row][col], col == 2 ? '\\n' : ' ');\n        }\n    }\n    return 0;\n}",
+      "example": [
+        "At (0,0), 1+6 gives 7; at (0,1), 2+5 gives 7; the same reasoning yields two output rows, each 7 7 7. There are six additions and six element prints.",
+        "Test 1-by-1 matrices, a matrix with zeros, and negative entries. A transpose of a 2-by-3 matrix needs a 3-by-2 destination; using an unchanged 2-by-3 destination can make the swapped indices invalid."
+      ]
+    },
+    {
+      "title": "3. Row-major stride and operation costs",
+      "paragraphs": [
+        "Row-major layout places all elements of row zero before row one. The offset for [i][j] in an R-by-C array is (i*C+j)*sizeof(element), with indices in range. Under a hypothetical base 2000 and four-byte int, [1][2] in a two-by-three array begins at 2000+(1*3+2)*4=2020.",
+        "The outer array normally converts to a pointer to a whole row, not int **. These types have different layouts and cannot be interchanged by guessing. Unit 2 will develop pointer-to-array declarations more fully.",
+        "Addition visits R*C elements. For matrix multiplication A with R-by-K and B with K-by-C, each output is the sum over k of A[i][k]*B[k][j]. The straightforward three-loop method performs R*K*C multiplications; products and accumulation both need range checks."
+      ]
+    }
+  ],
+  "revision": [
+    "Identify row and column bounds separately.",
+    "Trace partial nested initialisation.",
+    "Derive a byte offset using the row width.",
+    "State dimension compatibility for addition and multiplication."
+  ],
+  "questions": [
+    {
+      "id": "two-dimensional-arrays-1",
+      "question": "What does int a[2][2]={{1},{2}} contain?",
+      "level": "easy",
+      "tags": [
+        "Concept check"
+      ],
+      "answer": [
+        "Row zero is [1,0] and row one is [2,0]. Each braced subarray is initialised separately; omitted entries are zero."
+      ]
+    },
+    {
+      "id": "two-dimensional-arrays-2",
+      "question": "Find the element offset of a[2][1] in int a[3][4].",
+      "level": "medium",
+      "tags": [
+        "Exam practice"
+      ],
+      "answer": [
+        "There are two complete rows of four elements before row two, then one element before column one: 2*4+1=9 elements. The byte offset is 9*sizeof(int), not necessarily 36 on every implementation."
+      ]
+    },
+    {
+      "id": "two-dimensional-arrays-3",
+      "question": "Why is a two-dimensional array not an int **?",
+      "level": "hard",
+      "tags": [
+        "Interview practice"
+      ],
+      "answer": [
+        "Its rows are contiguous array objects, not a collection of stored pointers to independently located rows. A pointer to a row uses the known row width for pointer arithmetic. int ** requires pointer objects and a different dereference contract."
+      ]
+    }
+  ],
+  "references": [
+    {
+      "title": "WG14 C11 committee draft N1570 - consult the clauses listed in this chapter",
+      "url": "https://www.open-std.org/jtc1/sc22/wg14/www/docs/n1570.pdf"
+    }
+  ],
+  "next": "Multidimensional arrays generalise row strides to more than two indices. Verification: N1570 clauses 6.5.2.1 and 6.7.6.2."
+}

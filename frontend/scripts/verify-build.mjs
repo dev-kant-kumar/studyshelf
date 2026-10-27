@@ -74,7 +74,8 @@ for (const file of pages) {
     const href = anchor.getAttribute('href')
     if (!href.startsWith('/') || href.startsWith('//')) continue
     const target = new URL(href, url.origin).pathname
-    await access(join('dist', target === '/' ? 'index.html' : target.endsWith('.pdf') ? target.slice(1) : `${target.slice(1)}.html`))
+    const isDownload = anchor.hasAttribute('download') || target.endsWith('.pdf')
+    await access(join('dist', target === '/' ? 'index.html' : isDownload ? target.slice(1) : `${target.slice(1)}.html`))
     linkCount++
   }
   assert.equal(document.querySelectorAll('template[id^="B:"], div[hidden][id^="S:"]').length, 0, `${file}: no unresolved suspense segments`)

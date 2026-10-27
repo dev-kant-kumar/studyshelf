@@ -1,0 +1,111 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 1690" role="img" aria-labelledby="title desc"><title id="title">DBMS architecture: components and cooperating paths</title><desc id="desc">A functional reference model: names and module boundaries vary between engines.</desc><defs><marker id="tip" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#0f766e"/></marker></defs><rect width="960" height="1690" rx="16" fill="#f8fafc"/>
+<text x="40" y="48" text-anchor="start" font-family="Arial,sans-serif" font-size="27" font-weight="700" fill="#16324f">DBMS architecture: components and cooperating paths</text>
+<text x="40" y="82" text-anchor="start" font-family="Arial,sans-serif" font-size="19" font-weight="400" fill="#16324f">A functional reference model: names and module boundaries vary between engines.</text>
+<rect x="40" y="115" width="260" height="100" rx="9" fill="#eef2ff" stroke="#94a3b8" stroke-width="2"/>
+<text x="56" y="147" text-anchor="start" font-family="Arial,sans-serif" font-size="19" font-weight="700" fill="#16324f">DBA / designer</text>
+<text x="56" y="179" text-anchor="start" font-family="Arial,sans-serif" font-size="19" font-weight="400" fill="#16324f">Schema and access rules</text>
+<rect x="350" y="115" width="260" height="100" rx="9" fill="#eef2ff" stroke="#94a3b8" stroke-width="2"/>
+<text x="366" y="147" text-anchor="start" font-family="Arial,sans-serif" font-size="19" font-weight="700" fill="#16324f">Interactive user</text>
+<text x="366" y="179" text-anchor="start" font-family="Arial,sans-serif" font-size="19" font-weight="400" fill="#16324f">Ad hoc SQL statements</text>
+<rect x="660" y="115" width="260" height="100" rx="9" fill="#eef2ff" stroke="#94a3b8" stroke-width="2"/>
+<text x="676" y="147" text-anchor="start" font-family="Arial,sans-serif" font-size="19" font-weight="700" fill="#16324f">Application</text>
+<text x="676" y="179" text-anchor="start" font-family="Arial,sans-serif" font-size="19" font-weight="400" fill="#16324f">Driver / precompiled calls</text>
+<rect x="20" y="260" width="920" height="1145" rx="12" fill="#f1f5f9" stroke="#64748b" stroke-width="2"/>
+<text x="40" y="250" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">DBMS</text>
+<rect x="40" y="300" width="260" height="100" rx="9" fill="#dbeafe" stroke="#94a3b8" stroke-width="2"/>
+<text x="56" y="332" text-anchor="start" font-family="Arial,sans-serif" font-size="19" font-weight="700" fill="#16324f">DDL interpreter</text>
+<text x="56" y="364" text-anchor="start" font-family="Arial,sans-serif" font-size="19" font-weight="400" fill="#16324f">Validate object definitions</text>
+<rect x="350" y="300" width="260" height="100" rx="9" fill="#dbeafe" stroke="#94a3b8" stroke-width="2"/>
+<text x="366" y="332" text-anchor="start" font-family="Arial,sans-serif" font-size="19" font-weight="700" fill="#16324f">DML compiler: front end</text>
+<text x="366" y="364" text-anchor="start" font-family="Arial,sans-serif" font-size="19" font-weight="400" fill="#16324f">Parse SQL; bind names</text>
+<rect x="660" y="300" width="260" height="100" rx="9" fill="#dbeafe" stroke="#94a3b8" stroke-width="2"/>
+<text x="676" y="332" text-anchor="start" font-family="Arial,sans-serif" font-size="19" font-weight="700" fill="#16324f">Application interface</text>
+<text x="676" y="364" text-anchor="start" font-family="Arial,sans-serif" font-size="19" font-weight="400" fill="#16324f">Bind values; send SQL</text>
+<path d="M170 215 L170 295" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<path d="M480 215 L480 295" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<path d="M790 215 L790 295" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<path d="M655 350 L615 350" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<rect x="40" y="460" width="260" height="405" rx="9" fill="#f0fdfa" stroke="#99c9bd" stroke-width="2"/>
+<text x="56" y="492" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">Catalogue and policy</text>
+<rect x="60" y="530" width="220" height="145" rx="9" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="76" y="562" text-anchor="start" font-family="Arial,sans-serif" font-size="18" font-weight="700" fill="#16324f">System catalogue</text>
+<text x="76" y="594" text-anchor="start" font-family="Arial,sans-serif" font-size="18" font-weight="400" fill="#16324f">Tables, types, keys</text>
+<text x="76" y="623" text-anchor="start" font-family="Arial,sans-serif" font-size="18" font-weight="400" fill="#16324f">View definitions</text>
+<text x="76" y="652" text-anchor="start" font-family="Arial,sans-serif" font-size="18" font-weight="400" fill="#16324f">Planning statistics</text>
+<rect x="60" y="725" width="220" height="100" rx="9" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="76" y="757" text-anchor="start" font-family="Arial,sans-serif" font-size="18" font-weight="700" fill="#16324f">Access metadata</text>
+<text x="76" y="789" text-anchor="start" font-family="Arial,sans-serif" font-size="18" font-weight="400" fill="#16324f">Owners and privileges</text>
+<rect x="350" y="460" width="570" height="405" rx="9" fill="#eff6ff" stroke="#93b4d9" stroke-width="2"/>
+<text x="640" y="492" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="700" fill="#16324f">Query processor</text>
+<rect x="370" y="535" width="240" height="110" rx="9" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="386" y="567" text-anchor="start" font-family="Arial,sans-serif" font-size="18" font-weight="700" fill="#16324f">Query rewriter</text>
+<text x="386" y="599" text-anchor="start" font-family="Arial,sans-serif" font-size="18" font-weight="400" fill="#16324f">Expand views</text>
+<text x="386" y="628" text-anchor="start" font-family="Arial,sans-serif" font-size="18" font-weight="400" fill="#16324f">Preserve query meaning</text>
+<rect x="660" y="535" width="240" height="110" rx="9" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="676" y="567" text-anchor="start" font-family="Arial,sans-serif" font-size="18" font-weight="700" fill="#16324f">Planner / optimiser</text>
+<text x="676" y="599" text-anchor="start" font-family="Arial,sans-serif" font-size="18" font-weight="400" fill="#16324f">Compare access paths</text>
+<text x="676" y="628" text-anchor="start" font-family="Arial,sans-serif" font-size="18" font-weight="400" fill="#16324f">Choose a physical plan</text>
+<rect x="505" y="735" width="260" height="100" rx="9" fill="#dbeafe" stroke="#94a3b8" stroke-width="2"/>
+<text x="521" y="767" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">Execution engine</text>
+<text x="521" y="799" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Run plan operators</text>
+<path d="M170 400 L170 455" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<path d="M480 400 L480 455" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<text x="495" y="440" text-anchor="start" font-family="Arial,sans-serif" font-size="19" font-weight="400" fill="#0f766e">query tree</text>
+<path d="M615 590 L655 590" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<path d="M780 645 L780 690 L635 690 L635 730" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<text x="645" y="718" text-anchor="start" font-family="Arial,sans-serif" font-size="19" font-weight="400" fill="#0f766e">selected plan</text>
+<path d="M305 690 L345 690" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)" stroke-dasharray="7 5"/>
+<text x="47" y="852" text-anchor="start" font-family="Arial,sans-serif" font-size="16" font-weight="400" fill="#16324f">Definitions and permissions</text>
+<rect x="40" y="915" width="880" height="205" rx="9" fill="#fff7ed" stroke="#e8ba80" stroke-width="2"/>
+<text x="60" y="948" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="700" fill="#16324f">Runtime control services</text>
+<rect x="60" y="975" width="240" height="115" rx="9" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="76" y="1007" text-anchor="start" font-family="Arial,sans-serif" font-size="18" font-weight="700" fill="#16324f">Authorisation / integrity</text>
+<text x="76" y="1039" text-anchor="start" font-family="Arial,sans-serif" font-size="18" font-weight="400" fill="#16324f">Check permitted actions</text>
+<text x="76" y="1068" text-anchor="start" font-family="Arial,sans-serif" font-size="18" font-weight="400" fill="#16324f">Enforce data constraints</text>
+<rect x="360" y="975" width="240" height="115" rx="9" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="376" y="1007" text-anchor="start" font-family="Arial,sans-serif" font-size="18" font-weight="700" fill="#16324f">Transaction / scheduler</text>
+<text x="376" y="1039" text-anchor="start" font-family="Arial,sans-serif" font-size="18" font-weight="400" fill="#16324f">Begin, commit, abort</text>
+<text x="376" y="1068" text-anchor="start" font-family="Arial,sans-serif" font-size="18" font-weight="400" fill="#16324f">Locks, versions, conflicts</text>
+<rect x="660" y="975" width="240" height="115" rx="9" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="676" y="1007" text-anchor="start" font-family="Arial,sans-serif" font-size="18" font-weight="700" fill="#16324f">Recovery / log manager</text>
+<text x="676" y="1039" text-anchor="start" font-family="Arial,sans-serif" font-size="18" font-weight="400" fill="#16324f">Record logged changes</text>
+<text x="676" y="1068" text-anchor="start" font-family="Arial,sans-serif" font-size="18" font-weight="400" fill="#16324f">Coordinate commit / redo</text>
+<path d="M635 835 L635 910" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<text x="360" y="897" text-anchor="start" font-family="Arial,sans-serif" font-size="19" font-weight="400" fill="#0f766e">operations under control</text>
+<rect x="40" y="1170" width="880" height="205" rx="9" fill="#f0fdf4" stroke="#9bc6a8" stroke-width="2"/>
+<text x="60" y="1203" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="700" fill="#16324f">Storage and data-access services</text>
+<rect x="60" y="1230" width="240" height="115" rx="9" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="76" y="1262" text-anchor="start" font-family="Arial,sans-serif" font-size="18" font-weight="700" fill="#16324f">Buffer manager</text>
+<text x="76" y="1294" text-anchor="start" font-family="Arial,sans-serif" font-size="18" font-weight="400" fill="#16324f">Locate / cache pages</text>
+<text x="76" y="1323" text-anchor="start" font-family="Arial,sans-serif" font-size="18" font-weight="400" fill="#16324f">Track dirty memory pages</text>
+<rect x="360" y="1230" width="240" height="115" rx="9" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="376" y="1262" text-anchor="start" font-family="Arial,sans-serif" font-size="18" font-weight="700" fill="#16324f">Record / index access</text>
+<text x="376" y="1294" text-anchor="start" font-family="Arial,sans-serif" font-size="18" font-weight="400" fill="#16324f">Read and change tuples</text>
+<text x="376" y="1323" text-anchor="start" font-family="Arial,sans-serif" font-size="18" font-weight="400" fill="#16324f">Use scans and indexes</text>
+<rect x="660" y="1230" width="240" height="115" rx="9" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="676" y="1262" text-anchor="start" font-family="Arial,sans-serif" font-size="18" font-weight="700" fill="#16324f">File / space manager</text>
+<text x="676" y="1294" text-anchor="start" font-family="Arial,sans-serif" font-size="18" font-weight="400" fill="#16324f">Allocate and map pages</text>
+<text x="676" y="1323" text-anchor="start" font-family="Arial,sans-serif" font-size="18" font-weight="400" fill="#16324f">Read / write storage blocks</text>
+<path d="M480 1120 L480 1165" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<path d="M355 1285 L305 1285" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<path d="M305 1318 L355 1318" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<path d="M605 1285 L655 1285" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<path d="M180 1345 L180 1360 L780 1360 L780 1350" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)" stroke-dasharray="7 5"/>
+<text x="40" y="1430" text-anchor="start" font-family="Arial,sans-serif" font-size="21" font-weight="700" fill="#16324f">PERSISTENT STORAGE</text>
+<path d="M40 1495 V1585 A102.5 15 0 0 0 245 1585 V1495" fill="#e2e8f0" stroke="#94a3b8" stroke-width="2"/><ellipse cx="142.5" cy="1495" rx="102.5" ry="15" fill="#cbd5e1" stroke="#94a3b8" stroke-width="2"/>
+<text x="56" y="1530" text-anchor="start" font-family="Arial,sans-serif" font-size="18" font-weight="700" fill="#16324f">Data files</text>
+<text x="56" y="1560" text-anchor="start" font-family="Arial,sans-serif" font-size="18" font-weight="400" fill="#16324f">Tables and tuples</text>
+<path d="M265 1495 V1585 A102.5 15 0 0 0 470 1585 V1495" fill="#e2e8f0" stroke="#94a3b8" stroke-width="2"/><ellipse cx="367.5" cy="1495" rx="102.5" ry="15" fill="#cbd5e1" stroke="#94a3b8" stroke-width="2"/>
+<text x="281" y="1530" text-anchor="start" font-family="Arial,sans-serif" font-size="18" font-weight="700" fill="#16324f">Index files</text>
+<text x="281" y="1560" text-anchor="start" font-family="Arial,sans-serif" font-size="18" font-weight="400" fill="#16324f">Search structures</text>
+<path d="M490 1495 V1585 A102.5 15 0 0 0 695 1585 V1495" fill="#e2e8f0" stroke="#94a3b8" stroke-width="2"/><ellipse cx="592.5" cy="1495" rx="102.5" ry="15" fill="#cbd5e1" stroke="#94a3b8" stroke-width="2"/>
+<text x="506" y="1530" text-anchor="start" font-family="Arial,sans-serif" font-size="18" font-weight="700" fill="#16324f">Catalogue data</text>
+<text x="506" y="1560" text-anchor="start" font-family="Arial,sans-serif" font-size="18" font-weight="400" fill="#16324f">Definitions / stats</text>
+<path d="M715 1495 V1585 A102.5 15 0 0 0 920 1585 V1495" fill="#e2e8f0" stroke="#94a3b8" stroke-width="2"/><ellipse cx="817.5" cy="1495" rx="102.5" ry="15" fill="#cbd5e1" stroke="#94a3b8" stroke-width="2"/>
+<text x="731" y="1530" text-anchor="start" font-family="Arial,sans-serif" font-size="18" font-weight="700" fill="#16324f">Recovery log</text>
+<text x="731" y="1560" text-anchor="start" font-family="Arial,sans-serif" font-size="18" font-weight="400" fill="#16324f">Durable WAL</text>
+<path d="M780 1345 L780 1435" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/><path d="M142 1440 H817" fill="none" stroke="#0f766e" stroke-width="3"/><path d="M142 1440 V1475" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/><path d="M367 1440 V1475" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/><path d="M592 1440 V1475" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/><path d="M817 1440 V1475" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<path d="M780 1090 L930 1090 L930 1460 L817 1460 L817 1475" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<text x="40" y="1630" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Solid arrows: selected requests, plans, operations, or storage access.</text>
+<text x="40" y="1657" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Dashed arrows: supporting lookups / coordination. Return paths are omitted.</text>
+</svg>

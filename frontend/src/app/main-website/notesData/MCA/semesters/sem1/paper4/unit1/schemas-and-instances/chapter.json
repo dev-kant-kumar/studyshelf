@@ -1,0 +1,140 @@
+{
+  "intro": "A schema describes the permitted structure of a database. A database instance, in the schema-state sense, is the collection of data present at a particular moment. Structure changes less frequently than contents, but both can evolve.",
+  "outcomes": [
+    "Distinguish schema, state, valid state, and transaction transitions.",
+    "Explain intension, extension, and subschemas.",
+    "Recognise product-specific meanings of schema and instance."
+  ],
+  "sections": [
+    {
+      "title": "1. Schema as a structural contract",
+      "paragraphs": [
+        "A schema includes named structures, attributes or fields, their domains or types, relationships, and constraints. For Student(student_id INTEGER, name VARCHAR(80)), with student_id as primary key and name required, the schema permits only records satisfying those rules. A domain is the set of permitted values for an attribute, possibly narrowed by additional constraints.",
+        "The schema is sometimes called the intension: the definition or meaning of the database structure. A diagram can communicate part of it, but the schema also includes rules that may not fit in the diagram. A relational schema is not merely a list of current rows."
+      ]
+    },
+    {
+      "title": "2. Instance or database state",
+      "paragraphs": [
+        "At time t1, Student might contain (101, Asha) and (102, Ravi). At time t2, inserting (103, Mira) changes the instance while leaving the schema unchanged. The current collection of tuples is also called the extension. An empty table is still an instance of its schema.",
+        "A valid state satisfies all relevant schema constraints. If student_id is a primary key, two rows with identifier 101 form an invalid state even when their names differ. A transaction should move from a valid state to another valid state; some constraint checks may be deferred within a transaction under supported rules.",
+        "A consistent snapshot gives a defined view of data during concurrency. Without such a boundary, reading different tables at different times can accidentally combine facts from different moments. The exact snapshot behaviour depends on transaction isolation and engine semantics."
+      ],
+      "table": {
+        "caption": "One schema, changing states",
+        "headers": [
+          "Moment",
+          "Student rows",
+          "What changed?"
+        ],
+        "rows": [
+          [
+            "t1",
+            "(101, Asha), (102, Ravi)",
+            "Initial populated state"
+          ],
+          [
+            "t2",
+            "(101, Asha), (102, Ravi), (103, Mira)",
+            "INSERT changes state only"
+          ],
+          [
+            "t3",
+            "(101, Asha Singh), (102, Ravi), (103, Mira)",
+            "UPDATE changes state only"
+          ],
+          [
+            "t4",
+            "Same rows, plus a new optional phone column",
+            "ALTER changes schema; rows gain the new representation"
+          ]
+        ]
+      },
+      "diagram": "schema-stable-instance-changing",
+      "diagramHeight": 730,
+      "alt": "An unchanged schema sits above three Student snapshots: Asha alone, then Ravi inserted, then Asha renamed. Columns and key rules stay fixed.",
+      "caption": "The top definition stays the same. Read the lower tables as states at successive moments rather than different schemas."
+    },
+    {
+      "title": "3. DDL, DML, and schema evolution",
+      "paragraphs": [
+        "CREATE TABLE establishes a structure. INSERT, UPDATE, and DELETE change contents. ALTER TABLE changes structure, such as adding a field or constraint. A schema migration is a controlled transition between schema versions, often including data transformation and compatibility work.",
+        "Adding a required programme attribute to existing rows requires deciding valid values for those rows. A schema change is therefore not always independent of data. Conversely, adding a primary key can fail if the existing state contains duplicates. Always consider both the new definition and whether the current data can satisfy it.",
+        "A subschema is a description of a selected part or perspective of the whole schema. It connects to external schemas in the three-schema architecture. It is not simply a smaller random sample of current rows."
+      ],
+      "diagram": "schema-change-existing-data",
+      "diagramHeight": 700,
+      "alt": "Two existing students share an email value. Adding UNIQUE(email) fails because the current data already violates the new rule.",
+      "caption": "Separate the schema operation from validation of the stored state. A definition change can require data repair even without a new insert."
+    },
+    {
+      "title": "4. Overloaded product terminology",
+      "paragraphs": [
+        "In SQL products, a schema can also mean a namespace containing tables, views, and other objects, for example academic.Student. That usage is related to organisation of definitions but is narrower than the full conceptual database design.",
+        "Instance also has operational meanings. In Oracle terminology, an instance includes memory structures and background processes managing database files. Other systems use instance for a running server or service deployment. When discussing schema versus instance in data modelling, state the intended meaning: instance means data at a time, not necessarily a running process.",
+        "A server restart may create a new process lifetime while preserving the same stored database state. Inserting a row changes the data state without requiring a new running server."
+      ]
+    },
+    {
+      "title": "5. Worked validity check",
+      "paragraphs": [
+        "Assume Student requires unique non-null student_id and non-null name. Inserting (104, Neha) is structurally valid if 104 is unused. Inserting another (101, Asha) violates uniqueness. Inserting (105, NULL) violates the required-name rule. An empty name might still pass NOT NULL, illustrating the distinction between absence and an undesirable value.",
+        "Changing the rule to forbid empty or whitespace-only names is a schema decision. Correcting a misspelled existing name is a state change. A schema can express many validity conditions but cannot prove all real-world facts are true."
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "id": "schema-state",
+      "question": "Differentiate database schema and database instance.",
+      "answer": [
+        "A schema defines structures, types, relationships, and constraints. A database instance in the modelling sense is the data present at a particular time. The schema is relatively stable and can have many valid instances as records are inserted, changed, and removed. CREATE or ALTER changes definitions; ordinary row updates change the state. Intension refers to the definition and extension to its current contents."
+      ],
+      "level": "easy",
+      "tags": [
+        "Concept check"
+      ]
+    },
+    {
+      "id": "migration",
+      "question": "Why can adding a unique constraint fail without inserting any new rows?",
+      "answer": [
+        "The constraint changes the schema, but it must apply to the current state. If existing rows repeat the constrained value, the new rule is violated immediately. The migration must first identify duplicates and resolve them according to data ownership and meaning, or choose a correct alternative rule. Schema and instance are distinct but not unrelated."
+      ],
+      "level": "medium",
+      "tags": [
+        "Practical"
+      ]
+    },
+    {
+      "id": "instance-word",
+      "question": "Does restarting a database necessarily change its database instance?",
+      "answer": [
+        "The answer depends on terminology. In the schema-versus-instance discussion, instance means current data, so restarting need not change it. In operational terminology, instance may mean the running server processes and memory, whose lifetime changes on restart. Always identify which meaning is being used."
+      ],
+      "level": "hard",
+      "tags": [
+        "Concept check"
+      ]
+    }
+  ],
+  "revision": [
+    "Classify examples as definition changes or state changes.",
+    "Check a state against explicit constraints.",
+    "Disambiguate schema namespaces and running instances."
+  ],
+  "references": [
+    {
+      "title": "Oracle Database Concepts: introduction and architecture",
+      "url": "https://docs.oracle.com/en/database/oracle/oracle-database/19/cncpt/introduction-to-oracle-database.html"
+    },
+    {
+      "title": "University of Cape Town: database schemas and data independence",
+      "url": "https://www.cs.uct.ac.za/mit_notes/database/htmls/chp01.html"
+    }
+  ],
+  "next": {
+    "id": "views",
+    "title": "Database views and their advantages"
+  }
+}

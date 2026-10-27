@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 700" role="img" aria-labelledby="title desc"><title id="title">One logical request, different physical plans</title><desc id="desc">Request: return the name of Student with student_id = 101.</desc><defs><marker id="tip" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#0f766e"/></marker></defs><rect width="960" height="700" rx="16" fill="#f8fafc"/>
+<text x="40" y="48" text-anchor="start" font-family="Arial,sans-serif" font-size="27" font-weight="700" fill="#16324f">One logical request, different physical plans</text>
+<text x="40" y="82" text-anchor="start" font-family="Arial,sans-serif" font-size="19" font-weight="400" fill="#16324f">Request: return the name of Student with student_id = 101.</text>
+<text x="40" y="145" text-anchor="start" font-family="Arial,sans-serif" font-size="24" font-weight="700" fill="#16324f">Plan A: scan and filter</text>
+<text x="530" y="145" text-anchor="start" font-family="Arial,sans-serif" font-size="24" font-weight="700" fill="#16324f">Plan B: indexed lookup</text>
+<rect x="40" y="200" width="390" height="115" rx="9" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="56" y="232" text-anchor="start" font-family="Arial,sans-serif" font-size="21" font-weight="700" fill="#16324f">Scan Student pages</text>
+<text x="56" y="264" text-anchor="start" font-family="Arial,sans-serif" font-size="21" font-weight="400" fill="#16324f">Read rows and test ID = 101</text>
+<rect x="530" y="200" width="390" height="115" rx="9" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="546" y="232" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">Find 101 in the ID index</text>
+<text x="546" y="264" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Use its reference to fetch a row</text>
+<path d="M235 315 L235 400" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<path d="M725 315 L725 400" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<rect x="40" y="405" width="390" height="90" rx="9" fill="#ecfdf5" stroke="#94a3b8" stroke-width="2"/>
+<text x="56" y="437" text-anchor="start" font-family="Arial,sans-serif" font-size="21" font-weight="700" fill="#16324f">Return name: Asha</text>
+<rect x="530" y="405" width="390" height="90" rx="9" fill="#ecfdf5" stroke="#94a3b8" stroke-width="2"/>
+<text x="546" y="437" text-anchor="start" font-family="Arial,sans-serif" font-size="21" font-weight="700" fill="#16324f">Return name: Asha</text>
+<text x="40" y="640" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Both plans preserve the requested meaning; estimates guide the choice.</text>
+<text x="40" y="667" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">An index lookup is not always cheaper for a tiny or mostly-matching table.</text>
+</svg>

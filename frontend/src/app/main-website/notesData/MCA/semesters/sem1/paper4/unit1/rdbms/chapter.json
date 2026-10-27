@@ -1,0 +1,119 @@
+{
+  "intro": "A relational database management system manages data using the relational model. Relations represent facts; keys and integrity rules establish valid identities and associations; relational operations derive new results from existing facts.",
+  "outcomes": [
+    "Define relation, tuple, attribute, domain, degree, and cardinality.",
+    "Build and query a complete small relational database.",
+    "Explain keys, integrity, joins, and differences between relations and SQL tables."
+  ],
+  "sections": [
+    {
+      "title": "1. Relational vocabulary",
+      "paragraphs": [
+        "A relation is mathematically a set of tuples over named attributes and their domains. A tuple records one combination of attribute values. A domain is the permitted set of values for an attribute. In table terminology, tuples are rows and attributes are columns. Relation degree is the number of attributes; cardinality is the number of tuples.",
+        "Student(student_id, name) has degree 2. If it contains three students, its cardinality is 3. Relationship cardinality such as one-to-many is a different use of the word cardinality. In the relational model, tuple order and attribute presentation order do not define meaning, and duplicate tuples do not occur in a set.",
+        "SQL tables and query results do not implement every aspect of a pure relation directly. SQL can allow duplicate rows and NULL, and queries can return duplicates unless uniqueness or DISTINCT prevents them. Result order requires ORDER BY. A table-shaped file alone does not establish an RDBMS."
+      ],
+      "diagram": "relational-vocabulary-grid",
+      "diagramHeight": 700,
+      "alt": "Student has three columns and two rows. Asha row is highlighted to identify one tuple. The degree is three and relation cardinality is two.",
+      "caption": "Count columns for degree and rows for relation cardinality. Distinguish an attribute name from a stored value."
+    },
+    {
+      "title": "2. Keys and integrity",
+      "paragraphs": [
+        "A superkey uniquely identifies tuples. A candidate key is a minimal superkey: removing any attribute destroys its uniqueness guarantee. A primary key is a chosen candidate key; other candidates remain alternate keys. Minimal means no unnecessary attributes, not necessarily the key with the fewest characters or the smallest numeric value.",
+        "A composite key has more than one attribute. A foreign key connects referencing attributes to an eligible unique key in a referenced table, which may be the same table. It need not itself be unique: many enrolments can reference one student.",
+        "Entity integrity requires the primary key to identify each row without NULL components. Referential integrity prevents unsupported references, subject to defined NULL and matching rules. Domain integrity restricts types and allowed values. Business constraints add requirements such as mark ranges. Constraints express declared rules, not proof that recorded facts match reality."
+      ],
+      "diagram": "referential-integrity-example",
+      "diagramHeight": 730,
+      "alt": "Student 101 is identified once in Student and referenced by two Enrolment rows for different courses. A reference to student 999 is rejected because no parent key matches.",
+      "caption": "Repeated foreign-key values are normal in a one-to-many relationship and do not violate uniqueness of the referenced primary key."
+    },
+    {
+      "title": "3. Complete college example",
+      "paragraphs": [
+        "Run this example in a fresh scratch database. It uses two entities and an association. The composite enrolment key assumes one enrolment per student and course; repeated offerings need another identifier. NUMERIC(5,2) stores up to five decimal digits including two after the decimal point. A mark may be NULL until assessment.",
+        "The foreign keys require valid student and course identities. CHECK restricts known marks to 0 through 100; it does not reject NULL here. Add NOT NULL if every enrolment must already have a mark. This separates an unknown result from a numerical score of zero."
+      ],
+      "code": "CREATE TABLE Student (\n  student_id INTEGER PRIMARY KEY,\n  name VARCHAR(80) NOT NULL\n);\nCREATE TABLE Course (\n  course_code VARCHAR(10) PRIMARY KEY,\n  title VARCHAR(100) NOT NULL\n);\nCREATE TABLE Enrolment (\n  student_id INTEGER REFERENCES Student(student_id),\n  course_code VARCHAR(10) REFERENCES Course(course_code),\n  mark NUMERIC(5,2) CHECK (mark BETWEEN 0 AND 100),\n  PRIMARY KEY (student_id, course_code)\n);\nINSERT INTO Student VALUES (101, 'Asha'), (102, 'Ravi');\nINSERT INTO Course VALUES ('DB101', 'Database Systems');\nINSERT INTO Enrolment VALUES\n  (101, 'DB101', 82), (102, 'DB101', NULL);\n\nSELECT s.name, c.title, e.mark\nFROM Enrolment AS e\nJOIN Student AS s ON s.student_id = e.student_id\nJOIN Course AS c ON c.course_code = e.course_code\nORDER BY s.student_id;",
+      "example": [
+        "Expected rows: Asha | Database Systems | 82.00, then Ravi | Database Systems | NULL. A client may display NULL differently, but it must not be interpreted as zero.",
+        "An enrolment for student 999 is rejected because the referenced student is absent. Repeating (101, DB101) violates the composite primary key. A mark of 120 violates the check. These are separate rules."
+      ]
+    },
+    {
+      "title": "4. Relational operations and query meaning",
+      "paragraphs": [
+        "Selection keeps tuples satisfying a condition; projection chooses attributes; a join combines matching tuples; union combines compatible sets; difference finds tuples in one compatible relation but not another; Cartesian product forms all pairwise combinations. Formal relational algebra develops these operations in more detail in the next unit.",
+        "SQL SELECT supports these ideas with its own duplicate and NULL semantics. In the example, JOIN matches identifiers; names are display values, not reliable identity keys. If two students share a name, joining by name can create incorrect combinations.",
+        "NULL represents missing or unknown information under the chosen design. Comparisons with NULL generally produce unknown rather than true or false, so use IS NULL to find unrecorded marks. AVG(mark) ignores NULL input marks; replacing missing marks with zero changes the meaning of the average."
+      ],
+      "diagram": "relational-selection-projection",
+      "diagramHeight": 790,
+      "alt": "Selecting MCA keeps Asha and Mira rows with all columns. Projecting name from the same input keeps only names for Asha, Ravi, and Mira.",
+      "caption": "Follow the independent branches. One operation chooses rows; the other chooses attributes."
+    },
+    {
+      "title": "5. Benefits and boundaries",
+      "paragraphs": [
+        "Relational design separates facts and combines them through values rather than requiring applications to navigate physical pointers. Constraints and declarative queries support consistency and flexible reporting. Transactions coordinate related changes, while storage choices remain largely behind the logical interface.",
+        "An RDBMS still needs good modelling, correct queries, appropriate isolation, and operational care. A badly chosen key or uncontrolled join can create incorrect results. SQL syntax and supported features vary across products, so portability requires validation. A relational model does not require one particular physical row-storage format."
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "id": "vocabulary",
+      "question": "Define relation, tuple, attribute, degree, and cardinality.",
+      "answer": [
+        "A relation is a set of tuples defined over attributes and their domains. A tuple is one combination of attribute values; an attribute is a named component with a permitted domain. Degree counts attributes and cardinality counts tuples. Student(student_id, name) with two rows has degree 2 and cardinality 2. SQL tables approximate this representation but may allow NULL and duplicates unless constrained."
+      ],
+      "level": "easy",
+      "tags": [
+        "Concept check"
+      ]
+    },
+    {
+      "id": "keys",
+      "question": "Distinguish candidate, primary, composite, and foreign keys.",
+      "answer": [
+        "A candidate key uniquely identifies rows and has no unnecessary attribute. A primary key is the candidate selected as the principal identifier. A composite key contains multiple attributes. A foreign key enforces a reference to an eligible unique key and need not be unique in the referencing table. Enrolment(student_id, course_code) has a composite primary key and two separate foreign keys."
+      ],
+      "level": "medium",
+      "tags": [
+        "Concept check"
+      ]
+    },
+    {
+      "id": "null-average",
+      "question": "Asha has 82 and Ravi has NULL. What does AVG(mark) mean?",
+      "answer": [
+        "AVG(mark) averages the known non-NULL marks, so its result is 82 for these two rows. It does not establish an average of 41 across all enrolled students. If NULL means not yet assessed, substituting zero would falsely treat an unrecorded assessment as a zero score. The report should state whether it summarises assessed students or all enrolments."
+      ],
+      "level": "hard",
+      "tags": [
+        "Practical"
+      ]
+    }
+  ],
+  "revision": [
+    "Identify keys, references, degree, and cardinality in the example.",
+    "Predict rejected changes and explain which constraint rejects each.",
+    "Explain NULL, duplicate, and ordering behaviour in SQL."
+  ],
+  "references": [
+    {
+      "title": "PostgreSQL: relational concepts",
+      "url": "https://www.postgresql.org/docs/current/tutorial-concepts.html"
+    },
+    {
+      "title": "PostgreSQL: constraints",
+      "url": "https://www.postgresql.org/docs/current/ddl-constraints.html"
+    }
+  ],
+  "next": {
+    "id": "dbms-versus-rdbms",
+    "title": "Difference between DBMS and RDBMS"
+  }
+}

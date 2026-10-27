@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 730" role="img" aria-labelledby="title desc"><title id="title">From requirements to a working database service</title><desc id="desc">Different roles produce different parts of the same system.</desc><defs><marker id="tip" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#0f766e"/></marker></defs><rect width="960" height="730" rx="16" fill="#f8fafc"/>
+<text x="40" y="48" text-anchor="start" font-family="Arial,sans-serif" font-size="27" font-weight="700" fill="#16324f">From requirements to a working database service</text>
+<text x="40" y="82" text-anchor="start" font-family="Arial,sans-serif" font-size="19" font-weight="400" fill="#16324f">Different roles produce different parts of the same system.</text>
+<rect x="40" y="130" width="400" height="125" rx="9" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="56" y="162" text-anchor="start" font-family="Arial,sans-serif" font-size="21" font-weight="700" fill="#16324f">Analyst and data owner</text>
+<text x="56" y="194" text-anchor="start" font-family="Arial,sans-serif" font-size="21" font-weight="400" fill="#16324f">Define retakes, fees, and access</text>
+<text x="56" y="223" text-anchor="start" font-family="Arial,sans-serif" font-size="21" font-weight="400" fill="#16324f">Output: agreed business rules</text>
+<rect x="520" y="130" width="400" height="125" rx="9" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="536" y="162" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">Database designer</text>
+<text x="536" y="194" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Choose entities, keys, constraints</text>
+<text x="536" y="223" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Output: logical schema</text>
+<rect x="520" y="405" width="400" height="125" rx="9" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="536" y="437" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">Application developer</text>
+<text x="536" y="469" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Implement workflows and queries</text>
+<text x="536" y="498" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Output: correct transactions</text>
+<rect x="40" y="405" width="400" height="125" rx="9" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="56" y="437" text-anchor="start" font-family="Arial,sans-serif" font-size="21" font-weight="700" fill="#16324f">DBA and operations</text>
+<text x="56" y="469" text-anchor="start" font-family="Arial,sans-serif" font-size="21" font-weight="400" fill="#16324f">Configure, monitor, and recover</text>
+<text x="56" y="498" text-anchor="start" font-family="Arial,sans-serif" font-size="21" font-weight="400" fill="#16324f">Output: operated service</text>
+<path d="M445 192 L515 192" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<path d="M720 255 L720 400" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<path d="M515 467 L445 467" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<path d="M240 405 L240 260" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)" stroke-dasharray="7 5"/>
+<text x="260" y="350" text-anchor="start" font-family="Arial,sans-serif" font-size="19" font-weight="400" fill="#0f766e">feedback and revised requirements</text>
+<text x="40" y="670" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Arrows show a simplified flow of responsibilities, with feedback.</text>
+<text x="40" y="697" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">One person may hold several roles; each responsibility still needs an owner.</text>
+</svg>

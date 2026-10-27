@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 600" role="img" aria-labelledby="title desc"><title id="title">Key-value DBMS: retrieve a value using its key</title><desc id="desc">The key identifies the entry; the value is retrieved as a unit.</desc><defs><marker id="tip" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#0f766e"/></marker></defs><rect width="960" height="600" rx="16" fill="#f8fafc"/>
+<text x="40" y="48" text-anchor="start" font-family="Arial,sans-serif" font-size="28" font-weight="700" fill="#16324f">Key-value DBMS: retrieve a value using its key</text>
+<text x="40" y="82" text-anchor="start" font-family="Arial,sans-serif" font-size="19" font-weight="400" fill="#16324f">The key identifies the entry; the value is retrieved as a unit.</text>
+<rect x="40" y="140" width="300" height="100" rx="10" fill="#e0f2fe" stroke="#94a3b8" stroke-width="2"/>
+<text x="58" y="174" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="700" fill="#16324f">Key</text>
+<text x="58" y="207" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="400" fill="#16324f">session:101</text>
+<rect x="480" y="140" width="440" height="125" rx="10" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="498" y="174" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="700" fill="#16324f">Value</text>
+<text x="498" y="207" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="400" fill="#16324f">{ user: 101, role: student }</text>
+<rect x="40" y="350" width="300" height="100" rx="10" fill="#e0f2fe" stroke="#94a3b8" stroke-width="2"/>
+<text x="58" y="384" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="700" fill="#16324f">Key</text>
+<text x="58" y="417" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="400" fill="#16324f">session:102</text>
+<rect x="480" y="350" width="440" height="125" rx="10" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="498" y="384" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="700" fill="#16324f">Value</text>
+<text x="498" y="417" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="400" fill="#16324f">{ user: 102, role: teacher }</text>
+<path d="M340 190 L475 190" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<text x="355" y="167" text-anchor="start" font-family="Arial,sans-serif" font-size="19" font-weight="400" fill="#0f766e">GET key</text>
+<path d="M340 400 L475 400" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<text x="355" y="377" text-anchor="start" font-family="Arial,sans-serif" font-size="19" font-weight="400" fill="#0f766e">GET key</text>
+<text x="40" y="540" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">GET session:101 returns its associated value.</text>
+<text x="40" y="567" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Searching by fields inside values may require additional engine facilities.</text>
+</svg>

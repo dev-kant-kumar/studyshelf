@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 730" role="img" aria-labelledby="title desc"><title id="title">One schema, several database states</title><desc id="desc">INSERT and UPDATE change the contents while this structure stays fixed.</desc><defs><marker id="tip" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#0f766e"/></marker></defs><rect width="960" height="730" rx="16" fill="#f8fafc"/>
+<text x="40" y="48" text-anchor="start" font-family="Arial,sans-serif" font-size="27" font-weight="700" fill="#16324f">One schema, several database states</text>
+<text x="40" y="82" text-anchor="start" font-family="Arial,sans-serif" font-size="19" font-weight="400" fill="#16324f">INSERT and UPDATE change the contents while this structure stays fixed.</text>
+<rect x="40" y="120" width="880" height="95" rx="9" fill="#e0f2fe" stroke="#94a3b8" stroke-width="2"/>
+<text x="56" y="152" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="700" fill="#16324f">Unchanged schema: Student(student_id, name)</text>
+<text x="56" y="184" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="400" fill="#16324f">student_id: INTEGER PRIMARY KEY; name: required text</text>
+<rect x="40" y="335" width="250" height="129" rx="9" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="52" y="367" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="700" fill="#16324f">State t1</text>
+<path d="M40 384 L290 384" fill="none" stroke="#0f766e" stroke-width="3"/>
+<text x="51" y="412" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">id</text>
+<text x="151" y="412" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">name</text>
+<path d="M140 384 V464" stroke="#cbd5e1"/>
+<text x="51" y="452" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">101</text>
+<text x="151" y="452" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Asha</text>
+<path d="M140 384 V464" stroke="#cbd5e1"/>
+<path d="M40 424 H290" stroke="#cbd5e1"/>
+<rect x="355" y="335" width="250" height="169" rx="9" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="367" y="367" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="700" fill="#16324f">State t2</text>
+<path d="M355 384 L605 384" fill="none" stroke="#0f766e" stroke-width="3"/>
+<text x="366" y="412" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">id</text>
+<text x="466" y="412" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">name</text>
+<path d="M455 384 V504" stroke="#cbd5e1"/>
+<text x="366" y="452" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">101</text>
+<text x="466" y="452" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Asha</text>
+<path d="M455 384 V504" stroke="#cbd5e1"/>
+<path d="M355 424 H605" stroke="#cbd5e1"/>
+<text x="366" y="492" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">102</text>
+<text x="466" y="492" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Ravi</text>
+<path d="M455 384 V504" stroke="#cbd5e1"/>
+<path d="M355 464 H605" stroke="#cbd5e1"/>
+<rect x="670" y="335" width="250" height="169" rx="9" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+<text x="682" y="367" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="700" fill="#16324f">State t3</text>
+<path d="M670 384 L920 384" fill="none" stroke="#0f766e" stroke-width="3"/>
+<text x="681" y="412" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">id</text>
+<text x="781" y="412" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#16324f">name</text>
+<path d="M770 384 V504" stroke="#cbd5e1"/>
+<text x="681" y="452" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">101</text>
+<text x="781" y="452" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Asha S.</text>
+<path d="M770 384 V504" stroke="#cbd5e1"/>
+<path d="M670 424 H920" stroke="#cbd5e1"/>
+<text x="681" y="492" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">102</text>
+<text x="781" y="492" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">Ravi</text>
+<path d="M770 384 V504" stroke="#cbd5e1"/>
+<path d="M670 464 H920" stroke="#cbd5e1"/>
+<path d="M295 400 L350 400" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<path d="M610 400 L665 400" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#tip)"/>
+<text x="40" y="590" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="400" fill="#16324f">t1 -&gt; t2: INSERT student 102.     t2 -&gt; t3: UPDATE student 101 name.</text>
+<text x="40" y="670" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">The three valid states share the same column definitions and key rule.</text>
+<text x="40" y="697" text-anchor="start" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#16324f">An empty Student table would also be a possible state of this schema.</text>
+</svg>

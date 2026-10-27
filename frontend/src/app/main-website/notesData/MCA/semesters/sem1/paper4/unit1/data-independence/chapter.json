@@ -1,0 +1,151 @@
+{
+  "intro": "Data independence is the ability to change a schema at one level without requiring changes to the schema at the next higher level. It reduces the extent to which applications depend on representation choices.",
+  "outcomes": [
+    "Distinguish logical and physical independence using schema mappings.",
+    "Evaluate concrete changes and compatibility requirements.",
+    "Explain why independence has semantic and operational limits."
+  ],
+  "sections": [
+    {
+      "title": "1. Dependence and the mapping boundary",
+      "paragraphs": [
+        "An application is tightly dependent on storage when it reads records at fixed byte offsets or assumes a particular file order. It is dependent on a logical schema when it expects a particular table, field, type, and meaning. Data independence introduces mappings that absorb some lower-level changes while maintaining the higher-level contract.",
+        "The contract includes more than field names: types, meaning, visibility, supported operations, and applicable constraints can matter. A read query still running is not proof that every application behaviour is preserved."
+      ]
+    },
+    {
+      "title": "2. Physical data independence",
+      "paragraphs": [
+        "Physical data independence permits internal-schema changes without changing the conceptual schema. Examples include adding an index, changing page organisation, relocating storage, or applying transparent compression. The DBMS translates the same logical query into operations on the new representation.",
+        "For Student(student_id, name), replacing a table scan with an index lookup should not change which rows satisfy student_id = 101. The conceptual-internal mapping absorbs the access change. Performance, storage use, and maintenance windows can still differ.",
+        "An application that assumes returned row order without ORDER BY has relied on an unstated physical accident. Adding an index may expose that defect. The logical interface did not promise the earlier order."
+      ],
+      "diagram": "independence-physical-change",
+      "diagramHeight": 750,
+      "alt": "The same student lookup uses a scan before an index exists and an indexed access route afterward, returning student 101 named Asha in both cases.",
+      "caption": "Compare both access routes with the unchanged result. Internal access can change without changing the logical table interface."
+    },
+    {
+      "title": "3. Logical data independence",
+      "paragraphs": [
+        "Logical data independence permits conceptual-schema changes without requiring changes to relevant external schemas or their applications. Adding an optional attribute can leave existing explicit projections unchanged. Splitting a relation may be hidden behind a view that reconstructs an existing perspective.",
+        "Suppose Student(student_id, name, phone) becomes StudentIdentity(student_id, name) and StudentContact(student_id, phone). If every student has exactly one contact row, a join can recreate the earlier interface. If contact rows are optional, a left join may be necessary to retain students with no phone. If there are several contacts, the old one-row-per-student interface needs a deliberate selection rule.",
+        "Logical independence is usually harder because conceptual changes may alter meaning, constraints, or permissible updates. A view can preserve selected reads while being ambiguous for inserts and deletes. Applications using SELECT * may also depend on a changing column list."
+      ],
+      "diagram": "independence-logical-split",
+      "diagramHeight": 790,
+      "alt": "An earlier Student interface is split into identity and optional contact tables. A left-join compatibility view reconstructs the same read columns and retains Ravi despite having no contact row.",
+      "caption": "The schema changes while a mapping preserves the read contract. Contact multiplicity, missing rows, and update behaviour require separate checks."
+    },
+    {
+      "title": "4. Worked compatibility view",
+      "paragraphs": [
+        "The following illustrative SQL preserves a read interface after separating identity and contact data. StudentContact.student_id must be unique to avoid multiplying student rows. A left join retains students without a contact row, producing NULL for phone. NULL represents an absent or unknown value in this example, not an empty string."
+      ],
+      "code": "CREATE VIEW Student AS\nSELECT i.student_id, i.name, c.phone\nFROM StudentIdentity AS i\nLEFT JOIN StudentContact AS c\n  ON c.student_id = i.student_id;",
+      "example": [
+        "Identity: (101, Asha), (102, Ravi). Contact: (101, 9001).",
+        "The view yields (101, Asha, 9001) and (102, Ravi, NULL). An inner join would incorrectly hide Ravi from the old interface. This establishes read compatibility only; writes through the join view need separate design."
+      ],
+      "diagram": "compatibility-left-join",
+      "diagramHeight": 790,
+      "alt": "The inner join returns Asha only, while the left join on the same identity and contact inputs also returns Ravi with a NULL phone.",
+      "caption": "Compare the output rows, not just the column names. Silently losing students would break the earlier interface."
+    },
+    {
+      "title": "5. Comparison and limits",
+      "paragraphs": [
+        "Data independence is not independence from every change. Renaming a public field, changing its meaning, narrowing its range, or withdrawing a supported operation can require application changes. It is also different from portability between DBMS products, which involves dialects, types, drivers, and operational behaviour."
+      ],
+      "table": {
+        "caption": "Two kinds of data independence",
+        "headers": [
+          "Aspect",
+          "Physical",
+          "Logical"
+        ],
+        "rows": [
+          [
+            "Changed level",
+            "Internal",
+            "Conceptual"
+          ],
+          [
+            "Protected level",
+            "Conceptual and applications above it",
+            "Relevant external schemas and applications"
+          ],
+          [
+            "Mapping involved",
+            "Conceptual-internal",
+            "External-conceptual"
+          ],
+          [
+            "Example",
+            "Add an index without changing tables",
+            "Split a table behind a compatible view"
+          ],
+          [
+            "Typical difficulty",
+            "Storage details can often be hidden",
+            "Semantic and update compatibility are harder"
+          ]
+        ]
+      }
+    }
+  ],
+  "questions": [
+    {
+      "id": "compare",
+      "question": "Compare logical and physical data independence.",
+      "answer": [
+        "Physical data independence hides internal storage changes from the conceptual schema, such as replacing an access path while preserving table meaning. Logical data independence hides conceptual design changes from existing external perspectives, such as reconstructing an earlier relation through a view. The former uses conceptual-internal mappings; the latter uses external-conceptual mappings. Logical independence is generally more difficult because relationships, meaning, and update behaviour may change."
+      ],
+      "level": "medium",
+      "tags": [
+        "Concept check"
+      ]
+    },
+    {
+      "id": "view-trap",
+      "question": "Why can joining split tables fail to preserve an old Student interface?",
+      "answer": [
+        "An inner join removes students without a contact row. Multiple contact rows can duplicate a student. A left join solves missing optional contacts but does not solve multiplicity. Preserving the old interface requires explicit rules for cardinality, missing values, and which contact to expose. Write operations also need a mapping that determines which underlying rows to change."
+      ],
+      "level": "hard",
+      "tags": [
+        "Practical"
+      ]
+    },
+    {
+      "id": "index-order",
+      "question": "Does an index changing output order violate physical data independence?",
+      "answer": [
+        "Not when the original query had no ordering requirement. SQL result order must be explicitly requested using ORDER BY. The application depended on an accidental physical order, so its assumed contract exceeded the logical guarantee. If a defined order is required, the query must specify it."
+      ],
+      "level": "medium",
+      "tags": [
+        "Concept check"
+      ]
+    }
+  ],
+  "revision": [
+    "Identify the changed and protected levels for each kind of independence.",
+    "Test compatibility for missing rows, duplicates, types, and writes.",
+    "Distinguish stable logical meaning from stable performance."
+  ],
+  "references": [
+    {
+      "title": "Oracle Database Concepts: introduction and architecture",
+      "url": "https://docs.oracle.com/en/database/oracle/oracle-database/19/cncpt/introduction-to-oracle-database.html"
+    },
+    {
+      "title": "University of Cape Town: database schemas and data independence",
+      "url": "https://www.cs.uct.ac.za/mit_notes/database/htmls/chp01.html"
+    }
+  ],
+  "next": {
+    "id": "data-abstraction",
+    "title": "Data abstraction and levels of detail"
+  }
+}
