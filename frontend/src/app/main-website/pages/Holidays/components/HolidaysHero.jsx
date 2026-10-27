@@ -1,5 +1,5 @@
-import { Download, Calendar, Sun, Palmtree, Clock } from 'lucide-react'
-import { eyebrow, muted, focus } from '@/ui/classes'
+import { Calendar, Sun, Palmtree, Clock } from 'lucide-react'
+import { eyebrow, muted } from '@/ui/classes'
 import { holidaySummary } from '../holidayData'
 
 export default function HolidaysHero() {
@@ -20,7 +20,7 @@ export default function HolidaysHero() {
           </p>
         </div>
 
-        {/* Circular downloads */}
+        {/* Circular downloads commented out until official university PDF/scan is released
         <div className="flex w-full flex-wrap items-center gap-2 sm:w-auto">
           {holidaySummary.sourceNotices.map((notice, index) => (
             <a
@@ -34,6 +34,7 @@ export default function HolidaysHero() {
             </a>
           ))}
         </div>
+        */}
       </div>
 
       {/* Metric Cards Grid */}

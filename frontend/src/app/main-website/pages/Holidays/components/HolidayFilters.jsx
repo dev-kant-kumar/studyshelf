@@ -1,6 +1,12 @@
 import { Search, X, LayoutGrid, Table } from 'lucide-react'
+import Dropdown from '@/ui/Dropdown'
 import { focus } from '@/ui/classes'
 import { holidayMonths, holidayCategories } from '../holidayData'
+
+const monthOptions = [
+  { value: '', label: 'All 12 Months' },
+  ...holidayMonths.map(month => ({ value: month, label: month })),
+]
 
 export default function HolidayFilters({
   query,
@@ -123,22 +129,15 @@ export default function HolidayFilters({
 
         {/* Month Selector & Clear */}
         <div className="flex flex-wrap items-center gap-2">
-          <label htmlFor="month-select" className="sr-only">
-            Filter by month
-          </label>
-          <select
-            id="month-select"
+          <Dropdown
+            id="holiday-month-filter"
+            compact
+            label="Filter by month"
+            options={monthOptions}
             value={selectedMonth}
-            onChange={e => onMonthChange(e.target.value)}
-            className={`rounded-lg border border-line bg-surface px-2.5 py-1 text-xs font-semibold text-ink dark:border-night-line dark:bg-night-surface dark:text-night-ink ${focus}`}
-          >
-            <option value="">All 12 Months</option>
-            {holidayMonths.map(month => (
-              <option key={month} value={month}>
-                {month}
-              </option>
-            ))}
-          </select>
+            onChange={onMonthChange}
+            className="text-xs"
+          />
 
           {hasFilters && (
             <button
