@@ -200,6 +200,9 @@ export default function Header() {
               <NavLink className={drawerNavClass} to="/professors" onClick={() => setOpen(false)}>
                 <span>Faculty Directory</span>
               </NavLink>
+              <NavLink className={drawerNavClass} to="/holidays" onClick={() => setOpen(false)}>
+                <span>Holiday Calendar 2026</span>
+              </NavLink>
               <NavLink className={drawerNavClass} to="/vbu" onClick={() => setOpen(false)}>
                 <span>VBU Student Guide</span>
               </NavLink>

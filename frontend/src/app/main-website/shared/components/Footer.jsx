@@ -144,6 +144,14 @@ export default function Footer() {
               </li>
               <li>
                 <Link
+                  to="/holidays"
+                  className={`inline-flex items-center text-subtle transition-colors hover:text-brand dark:text-night-subtle dark:hover:text-night-brand ${focus}`}
+                >
+                  University Holiday List 2026
+                </Link>
+              </li>
+              <li>
+                <Link
                   to="/professors"
                   className={`inline-flex items-center text-subtle transition-colors hover:text-brand dark:text-night-subtle dark:hover:text-night-brand ${focus}`}
                 >

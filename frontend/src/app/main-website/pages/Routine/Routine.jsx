@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useSearchParams } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import { CalendarDays, Calendar, LayoutGrid } from 'lucide-react'
 import CatalogueLayout from '../../layouts/CatalogueLayout'
 import Breadcrumbs from '../../shared/components/Breadcrumbs'
@@ -175,7 +175,14 @@ export default function Routine() {
             {/* Footer Disclaimer & Official Notice Info */}
             <div className="mt-8 rounded-xl border border-line bg-soft/40 p-4 text-xs leading-relaxed text-subtle dark:border-night-line dark:bg-night-soft/30 dark:text-night-subtle">
               <span className="font-semibold text-ink dark:text-night-ink">Official source: </span>
-              Transcribed from the Department of Computer Applications MCA-I official notification. Routine timing follows India Standard Time (IST). Academic holiday notices and ad-hoc university cancellations are not reflected automatically.
+              Transcribed from the Department of Computer Applications MCA-I official notification. Routine timing follows India Standard Time (IST). Academic holiday notices and ad-hoc university cancellations are not reflected automatically. Check the full{' '}
+              <Link
+                to="/holidays"
+                className={`font-semibold text-brand underline underline-offset-2 hover:opacity-90 dark:text-night-brand ${focus}`}
+              >
+                VBU official holiday calendar
+              </Link>{' '}
+              for scheduled campus leaves.
             </div>
           </>
         )}
