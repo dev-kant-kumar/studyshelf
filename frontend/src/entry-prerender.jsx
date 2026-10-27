@@ -5,8 +5,9 @@ import MainWebsite from './app/main-website/MainWebsite'
 import { courses, notes } from './app/main-website/notesData'
 import { publicPages } from './config/publicPages'
 import { site } from './config/site'
+import { departmentPeople, professorHref } from './app/main-website/pages/Professors/facultyData.js'
 export { site }
-export const paths = ['/', ...publicPages.map(page => page.path), '/search', '/saved', ...courses.flatMap(course => [course.href, ...course.semesters.flatMap(semester => [semester.href, ...semester.papers.map(paper => paper.href)])]), ...notes.map(note => note.href)]
+export const paths = ['/', ...departmentPeople.map(person => professorHref(person.id)), ...publicPages.map(page => page.path), '/search', '/saved', ...courses.flatMap(course => [course.href, ...course.semesters.flatMap(semester => [semester.href, ...semester.papers.map(paper => paper.href)])]), ...notes.map(note => note.href)]
 export const noteDates = Object.fromEntries(notes.filter(note => note.updatedAt).map(note => [note.href, note.updatedAt]))
 export async function render(path) {
   let failure

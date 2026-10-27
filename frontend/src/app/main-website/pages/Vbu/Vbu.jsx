@@ -6,7 +6,7 @@ import PageIntro from '../../shared/components/PageIntro'
 import Breadcrumbs from '../../shared/components/Breadcrumbs'
 import SyllabusLabel from '../../shared/components/SyllabusLabel'
 import { getCourse } from '../../notesData'
-import { panel, muted, link, button, focus } from '@/ui/classes'
+import { panel, muted, link, button, focus, secondary } from '@/ui/classes'
 
 const colleges = [
   { name: 'Annada College, Hazaribag', href: 'https://annadacollege.ac.in/', icon: 'annada' },
@@ -35,6 +35,7 @@ export default function Vbu() {
     <DocumentHead title="VBU BCA & MCA Syllabus - Student Guide" description="Find VBU MCA study notes and syllabus units, with guidance for BCA students at Vinoba Bhave University colleges in Jharkhand." path="/vbu" />
     <Breadcrumbs items={[{ label: 'VBU study guide' }]} />
     <PageIntro eyebrow="Vinoba Bhave University · Jharkhand" title="A study guide for VBU students." description="Find your semester, check your syllabus, and study one topic at a time."><SyllabusLabel course={mca} /></PageIntro>
+    <Link className={`${secondary} mb-6`} to="/professors">Explore BCA and MCA professors <ArrowUpRight size={16} aria-hidden="true" /></Link>
     <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
       <div className="space-y-8">
         <section className={`${panel} p-6 sm:p-8`}>

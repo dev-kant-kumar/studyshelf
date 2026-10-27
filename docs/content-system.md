@@ -141,3 +141,21 @@ SQL code blocks offer PostgreSQL (default), Oracle, MySQL, MariaDB, SQLite, and 
 For structured DBMS chapters, provide `sqlVariants` beside `code` and `language: "sql"`. Keys are `postgresql`, `oracle`, `mysql`, `mariadb`, `sqlite`, and `sqlserver`; each value contains `code`, a platform-specific `note`, and optionally `download: { href, filename }`. Keep the baseline `code` equal to the PostgreSQL variant. Author and review real variants instead of translating arbitrary SQL with string replacement. Missing variants explicitly display Original SQL without claiming compatibility.
 
 All eight current SQL examples have six authored variants. Complete structure, relational, and view labs have matching downloads in `frontend/public/examples/`. Oracle examples target 19c-compatible syntax; SQL Server notes identify client batch separators. Version and transaction requirements appear beside the code. Tests verify variant coverage, preference migration, language resolution, download consistency, and important dialect differences. The three SQLite downloads were executed in isolated in-memory databases; the structure fixture also passed expected-row, foreign-key, duplicate-key, and mark-bound checks. Other database variants were reviewed against vendor documentation but not executed on those servers.
+
+
+## MCA professor directory
+
+`pages/Professors/facultyData.js` holds seven selected faculty listings transcribed from the official VBU MCA page, retrieved 27 October 2026. Stable IDs resolve individual `/professors/:professor` pages and are referenced by routine entries instead of duplicating names and contact details. The directory supports name, specialization, and qualification search. Profiles preserve published contacts, report source experience without recalculating it, and disclose the source's missing update date. No timetable or current teaching assignments are inferred from faculty specializations. The supplied MCA Semester 1 routine is now available; remaining schedules are pending.
+
+The directory is linked from MCA, the VBU guide, and the footer. All profile routes are prerendered with canonical metadata. Validate faculty updates against the source and retain provenance; do not infer degrees, titles, present employment, or office hours. The linked legacy Word profiles are not imported because the sampled source link returned 404.
+
+The directory covers BCA and MCA teaching, confirmed by the project owner. Both course pages link to the same faculty records; the official MCA page remains the source for biographical and contact details. Each faculty record lists both course IDs for routine associations.
+
+
+## Class routines and departmental staff
+
+`pages/Routine/routineData.js` stores supplied schedules independently of the syllabus catalogue. MCA Semester 1 is transcribed from the project owner's image at `/routines/mca-sem1.png`; source receipt date is 27 October 2026, not an effective date. Preserve merged two-hour labs, the daily recess, library, and tutorial. No BCA or other semester schedule is inferred. `/routine` uses shareable course, semester, view, and day query parameters. Today, current sessions, and next classes use Asia/Kolkata time and update every 30 seconds. This is a regular weekly routine, not a holiday calendar or cancellation service.
+
+The faculty data also includes four departmental staff from the official page's image labels. They remain separate from professors and have no inferred academic title, qualification, or contact information. The source spells Arshad Alam as "arsad alam" in the image label and uses "Md.Arshad-Alam.pdf" for the linked profile; the display name is normalized while `sourceName` retains the label. Linked staff PDFs could not be retrieved (www paths returned 404; the bare host failed certificate validation). AK resolves to Abhishek Kumar and AA to Arshad Alam for lab/library assignments. Other routine abbreviations resolve to stable professor IDs. New schedules should reuse those IDs and retain source provenance.
+
+Routine displays use syllabus paper numbers and full paper titles (including distinct lab papers) plus full staff names. Source abbreviations remain internal transcription keys and are not shown in the day view, weekly view, or current-session banner.
