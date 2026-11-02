@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import { Link, useParams, useSearchParams } from 'react-router-dom'
-import { ArrowRight, Clock, Users, Compass, ArrowUpRight } from 'lucide-react'
+import { ArrowRight, Clock, Users, Compass, ArrowUpRight, FileText } from 'lucide-react'
 import Illustration from '../../shared/components/Illustration'
 import { getPaperIllustration } from '@/config/paperIllustrations'
 import { getCourse, getSemester } from '../../notesData'
@@ -74,7 +74,27 @@ export default function Semester() {
       </div>
 
       {/* Quick Action Hub */}
-      <div className="mb-8 grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
+      <div className="mb-8 grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-4">
+        <Link
+          to={`/courses/${course.id}/pyqs?semester=${semester.id}`}
+          className={`${panel} group flex items-center justify-between gap-3 p-4 transition-colors hover:border-brand dark:hover:border-night-brand motion-reduce:transition-none sm:gap-4 ${focus}`}
+        >
+          <div className="flex min-w-0 items-center gap-3">
+            <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-selected text-brand dark:bg-night-selected dark:text-night-brand">
+              <FileText size={17} aria-hidden="true" />
+            </span>
+            <div className="min-w-0">
+              <span className="block truncate text-sm font-semibold text-ink group-hover:text-brand dark:text-night-ink dark:group-hover:text-night-brand">
+                {semester.title} PYQs
+              </span>
+              <span className={`block truncate text-xs ${muted}`}>
+                Past exam question papers
+              </span>
+            </div>
+          </div>
+          <ArrowRight size={15} className="shrink-0 text-subtle transition-transform group-hover:translate-x-0.5 group-hover:text-brand dark:text-night-subtle dark:group-hover:text-night-brand" aria-hidden="true" />
+        </Link>
+
         <Link
           to={`/routine?course=${course.id}&semester=${semester.number}`}
           className={`${panel} group flex items-center justify-between gap-3 p-4 transition-colors hover:border-brand dark:hover:border-night-brand motion-reduce:transition-none sm:gap-4 ${focus}`}

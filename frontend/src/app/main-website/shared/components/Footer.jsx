@@ -133,6 +133,14 @@ export default function Footer() {
               </li>
               <li>
                 <Link
+                  to="/pyqs"
+                  className={`inline-flex items-center text-subtle transition-colors hover:text-brand dark:text-night-subtle dark:hover:text-night-brand ${focus}`}
+                >
+                  Previous Year Papers (PYQ)
+                </Link>
+              </li>
+              <li>
+                <Link
                   to="/routine"
                   className={`inline-flex items-center gap-1.5 text-subtle transition-colors hover:text-brand dark:text-night-subtle dark:hover:text-night-brand ${focus}`}
                 >

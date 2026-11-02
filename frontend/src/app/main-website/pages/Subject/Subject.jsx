@@ -196,6 +196,16 @@ function SubjectContent({ course, semester, paper, hash }) {
               <span>View Semester {semester.number} Routine</span>
             </Link>
           </div>
+
+          {/* Previous Year Questions Link */}
+          <div className="mt-3">
+            <Link
+              to={`/courses/${course.id}/pyqs?semester=${semester.id}`}
+              className={`${panel} block p-3.5 text-xs font-semibold text-subtle transition-colors hover:border-brand hover:text-brand dark:text-night-subtle dark:hover:border-night-brand dark:hover:text-night-brand sm:p-4 ${focus}`}
+            >
+              <span>View Semester {semester.number} PYQs</span>
+            </Link>
+          </div>
         </aside>
 
         {/* Main Content Area */}

@@ -62,7 +62,27 @@ export default function Course() {
       )}
 
       {/* Student Action & Companion Hub */}
-      <div className="mb-10 grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
+      <div className="mb-10 grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-4">
+        <Link
+          to={`/courses/${course.id}/pyqs`}
+          className={`${panel} group flex items-center justify-between gap-3 p-4 transition-colors hover:border-brand dark:hover:border-night-brand motion-reduce:transition-none sm:gap-4 sm:p-5 ${focus}`}
+        >
+          <div className="flex min-w-0 items-center gap-3">
+            <span className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-selected text-brand dark:bg-night-selected dark:text-night-brand">
+              <FileText size={19} aria-hidden="true" />
+            </span>
+            <div className="min-w-0">
+              <span className="block truncate font-semibold text-ink group-hover:text-brand dark:text-night-ink dark:group-hover:text-night-brand">
+                Past Exam PYQs
+              </span>
+              <span className={`mt-0.5 block truncate text-xs ${muted}`}>
+                Question papers & marks
+              </span>
+            </div>
+          </div>
+          <ArrowRight size={17} className="shrink-0 text-subtle transition-transform group-hover:translate-x-0.5 group-hover:text-brand dark:text-night-subtle dark:group-hover:text-night-brand" aria-hidden="true" />
+        </Link>
+
         <Link
           to={`/routine?course=${course.id}&semester=1`}
           className={`${panel} group flex items-center justify-between gap-3 p-4 transition-colors hover:border-brand dark:hover:border-night-brand motion-reduce:transition-none sm:gap-4 sm:p-5 ${focus}`}
@@ -76,7 +96,7 @@ export default function Course() {
                 Class Timetable
               </span>
               <span className={`mt-0.5 block truncate text-xs ${muted}`}>
-                {isMca ? 'Live IST class routine for Semester 1' : 'Timetable & period tracker'}
+                {isMca ? 'Live IST class routine for Sem 1' : 'Timetable & period tracker'}
               </span>
             </div>
           </div>
@@ -96,7 +116,7 @@ export default function Course() {
                 Faculty Directory
               </span>
               <span className={`mt-0.5 block truncate text-xs ${muted}`}>
-                Department professors and advisors
+                Department professors & staff
               </span>
             </div>
           </div>
@@ -105,7 +125,7 @@ export default function Course() {
 
         <Link
           to="/vbu"
-          className={`${panel} group flex items-center justify-between gap-3 p-4 transition-colors hover:border-brand dark:hover:border-night-brand motion-reduce:transition-none sm:col-span-2 sm:gap-4 sm:p-5 lg:col-span-1 ${focus}`}
+          className={`${panel} group flex items-center justify-between gap-3 p-4 transition-colors hover:border-brand dark:hover:border-night-brand motion-reduce:transition-none sm:gap-4 sm:p-5 ${focus}`}
         >
           <div className="flex min-w-0 items-center gap-3">
             <span className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-selected text-brand dark:bg-night-selected dark:text-night-brand">
@@ -116,7 +136,7 @@ export default function Course() {
                 VBU Academic Guide
               </span>
               <span className={`mt-0.5 block truncate text-xs ${muted}`}>
-                CBCS passing rules and practical guidelines
+                CBCS passing rules & guidelines
               </span>
             </div>
           </div>

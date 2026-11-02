@@ -62,6 +62,12 @@ export default function Home() {
               BCA Syllabus
             </Link>
             <Link
+              to="/pyqs"
+              className={`rounded-md border border-line bg-surface px-2.5 py-1 font-medium transition-colors hover:border-brand hover:text-brand dark:border-night-line dark:bg-night-surface dark:hover:border-night-brand dark:hover:text-night-brand ${focus}`}
+            >
+              Past PYQs
+            </Link>
+            <Link
               to="/routine"
               className={`rounded-md border border-line bg-surface px-2.5 py-1 font-medium transition-colors hover:border-brand hover:text-brand dark:border-night-line dark:bg-night-surface dark:hover:border-night-brand dark:hover:text-night-brand ${focus}`}
             >

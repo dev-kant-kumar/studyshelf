@@ -9,6 +9,7 @@ import {
   Code,
   Compass,
   Clock,
+  FileText,
 } from 'lucide-react'
 import { site } from '@/config/site'
 import { courses } from '../../notesData'
@@ -90,6 +91,9 @@ export default function Header() {
                 {course.name}
               </NavLink>
             ))}
+            <NavLink className={desktopNavLinkClass} to="/pyqs">
+              <span>PYQs</span>
+            </NavLink>
             <NavLink className={desktopNavLinkClass} to="/routine">
               <span>Routine</span>
             </NavLink>
@@ -129,34 +133,36 @@ export default function Header() {
               <Bookmark size={14} className="text-brand dark:text-night-brand" aria-hidden="true" />
               <span>Saved</span>
               {savedCount > 0 && (
-                <span className="rounded-full bg-brand/10 px-1.5 py-0.2 text-[10px] font-bold text-brand dark:bg-night-brand/20 dark:text-night-brand">
+                <span className="rounded-full bg-brand px-1.5 py-0.2 text-[10px] font-semibold text-on-brand dark:bg-night-brand dark:text-night-on-brand">
                   {savedCount}
                 </span>
               )}
             </NavLink>
 
-            <ThemeControl />
+            <ThemeControl id="desktop-theme" />
           </div>
 
-          {/* Mobile Actions: Search Trigger & Menu Trigger */}
+          {/* Mobile Drawer Trigger & Actions */}
           <div className="flex items-center gap-1 lg:hidden">
-            <Link className={iconButton} to="/search" aria-label="Search notes">
-              <Search size={20} />
-            </Link>
             <Link
+              to="/search"
               className={iconButton}
+              aria-label="Search notes"
+            >
+              <Search size={19} />
+            </Link>
+
+            <Link
               to="/saved"
+              className={`${iconButton} relative`}
               aria-label={`Saved notes, ${savedCount} saved`}
             >
-              <span className="relative">
-                <Bookmark size={20} />
-                {savedCount > 0 && (
-                  <span className="absolute -top-1 -right-1 flex size-3.5 items-center justify-center rounded-full bg-brand text-[9px] font-bold text-on-brand dark:bg-night-brand dark:text-night-on-brand">
-                    {savedCount}
-                  </span>
-                )}
-              </span>
+              <Bookmark size={19} />
+              {savedCount > 0 && (
+                <span className="absolute right-1.5 top-1.5 size-2 rounded-full bg-brand dark:bg-night-brand" />
+              )}
             </Link>
+
             <button
               className={iconButton}
               type="button"
@@ -187,6 +193,15 @@ export default function Header() {
               <NavLink className={drawerNavClass} to="/courses/bca" onClick={() => setOpen(false)}>
                 <span>BCA Syllabus & Notes</span>
                 <span className="rounded bg-soft px-1.5 py-0.5 text-[11px] font-mono text-subtle dark:bg-night-soft dark:text-night-subtle">UG</span>
+              </NavLink>
+              <NavLink className={drawerNavClass} to="/pyqs" onClick={() => setOpen(false)}>
+                <span className="flex items-center gap-1.5">
+                  <FileText size={14} className="text-brand dark:text-night-brand" aria-hidden="true" />
+                  <span>Previous Year Papers (PYQ)</span>
+                </span>
+                <span className="rounded bg-selected px-1.5 py-0.5 text-[10px] font-semibold text-brand dark:bg-night-selected dark:text-night-brand">
+                  New
+                </span>
               </NavLink>
               <NavLink className={drawerNavClass} to="/routine" onClick={() => setOpen(false)}>
                 <span className="flex items-center gap-1.5">
