@@ -697,7 +697,94 @@ export default {
               syllabusText:
                 "Introduction to OS Operating system functions, evaluation of O.S., Different types of O.S. batch, mu lti- programmed, time-sharing, real-time, distributed, parallel. System Structure Computer system operation, I/O structure, storage structure, storage hierarchy, different types of protections, operating syste m structure (simple, layered, virtual machine), O/S services, system calls. [Q-1]",
               sourcePage: 11,
-              notes: [],
+              topics: [
+                {
+                  id: "introduction-to-os",
+                  title: "Introduction to OS and operating system functions",
+                },
+                {
+                  id: "evolution-and-types",
+                  title: "Evolution and types of operating systems",
+                },
+                {
+                  id: "computer-system-operation",
+                  title: "Computer system operation and protection",
+                },
+                {
+                  id: "io-and-storage-structure",
+                  title: "I/O structure, storage structure, and memory hierarchy",
+                },
+                {
+                  id: "operating-system-structure",
+                  title: "Operating system structure and virtual machines",
+                },
+                {
+                  id: "os-services-and-system-calls",
+                  title: "Operating system services and system calls",
+                },
+              ],
+              notes: [
+                {
+                  id: "introduction-to-os",
+                  title: "Introduction to Operating Systems: Functions, Dual-Mode Operations, and Kernel Boundaries",
+                  summary: "Explore the dual roles of an OS, hardware privilege levels, kernel versus user space execution, mode switches, and hardware protection.",
+                  status: "published",
+                  order: 1,
+                  coveredTopics: ["introduction-to-os"],
+                  updatedAt: "2026-11-02",
+                  tags: ["operating systems", "kernel", "dual mode", "system calls", "hardware protection"],
+                },
+                {
+                  id: "evolution-and-types",
+                  title: "Evolution and Types of Operating Systems: Batch, Time-Sharing, RTOS, and Multiprocessors",
+                  summary: "Trace the evolution from serial processing and batch systems to time-sharing, hard versus soft RTOS, priority inversion, and SMP versus NUMA.",
+                  status: "published",
+                  order: 2,
+                  coveredTopics: ["evolution-and-types"],
+                  updatedAt: "2026-11-02",
+                  tags: ["operating systems", "batch systems", "time-sharing", "RTOS", "multiprocessing", "NUMA"],
+                },
+                {
+                  id: "computer-system-operation",
+                  title: "Computer System Operation and Hardware Protection: Bootstrapping, Interrupts, DMA, and Bounds Checking",
+                  summary: "Understand the hardware-kernel interface: reset vectors, APIC, IDT, top-half versus bottom-half interrupt handling, DMA cycle stealing, and base/limit registers.",
+                  status: "published",
+                  order: 3,
+                  coveredTopics: ["computer-system-operation"],
+                  updatedAt: "2026-11-02",
+                  tags: ["operating systems", "bootstrap", "interrupts", "APIC", "DMA", "base limit", "hardware protection"],
+                },
+                {
+                  id: "io-and-storage-structure",
+                  title: "I/O Structure, Storage Structure, and Memory Hierarchy: Hardware Controllers, Latency Numbers, and EMAT",
+                  summary: "Explore peripheral bus architectures, memory-mapped I/O, device drivers, Page Caching, EMAT formulas, magnetic disk physics, and NAND flash wear leveling.",
+                  status: "published",
+                  order: 4,
+                  coveredTopics: ["io-and-storage-structure"],
+                  updatedAt: "2026-11-02",
+                  tags: ["operating systems", "I/O subsystem", "storage hierarchy", "caching", "EMAT", "disk access time", "SSD", "FTL"],
+                },
+                {
+                  id: "operating-system-structure",
+                  title: "Operating System Structure and Virtual Machines: Monolithic, Microkernel, Hypervisors, and Containers",
+                  summary: "Analyze operating system architectures: monolithic kernels, microkernels, IPC overhead, hybrid engines, Intel VT-x hardware virtualization, and OS containers.",
+                  status: "published",
+                  order: 5,
+                  coveredTopics: ["operating-system-structure"],
+                  updatedAt: "2026-11-02",
+                  tags: ["operating systems", "kernel architecture", "monolithic", "microkernel", "hybrid", "hypervisor", "virtual machines", "containers", "VT-x"],
+                },
+                {
+                  id: "os-services-and-system-calls",
+                  title: "Operating System Services and System Calls: The POSIX Interface, Process Primitives, and Error Handling",
+                  summary: "Master operating system services: the five POSIX system call categories, fork/execve/waitpid lifecycle, errno semantics, and IPC trade-offs.",
+                  status: "published",
+                  order: 6,
+                  coveredTopics: ["os-services-and-system-calls"],
+                  updatedAt: "2026-11-02",
+                  tags: ["operating systems", "system calls", "POSIX", "process lifecycle", "fork", "execve", "waitpid", "errno", "IPC"],
+                },
+              ],
             },
             {
               id: "unit2",
@@ -706,7 +793,80 @@ export default {
               syllabusText:
                 "Concept of processes, proce ss scheduling, operations on processes, operating processes, inter -process communication. Process Synchronization: background, critical section problem, critical region, synchronization hardware, classical problems of synchronization, semaphores. Threads: overview, benefits of threads, user and kernel threads.CPU scheduling ]: scheduling criteria, preemptive & non - preemptive scheduling, scheduling algorithms,, multi-processor scheduling. [Q- 2]",
               sourcePage: 11,
-              notes: [],
+              topics: [
+                {
+                  id: "process-concept-and-operations",
+                  title: "Process concept, lifecycle operations, and IPC",
+                },
+                {
+                  id: "threads-and-multithreading",
+                  title: "Threads, multithreading models, and POSIX concurrency",
+                },
+                {
+                  id: "cpu-scheduling-algorithms",
+                  title: "CPU scheduling criteria and scheduling algorithms",
+                },
+                {
+                  id: "process-synchronization-and-critical-section",
+                  title: "Process synchronization, critical section, and hardware atomics",
+                },
+                {
+                  id: "semaphores-monitors-and-classical-problems",
+                  title: "Semaphores, monitors, and classical synchronization problems",
+                },
+              ],
+              notes: [
+                {
+                  id: "process-concept-and-operations",
+                  title: "Process Concept, Memory Layout, States, and Lifecycle Operations",
+                  summary: "Master process abstractions: virtual memory segments, PCB structure, state transition models, context switching mechanics, fork/exec lifecycle, and IPC paradigms.",
+                  status: "published",
+                  order: 1,
+                  coveredTopics: ["process-concept-and-operations"],
+                  updatedAt: "2026-11-02",
+                  tags: ["operating systems", "processes", "PCB", "context switch", "fork", "exec", "IPC"],
+                },
+                {
+                  id: "threads-and-multithreading",
+                  title: "Threads and Multithreading: Architectures, Models, and POSIX Concurrency",
+                  summary: "Compare heavyweight processes with threads, analyze user versus kernel thread models, evaluate multicore concurrency benefits, and master POSIX thread primitives.",
+                  status: "published",
+                  order: 2,
+                  coveredTopics: ["threads-and-multithreading"],
+                  updatedAt: "2026-11-02",
+                  tags: ["operating systems", "threads", "multithreading", "user threads", "kernel threads", "pthreads"],
+                },
+                {
+                  id: "cpu-scheduling-algorithms",
+                  title: "CPU Scheduling: Dispatching, Scheduling Criteria, and Core Algorithms",
+                  summary: "Explore CPU burst cycles, preemptive versus non-preemptive policies, criteria metrics, worked Gantt chart derivations for FCFS, SJF, SRTF, RR, and Multiprocessor/CFS scheduling.",
+                  status: "published",
+                  order: 3,
+                  coveredTopics: ["cpu-scheduling-algorithms"],
+                  updatedAt: "2026-11-02",
+                  tags: ["operating systems", "CPU scheduling", "FCFS", "SJF", "Round Robin", "MLFQ", "CFS"],
+                },
+                {
+                  id: "process-synchronization-and-critical-section",
+                  title: "Process Synchronization: Race Conditions, Critical Section, and Hardware Primitives",
+                  summary: "Analyze concurrent race conditions, critical section formal criteria, Peterson algorithm proof and out-of-order execution limits, and hardware atomic instructions.",
+                  status: "published",
+                  order: 4,
+                  coveredTopics: ["process-synchronization-and-critical-section"],
+                  updatedAt: "2026-11-02",
+                  tags: ["operating systems", "synchronization", "critical section", "Peterson algorithm", "atomics", "spinlocks"],
+                },
+                {
+                  id: "semaphores-monitors-and-classical-problems",
+                  title: "Semaphores, Monitors, and Classical Synchronization Problems: Full Analysis and Code",
+                  summary: "Master Dijkstra counting and binary semaphores, monitor condition variables, and formal deadlock-free solutions for Producer-Consumer, Readers-Writers, and Dining Philosophers.",
+                  status: "published",
+                  order: 5,
+                  coveredTopics: ["semaphores-monitors-and-classical-problems"],
+                  updatedAt: "2026-11-02",
+                  tags: ["operating systems", "semaphores", "monitors", "producer consumer", "readers writers", "dining philosophers"],
+                },
+              ],
             },
             {
               id: "unit3",
@@ -1149,8 +1309,8 @@ export default {
               notes: [
                 {
                   "id": "sql-foundations",
-                  "title": "SQL foundations and the shared practice database",
-                  "summary": "Understand SQL, relational vocabulary, and the dataset used throughout Unit 3.",
+                  "title": "Introduction to SQL",
+                  "summary": "Learn what SQL means, read a table, and write your first query with no previous SQL knowledge.",
                   "status": "published",
                   "order": 1,
                   "coveredTopics": [
@@ -1160,50 +1320,20 @@ export default {
                   "tags": [
                     "dbms",
                     "sql",
-                    "plsql",
-                    "unit3"
-                  ]
-                },
-                {
-                  "id": "basic-sql",
-                  "title": "Basic SQL: selecting and changing rows",
-                  "summary": "Write SELECT, INSERT, UPDATE, and DELETE with precise predicates and predictable results.",
-                  "status": "published",
-                  "order": 2,
-                  "coveredTopics": [
-                    "basic-sql"
-                  ],
-                  "updatedAt": "2026-10-27",
-                  "tags": [
-                    "dbms",
-                    "sql",
-                    "plsql",
-                    "unit3"
-                  ]
-                },
-                {
-                  "id": "advanced-sql",
-                  "title": "Advanced SQL: joins, CTEs, and window functions",
-                  "summary": "Trace outer joins, named query stages, ranking, and deterministic top-N selection.",
-                  "status": "published",
-                  "order": 3,
-                  "coveredTopics": [
-                    "advanced-sql"
-                  ],
-                  "updatedAt": "2026-10-27",
-                  "tags": [
-                    "dbms",
-                    "sql",
-                    "plsql",
-                    "unit3"
+                    "unit3",
+                    "postgresql",
+                    "backend",
+                    "what sql asks the database to do",
+                    "connect locally with psql",
+                    "run and interpret a query"
                   ]
                 },
                 {
                   "id": "database-languages",
-                  "title": "Database languages and transaction control",
-                  "summary": "Distinguish DDL, DML, DCL, TCL, client commands, and parameterized SQL.",
+                  "title": "SQL syntax, comments, identifiers, and command families",
+                  "summary": "Read a statement, distinguish syntax from data, and use a compact command reference.",
                   "status": "published",
-                  "order": 4,
+                  "order": 2,
                   "coveredTopics": [
                     "database-languages"
                   ],
@@ -1211,8 +1341,194 @@ export default {
                   "tags": [
                     "dbms",
                     "sql",
-                    "plsql",
-                    "unit3"
+                    "unit3",
+                    "postgresql",
+                    "backend",
+                    "read the statement before memorizing keywords",
+                    "identifiers, literals, parameters, and casts",
+                    "command families are a map, not different databases",
+                    "read errors by sqlstate"
+                  ]
+                },
+                {
+                  "id": "practice-schema",
+                  "title": "Read the schema and sample data",
+                  "summary": "Understand the users, orders, products, and line items used throughout the course.",
+                  "status": "published",
+                  "order": 3,
+                  "coveredTopics": [],
+                  "updatedAt": "2026-10-27",
+                  "tags": [
+                    "dbms",
+                    "sql",
+                    "unit3",
+                    "postgresql",
+                    "backend",
+                    "one relationship, one declared key",
+                    "inspect before reasoning",
+                    "use names and schemas deliberately"
+                  ]
+                },
+                {
+                  "id": "basic-sql",
+                  "title": "SELECT, expressions, aliases, and DISTINCT",
+                  "summary": "Choose columns, compute values, and distinguish duplicate rows from repeated facts.",
+                  "status": "published",
+                  "order": 4,
+                  "coveredTopics": [
+                    "basic-sql"
+                  ],
+                  "updatedAt": "2026-10-27",
+                  "tags": [
+                    "dbms",
+                    "sql",
+                    "unit3",
+                    "postgresql",
+                    "backend",
+                    "projection and expressions",
+                    "distinct removes duplicate result tuples",
+                    "the logical query pipeline"
+                  ]
+                },
+                {
+                  "id": "sql-filtering",
+                  "title": "WHERE, operators, patterns, and safe predicates",
+                  "summary": "Build exact predicates with AND, OR, NOT, IN, BETWEEN, and LIKE.",
+                  "status": "published",
+                  "order": 5,
+                  "coveredTopics": [],
+                  "updatedAt": "2026-10-27",
+                  "tags": [
+                    "dbms",
+                    "sql",
+                    "unit3",
+                    "postgresql",
+                    "backend",
+                    "filter by the intended business rule",
+                    "patterns are not regular expressions",
+                    "half-open ranges for timestamps"
+                  ]
+                },
+                {
+                  "id": "null-values",
+                  "title": "NULL, three-valued logic, CASE, and fallback values",
+                  "summary": "Reason about missing values without silently changing the question.",
+                  "status": "published",
+                  "order": 6,
+                  "coveredTopics": [
+                    "null-values"
+                  ],
+                  "updatedAt": "2026-10-27",
+                  "tags": [
+                    "dbms",
+                    "sql",
+                    "unit3",
+                    "postgresql",
+                    "backend",
+                    "null is missing information",
+                    "case describes conditional results",
+                    "the not in trap"
+                  ]
+                },
+                {
+                  "id": "sql-pagination",
+                  "title": "Ordering, limits, and API pagination",
+                  "summary": "Return predictable pages and understand the trade-off between offsets and cursors.",
+                  "status": "published",
+                  "order": 7,
+                  "coveredTopics": [],
+                  "updatedAt": "2026-10-27",
+                  "tags": [
+                    "dbms",
+                    "sql",
+                    "unit3",
+                    "postgresql",
+                    "backend",
+                    "a total order needs a tie-breaker",
+                    "offset versus keyset pagination",
+                    "treat cursor data as input"
+                  ]
+                },
+                {
+                  "id": "sql-writes",
+                  "title": "INSERT, UPDATE, DELETE, RETURNING, and upserts",
+                  "summary": "Change exactly the intended rows and make writes safe to retry.",
+                  "status": "published",
+                  "order": 8,
+                  "coveredTopics": [],
+                  "updatedAt": "2026-10-27",
+                  "tags": [
+                    "dbms",
+                    "sql",
+                    "unit3",
+                    "postgresql",
+                    "backend",
+                    "insert creates rows, not screen forms",
+                    "update and delete are set operations",
+                    "on conflict needs a business key"
+                  ]
+                },
+                {
+                  "id": "advanced-sql",
+                  "title": "Inner, outer, cross, and self joins",
+                  "summary": "Build relationship-aware queries without losing parents or multiplying totals.",
+                  "status": "published",
+                  "order": 9,
+                  "coveredTopics": [
+                    "advanced-sql"
+                  ],
+                  "updatedAt": "2026-10-27",
+                  "tags": [
+                    "dbms",
+                    "sql",
+                    "unit3",
+                    "postgresql",
+                    "backend",
+                    "declare the grain before joining",
+                    "preserve customers without paid orders",
+                    "other join forms and cardinality"
+                  ]
+                },
+                {
+                  "id": "aggregate-functions",
+                  "title": "Aggregates, GROUP BY, HAVING, and reporting",
+                  "summary": "Compute trustworthy summaries and distinguish row filters from group filters.",
+                  "status": "published",
+                  "order": 10,
+                  "coveredTopics": [
+                    "aggregate-functions"
+                  ],
+                  "updatedAt": "2026-10-27",
+                  "tags": [
+                    "dbms",
+                    "sql",
+                    "unit3",
+                    "postgresql",
+                    "backend",
+                    "aggregate at the intended level",
+                    "conditional aggregation and empty inputs",
+                    "grand totals and grouped dimensions"
+                  ]
+                },
+                {
+                  "id": "subqueries",
+                  "title": "Subqueries, EXISTS, ANY, ALL, and set operations",
+                  "summary": "Choose the correct query shape for scalar values, membership, and differences.",
+                  "status": "published",
+                  "order": 11,
+                  "coveredTopics": [
+                    "subqueries"
+                  ],
+                  "updatedAt": "2026-10-27",
+                  "tags": [
+                    "dbms",
+                    "sql",
+                    "unit3",
+                    "postgresql",
+                    "backend",
+                    "a scalar subquery has a cardinality contract",
+                    "membership, quantification, and missing values",
+                    "combine compatible result relations"
                   ]
                 },
                 {
@@ -1220,7 +1536,7 @@ export default {
                   "title": "Set operations: UNION, INTERSECT, and difference",
                   "summary": "Combine query results with correct duplicate, compatibility, and precedence rules.",
                   "status": "published",
-                  "order": 5,
+                  "order": 12,
                   "coveredTopics": [
                     "set-operations"
                   ],
@@ -1233,79 +1549,87 @@ export default {
                   ]
                 },
                 {
-                  "id": "aggregate-functions",
-                  "title": "Aggregate functions, grouping, and HAVING",
-                  "summary": "Derive group counts, sums, and averages while handling NULL and outer joins correctly.",
+                  "id": "sql-ctes",
+                  "title": "CTEs, recursion, and composable queries",
+                  "summary": "Name intermediate relations and traverse hierarchies with explicit termination.",
                   "status": "published",
-                  "order": 6,
-                  "coveredTopics": [
-                    "aggregate-functions"
-                  ],
+                  "order": 13,
+                  "coveredTopics": [],
                   "updatedAt": "2026-10-27",
                   "tags": [
                     "dbms",
                     "sql",
-                    "plsql",
-                    "unit3"
+                    "unit3",
+                    "postgresql",
+                    "backend",
+                    "with makes a query readable",
+                    "recursive queries need a base and a recursive step",
+                    "data-changing ctes are advanced tools"
                   ]
                 },
                 {
-                  "id": "null-values",
-                  "title": "NULL values and three-valued logic",
-                  "summary": "Use IS NULL, COALESCE, and existence checks without confusing unknown values with zero or empty text.",
+                  "id": "sql-windows",
+                  "title": "Window functions, ranking, frames, and top-N",
+                  "summary": "Calculate over related rows without collapsing the detail rows.",
                   "status": "published",
-                  "order": 7,
-                  "coveredTopics": [
-                    "null-values"
-                  ],
+                  "order": 14,
+                  "coveredTopics": [],
                   "updatedAt": "2026-10-27",
                   "tags": [
                     "dbms",
                     "sql",
-                    "plsql",
-                    "unit3"
+                    "unit3",
+                    "postgresql",
+                    "backend",
+                    "a window preserves the input grain",
+                    "filter a calculated rank in an outer query",
+                    "specify the frame for running calculations"
                   ]
                 },
                 {
-                  "id": "views",
-                  "title": "SQL views: interfaces, updates, and access",
-                  "summary": "Create views, trace their results, and explain update and security boundaries.",
+                  "id": "sql-types",
+                  "title": "Choose types, precision, identity, and time zones",
+                  "summary": "Model domain values deliberately and preserve their meaning across database and API boundaries.",
                   "status": "published",
-                  "order": 8,
-                  "coveredTopics": [
-                    "views"
-                  ],
+                  "order": 15,
+                  "coveredTopics": [],
                   "updatedAt": "2026-10-27",
                   "tags": [
                     "dbms",
                     "sql",
-                    "plsql",
-                    "unit3"
+                    "unit3",
+                    "postgresql",
+                    "backend",
+                    "types are part of the data contract",
+                    "time zones distinguish instants from wall clocks",
+                    "identity and generated values"
                   ]
                 },
                 {
-                  "id": "subqueries",
-                  "title": "Subqueries, correlation, and existence",
-                  "summary": "Choose scalar, set-valued, and correlated subqueries by their result shape.",
+                  "id": "sql-functions",
+                  "title": "Text, date, numeric, and collection functions",
+                  "summary": "Transform values without hiding data-quality rules inside unexplained expressions.",
                   "status": "published",
-                  "order": 9,
-                  "coveredTopics": [
-                    "subqueries"
-                  ],
+                  "order": 16,
+                  "coveredTopics": [],
                   "updatedAt": "2026-10-27",
                   "tags": [
                     "dbms",
                     "sql",
-                    "plsql",
-                    "unit3"
+                    "unit3",
+                    "postgresql",
+                    "backend",
+                    "read expressions from the inside out",
+                    "calendar operations need a reporting definition",
+                    "aggregate into a deliberate api shape"
                   ]
                 },
                 {
                   "id": "integrity-constraints",
-                  "title": "Entity, referential, and domain integrity",
-                  "summary": "Translate identity, relationship, and value-domain rules into enforceable database conditions.",
+                  "title": "Keys, relationships, normalization, and constraints",
+                  "summary": "Turn business invariants into a relational model that protects every writer.",
                   "status": "published",
-                  "order": 10,
+                  "order": 17,
                   "coveredTopics": [
                     "entity-integrity",
                     "referential-integrity",
@@ -1315,8 +1639,12 @@ export default {
                   "tags": [
                     "dbms",
                     "sql",
-                    "plsql",
-                    "unit3"
+                    "unit3",
+                    "postgresql",
+                    "backend",
+                    "start with facts and dependencies",
+                    "declare invariants next to the data",
+                    "deletion and lifecycle are domain decisions"
                   ]
                 },
                 {
@@ -1324,7 +1652,7 @@ export default {
                   "title": "SQL constraint types and schema evolution",
                   "summary": "Implement named PRIMARY KEY, FOREIGN KEY, UNIQUE, NOT NULL, CHECK, and default rules.",
                   "status": "published",
-                  "order": 11,
+                  "order": 18,
                   "coveredTopics": [
                     "sql-constraints"
                   ],
@@ -1337,20 +1665,43 @@ export default {
                   ]
                 },
                 {
-                  "id": "indexing",
-                  "title": "Indexing and query-plan reasoning",
-                  "summary": "Explain ordered indexes, selectivity, composite keys, and the cost of maintaining access paths.",
+                  "id": "sql-json",
+                  "title": "JSONB, arrays, and relational boundaries",
+                  "summary": "Query flexible attributes while preserving relational identity and validation.",
                   "status": "published",
-                  "order": 12,
+                  "order": 19,
+                  "coveredTopics": [],
+                  "updatedAt": "2026-10-27",
+                  "tags": [
+                    "dbms",
+                    "sql",
+                    "unit3",
+                    "postgresql",
+                    "backend",
+                    "a document is not a replacement for every table",
+                    "update one path, not an unrelated document",
+                    "index only the access pattern you actually need"
+                  ]
+                },
+                {
+                  "id": "views",
+                  "title": "Views, materialized views, functions, procedures, and triggers",
+                  "summary": "Choose database abstractions by their lifecycle and effects.",
+                  "status": "published",
+                  "order": 20,
                   "coveredTopics": [
-                    "indexing"
+                    "views"
                   ],
                   "updatedAt": "2026-10-27",
                   "tags": [
                     "dbms",
                     "sql",
-                    "plsql",
-                    "unit3"
+                    "unit3",
+                    "postgresql",
+                    "backend",
+                    "a view is a named query contract",
+                    "functions return values; procedures are invoked with call",
+                    "triggers run implicitly inside the write transaction"
                   ]
                 },
                 {
@@ -1358,7 +1709,7 @@ export default {
                   "title": "Cursors and row-by-row processing",
                   "summary": "Trace cursor state, fetch termination, implicit attributes, and set-based alternatives.",
                   "status": "published",
-                  "order": 13,
+                  "order": 21,
                   "coveredTopics": [
                     "cursors"
                   ],
@@ -1375,7 +1726,7 @@ export default {
                   "title": "Stored procedures, parameters, and exceptions",
                   "summary": "Build reusable server-side operations with clear input/output and transaction contracts.",
                   "status": "published",
-                  "order": 14,
+                  "order": 22,
                   "coveredTopics": [
                     "stored-procedures"
                   ],
@@ -1392,7 +1743,7 @@ export default {
                   "title": "Triggers, audit trails, and hidden side effects",
                   "summary": "Trace row and statement triggers, old/new values, multirow updates, and rollback.",
                   "status": "published",
-                  "order": 15,
+                  "order": 23,
                   "coveredTopics": [
                     "triggers"
                   ],
@@ -1402,6 +1753,237 @@ export default {
                     "sql",
                     "plsql",
                     "unit3"
+                  ]
+                },
+                {
+                  "id": "sql-migrations",
+                  "title": "Schema migrations, backfills, and safe deployment",
+                  "summary": "Change a live data model while old and new application versions coexist.",
+                  "status": "published",
+                  "order": 24,
+                  "coveredTopics": [],
+                  "updatedAt": "2026-10-27",
+                  "tags": [
+                    "dbms",
+                    "sql",
+                    "unit3",
+                    "postgresql",
+                    "backend",
+                    "a migration is a reviewed change history",
+                    "expand, migrate, contract",
+                    "transactions do not make every ddl command non-blocking"
+                  ]
+                },
+                {
+                  "id": "sql-transactions",
+                  "title": "Transactions, savepoints, and failure recovery",
+                  "summary": "Keep related writes atomic and recover from failures without leaking connections.",
+                  "status": "published",
+                  "order": 25,
+                  "coveredTopics": [],
+                  "updatedAt": "2026-10-27",
+                  "tags": [
+                    "dbms",
+                    "sql",
+                    "unit3",
+                    "postgresql",
+                    "backend",
+                    "the transaction is the unit of success",
+                    "savepoints define partial rollback boundaries",
+                    "keep the boundary short and explicit"
+                  ]
+                },
+                {
+                  "id": "sql-concurrency",
+                  "title": "MVCC, isolation, locks, deadlocks, and retries",
+                  "summary": "Reproduce concurrent behavior with two sessions and protect business invariants.",
+                  "status": "published",
+                  "order": 26,
+                  "coveredTopics": [],
+                  "updatedAt": "2026-10-27",
+                  "tags": [
+                    "dbms",
+                    "sql",
+                    "unit3",
+                    "postgresql",
+                    "backend",
+                    "snapshots do not remove write conflicts",
+                    "lab: one remaining item, two buyers",
+                    "lab: nonrepeatable reads and deadlocks"
+                  ]
+                },
+                {
+                  "id": "indexing",
+                  "title": "Index design, selectivity, and write costs",
+                  "summary": "Choose indexes from access patterns and verify the benefit instead of indexing every column.",
+                  "status": "published",
+                  "order": 27,
+                  "coveredTopics": [
+                    "indexing"
+                  ],
+                  "updatedAt": "2026-10-27",
+                  "tags": [
+                    "dbms",
+                    "sql",
+                    "unit3",
+                    "postgresql",
+                    "backend",
+                    "an index is an additional access structure",
+                    "partial, expression, and covering indexes",
+                    "sargability and maintenance"
+                  ]
+                },
+                {
+                  "id": "sql-query-plans",
+                  "title": "EXPLAIN ANALYZE, buffers, and slow-query diagnosis",
+                  "summary": "Use a reproducible large fixture to interpret estimates, loops, scans, and index effects.",
+                  "status": "published",
+                  "order": 28,
+                  "coveredTopics": [],
+                  "updatedAt": "2026-10-27",
+                  "tags": [
+                    "dbms",
+                    "sql",
+                    "unit3",
+                    "postgresql",
+                    "backend",
+                    "measure a plan, not a slogan",
+                    "compare a matching index on the same workload",
+                    "a diagnosis is a controlled hypothesis"
+                  ]
+                },
+                {
+                  "id": "sql-node-postgres",
+                  "title": "Application SQL: parameters, pools, and transactions",
+                  "summary": "Connect a Node.js service to PostgreSQL with an explicit lifecycle and error contract.",
+                  "status": "published",
+                  "order": 29,
+                  "coveredTopics": [],
+                  "updatedAt": "2026-10-27",
+                  "tags": [
+                    "dbms",
+                    "sql",
+                    "unit3",
+                    "postgresql",
+                    "backend",
+                    "bind values and validate identifiers",
+                    "a transaction must use one checked-out client",
+                    "lifecycle and bounded retries"
+                  ]
+                },
+                {
+                  "id": "sql-security",
+                  "title": "Injection prevention, roles, authorization, and RLS",
+                  "summary": "Protect query structure, restrict database privileges, and enforce ownership consistently.",
+                  "status": "published",
+                  "order": 30,
+                  "coveredTopics": [],
+                  "updatedAt": "2026-10-27",
+                  "tags": [
+                    "dbms",
+                    "sql",
+                    "unit3",
+                    "postgresql",
+                    "backend",
+                    "injection and authorization are different controls",
+                    "use separate owners, migrators, and runtime roles",
+                    "rls can add a row-level boundary"
+                  ]
+                },
+                {
+                  "id": "sql-data-access",
+                  "title": "Repositories, ORM boundaries, batching, and N+1 queries",
+                  "summary": "Keep application query behavior visible and avoid turning one request into unbounded database work.",
+                  "status": "published",
+                  "order": 31,
+                  "coveredTopics": [],
+                  "updatedAt": "2026-10-27",
+                  "tags": [
+                    "dbms",
+                    "sql",
+                    "unit3",
+                    "postgresql",
+                    "backend",
+                    "the repository defines a persistence contract",
+                    "n+1 is a request-level access pattern",
+                    "one joined query is another valid shape"
+                  ]
+                },
+                {
+                  "id": "sql-postgresql-features",
+                  "title": "LATERAL, DISTINCT ON, ranges, search, and partitioning",
+                  "summary": "Recognize useful PostgreSQL features and the boundaries that make them safe to adopt.",
+                  "status": "published",
+                  "order": 32,
+                  "coveredTopics": [],
+                  "updatedAt": "2026-10-27",
+                  "tags": [
+                    "dbms",
+                    "sql",
+                    "unit3",
+                    "postgresql",
+                    "backend",
+                    "select a small related set per parent",
+                    "range types and full-text search",
+                    "partitioning solves a specific data-management problem"
+                  ]
+                },
+                {
+                  "id": "sql-testing",
+                  "title": "Test SQL behavior, migrations, and concurrent requests",
+                  "summary": "Use executable evidence for rows, constraints, rollback, plans, and application contracts.",
+                  "status": "published",
+                  "order": 33,
+                  "coveredTopics": [],
+                  "updatedAt": "2026-10-27",
+                  "tags": [
+                    "dbms",
+                    "sql",
+                    "unit3",
+                    "postgresql",
+                    "backend",
+                    "test the database contract at the database boundary",
+                    "test failures without masking them",
+                    "plans and driver behavior need the right environment"
+                  ]
+                },
+                {
+                  "id": "sql-operations",
+                  "title": "Bulk import, backups, restore, vacuum, and observability",
+                  "summary": "Operate data workflows with explicit recovery evidence and bounded resource use.",
+                  "status": "published",
+                  "order": 34,
+                  "coveredTopics": [],
+                  "updatedAt": "2026-10-27",
+                  "tags": [
+                    "dbms",
+                    "sql",
+                    "unit3",
+                    "postgresql",
+                    "backend",
+                    "bulk data needs validation and a transaction strategy",
+                    "a backup is useful only after a verified restore",
+                    "observe the service and the database together"
+                  ]
+                },
+                {
+                  "id": "sql-capstone",
+                  "title": "Capstone: an invariant-preserving checkout service",
+                  "summary": "Combine schema design, querying, security, transactions, tests, and operations into one reviewable backend.",
+                  "status": "published",
+                  "order": 35,
+                  "coveredTopics": [],
+                  "updatedAt": "2026-10-27",
+                  "tags": [
+                    "dbms",
+                    "sql",
+                    "unit3",
+                    "postgresql",
+                    "backend",
+                    "define the service before implementing routes",
+                    "start with an executable transaction",
+                    "prove failure and concurrency behavior",
+                    "prepare the project for review and recovery"
                   ]
                 }
               ],

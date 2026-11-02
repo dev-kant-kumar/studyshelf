@@ -2,20 +2,25 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import { existsSync, readFileSync, readdirSync } from 'node:fs'
 import syllabus from '../src/app/main-website/notesData/MCA/syllabus.js'
+import { lessons, noteIds, lessonHref } from '../src/app/main-website/notesData/MCA/semesters/sem1/paper4/unit3/learning/data/course.js'
+import { studyGuides } from '../src/app/main-website/notesData/MCA/semesters/sem1/paper4/unit3/learning/data/studyGuides.js'
 
 const root = new URL('../src/app/main-website/notesData/MCA/semesters/sem1/paper4/unit3/', import.meta.url)
 const unit = syllabus.semesters.find(item => item.id === 'sem1').papers.find(item => item.id === 'paper4').units.find(item => item.id === 'unit3')
 const load = id => JSON.parse(readFileSync(new URL(`${id}/chapter.json`, root), 'utf8'))
+const collegeNotes = unit.notes.filter(note => existsSync(new URL(`${note.id}/chapter.json`, root)))
 
 test('DBMS Unit 3 maps every distinct syllabus topic to authored, separately routed content', () => {
   assert.equal(unit.topics.length, 17)
-  assert.equal(unit.notes.length, 15)
+  assert.equal(unit.notes.length, 35)
+  assert.equal(collegeNotes.length, 15, 'All original college topics and URLs survive')
   assert.match(unit.syllabusText, /Cursors, Stored procedures and triggers/)
   for (const topic of unit.topics) assert.equal(unit.notes.filter(note => note.coveredTopics.includes(topic.id)).length, 1, topic.id)
   const questionIds = new Set()
   for (const note of unit.notes) {
     assert.equal(note.status, 'published')
     assert.ok(existsSync(new URL(`${note.id}/main.jsx`, root)))
+    if (!collegeNotes.includes(note)) continue
     const chapter = load(note.id)
     assert.equal(chapter.id, note.id)
     assert.ok(chapter.sections.length >= 5 && chapter.outcomes.length >= 3 && chapter.questions.length >= 3)
@@ -30,7 +35,7 @@ test('DBMS Unit 3 maps every distinct syllabus topic to authored, separately rou
 
 test('Unit 3 SQL variants and downloadable exercises agree with their displayed source', () => {
   const dialects = ['postgresql', 'oracle', 'mysql', 'mariadb', 'sqlite', 'sqlserver']
-  for (const note of unit.notes) {
+  for (const note of collegeNotes) {
     for (const section of load(note.id).sections) {
       if (!section.code) continue
       assert.equal(section.code, section.sqlVariants.postgresql.code)
@@ -53,11 +58,39 @@ test('Unit 3 SQL variants and downloadable exercises agree with their displayed 
 test('instructional figures have files, accessible descriptions, and reserved dimensions', () => {
   const diagrams = readdirSync(new URL('diagrams/', root)).filter(name => name.endsWith('.svg'))
   assert.equal(diagrams.length, 11)
-  for (const note of unit.notes) for (const section of load(note.id).sections) {
+  for (const note of collegeNotes) for (const section of load(note.id).sections) {
     if (!section.diagram) continue
     assert.ok(diagrams.includes(section.diagram + '.svg'))
     assert.ok(section.alt.length > 50 && section.caption.length > 40)
     const svg = readFileSync(new URL(`diagrams/${section.diagram}.svg`, root), 'utf8')
     assert.ok(svg.includes(`height="${section.diagramHeight}"`))
+  }
+})
+
+test('expanded SQL lessons are actual Unit 3 notes, not a separate developer course', () => {
+  assert.equal(lessons.length, 30)
+  for (const lesson of lessons) {
+    const note = unit.notes.find(note => note.id === noteIds[lesson.id])
+    assert.equal(note?.title, lesson.title)
+    assert.equal(note.summary, lesson.summary)
+    assert.match(lessonHref(lesson.id), /^\/notes\/mca-sem1-paper4-unit3-/)
+    const entry = readFileSync(new URL(`${note.id}/main.jsx`, root), 'utf8')
+    assert.ok(entry.includes(`id="${lesson.id}"`), 'The registered note loads its expanded content')
+  }
+})
+
+test('every Unit 3 topic has its own learning, exam and interview material with valid prerequisites', () => {
+  const lessonIds = new Set(lessons.map(lesson => lesson.id))
+  const interviewQuestions = new Set()
+  for (const note of unit.notes) {
+    const lesson = lessons.find(lesson => noteIds[lesson.id] === note.id)
+    const id = lesson?.id ?? note.id
+    const guide = studyGuides[id]
+    assert.ok(guide, `${note.id}: missing study guide`)
+    assert.ok(guide.definition && guide.examQuestion && guide.examAnswer.length)
+    assert.ok(guide.interviewQuestion && guide.interviewAnswer && guide.followUp && guide.followUpAnswer)
+    assert.ok(!interviewQuestions.has(guide.interviewQuestion), `${note.id}: duplicated interview prompt`)
+    interviewQuestions.add(guide.interviewQuestion)
+    for (const prerequisite of guide.before) assert.ok(lessonIds.has(prerequisite) && prerequisite !== id)
   }
 })

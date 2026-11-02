@@ -1,5 +1,7 @@
 # SQL learning coverage audit
 
+This is the baseline assessment made before the expansion. The subsequent implementation lives directly in DBMS Unit 3; see [the Unit 3 authoring and verification guide](sql-unit3-authoring.md) for its current scope and verification evidence.
+
 Audited 27 October 2026. Scope: current MCA semester 1 DBMS Unit 3 chapters, related Unit 1 material, the SQL section of the backend roadmap, and the shared lesson/editor implementation. This is a curriculum assessment, not a claim that every page on the site was exhaustively reviewed.
 
 ## Finding

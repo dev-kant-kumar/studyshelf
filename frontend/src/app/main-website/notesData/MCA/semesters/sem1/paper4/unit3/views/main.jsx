@@ -1,3 +1,3 @@
-import TopicChapter from '../TopicChapter'
+import Unit3Lesson from '../learning/Unit3Lesson'
 import chapter from './chapter.json'
-export default function Chapter() { return <TopicChapter chapter={chapter} /> }
+export default function Chapter() { return <Unit3Lesson id="views-procedures" collegeChapter={chapter} /> }

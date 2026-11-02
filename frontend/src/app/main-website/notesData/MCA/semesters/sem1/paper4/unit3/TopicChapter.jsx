@@ -3,7 +3,9 @@ import Figure from '@/app/main-website/shared/components/Figure'
 import ComparisonTable from '@/app/main-website/shared/components/ComparisonTable'
 import CodeBlock from '@/app/main-website/shared/components/CodeBlock'
 import { Link } from 'react-router-dom'
-import { unit3Lessons, lessonHref } from '@/app/main-website/pages/Sql/data/course'
+import { unit3Lessons, lessonHref } from './learning/data/course.js'
+import { studyGuides } from './learning/data/studyGuides.js'
+import StudyReview from './learning/StudyReview'
 
 const diagrams = import.meta.glob('./diagrams/*.svg', { eager: true, query: '?url', import: 'default' })
 function TeachingContent({ content, nested = false }) {
@@ -19,10 +21,11 @@ function TeachingContent({ content, nested = false }) {
     {content.example && <><ExampleHeading>Worked example</ExampleHeading>{content.example.map((paragraph, index) => <p key={index}>{paragraph}</p>)}</>}
   </>
 }
-export default function TopicChapter({ chapter }) {
+export default function TopicChapter({ chapter, supplementary = false }) {
   return <>
     <p>{chapter.intro}</p>
-    <aside className="my-6 border-l-4 border-brand bg-soft p-5 dark:border-night-brand dark:bg-night-soft"><strong>Study this topic in depth</strong><p>Continue with <Link to={lessonHref(unit3Lessons[chapter.id] ?? 'start')}>the SQL for backend engineers lessons</Link> for worked queries, visible results, browser practice, explained exercises, and PostgreSQL application labs. These notes retain the MCA syllabus and DBMS variants.</p></aside>
+    {!supplementary && studyGuides[chapter.id]?.introduction && <p>{studyGuides[chapter.id].introduction}</p>}
+    {!supplementary && <aside className="my-6 border-l-4 border-brand bg-soft p-5 dark:border-night-brand dark:bg-night-soft"><strong>Study this topic in depth</strong><p>Continue with <Link to={lessonHref(unit3Lessons[chapter.id] ?? 'start')}>the expanded Unit 3 lessons</Link> for worked queries, visible results, browser practice, explained exercises, and PostgreSQL application labs. These notes retain the MCA syllabus and DBMS variants.</p></aside>}
     {chapter.id !== 'sql-foundations' && <p>Use the <a href="/notes/mca-sem1-paper4-unit3-sql-foundations">shared Unit 3 setup</a> before running these examples. Each exercise states any additional objects or changes it makes.</p>}
     <h2>What you will learn</h2>
     <ul>{chapter.outcomes.map(item => <li key={item}>{item}</li>)}</ul>
@@ -37,6 +40,7 @@ export default function TopicChapter({ chapter }) {
     <h2>Review checklist</h2>
     <ul>{chapter.revision.map(item => <li key={item}>{item}</li>)}</ul>
     <FAQ showGuide={false} title="Questions and answers" items={chapter.questions.map(question => ({ ...question, answer: <>{question.answer.map((paragraph, i) => <p key={i}>{paragraph}</p>)}</> }))} />
+    {!supplementary && studyGuides[chapter.id] && <StudyReview guide={studyGuides[chapter.id]} />}
     <h2>References</h2>
     <ul>{chapter.references.map(reference => <li key={reference.url}><a href={reference.url}>{reference.title}</a></li>)}</ul>
     {chapter.next && <p>Continue with <a href={`/notes/mca-sem1-paper4-unit3-${chapter.next.id}`}>{chapter.next.title}</a>.</p>}

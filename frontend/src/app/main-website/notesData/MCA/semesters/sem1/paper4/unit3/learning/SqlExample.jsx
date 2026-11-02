@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
-import CodeBlock from '../../shared/components/CodeBlock'
-import ComparisonTable from '../../shared/components/ComparisonTable'
+import CodeBlock from '@/app/main-website/shared/components/CodeBlock'
+import ComparisonTable from '@/app/main-website/shared/components/ComparisonTable'
 import { secondary, muted } from '@/ui/classes'
 
 function displayValue(value) {

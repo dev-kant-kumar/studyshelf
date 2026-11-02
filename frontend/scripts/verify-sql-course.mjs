@@ -16,7 +16,7 @@ function normalize(value) {
   return value === null ? null : String(value)
 }
 try {
-  const { lessons, modules } = await server.ssrLoadModule('/src/app/main-website/pages/Sql/data/course.js')
+  const { lessons, modules } = await server.ssrLoadModule('/src/app/main-website/notesData/MCA/semesters/sem1/paper4/unit3/learning/data/course.js')
   assert.equal(new Set(lessons.map(lesson => lesson.id)).size, lessons.length)
   assert.equal(modules.length, 5)
   const cases = lessons.flatMap(lesson => [
@@ -30,7 +30,11 @@ try {
       await db.exec(setup)
       const results = await db.exec(example.code)
       const result = example.resultIndex !== undefined ? results[example.resultIndex] : results.filter(result => result.fields.length).at(-1)
-      if (example.expected) { assert.deepEqual(normalize(result?.rows), normalize(example.expected)); assertions++ }
+      if (example.expected) {
+        const canonical = rows => example.unordered ? rows.map(row => JSON.stringify(row)).sort() : rows
+        assert.deepEqual(canonical(normalize(result?.rows)), canonical(normalize(example.expected)))
+        assertions++
+      }
       else assert.ok(result, 'Example should produce an inspectable result')
       verified++
     } catch (error) { throw new Error(`${example.context}: ${error.message}`, { cause: error }) }

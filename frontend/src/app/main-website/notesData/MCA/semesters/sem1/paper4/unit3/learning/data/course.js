@@ -13,7 +13,20 @@ export const modules = [
   { id: 'operations', title: 'Test and operate', lessons: operations },
 ]
 export const lessons = modules.flatMap(module => module.lessons.map(lesson => ({ ...lesson, module: module.title })))
-export const lessonHref = id => `/developers/sql/${id}`
+export const noteIds = {
+  start: 'sql-foundations', syntax: 'database-languages', 'sample-schema': 'practice-schema',
+  select: 'basic-sql', filtering: 'sql-filtering', nulls: 'null-values',
+  'sorting-pagination': 'sql-pagination', writes: 'sql-writes', joins: 'advanced-sql',
+  aggregation: 'aggregate-functions', 'subqueries-sets': 'subqueries', ctes: 'sql-ctes',
+  windows: 'sql-windows', types: 'sql-types', functions: 'sql-functions',
+  'schema-design': 'integrity-constraints', 'json-arrays': 'sql-json',
+  'views-procedures': 'views', migrations: 'sql-migrations', transactions: 'sql-transactions',
+  concurrency: 'sql-concurrency', indexes: 'indexing', 'query-plans': 'sql-query-plans',
+  'node-postgres': 'sql-node-postgres', security: 'sql-security', 'data-access': 'sql-data-access',
+  'advanced-postgres': 'sql-postgresql-features', testing: 'sql-testing', operations: 'sql-operations',
+  capstone: 'sql-capstone',
+}
+export const lessonHref = id => `/notes/mca-sem1-paper4-unit3-${noteIds[id] ?? id}`
 export function searchSqlLessons(query) {
   const words = query.trim().toLowerCase().split(/\s+/).filter(Boolean)
   if (!words.length) return []

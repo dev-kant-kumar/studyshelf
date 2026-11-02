@@ -35,7 +35,7 @@ export default function RouteFocus() {
     const pathnameChanged = previous.current?.pathname !== pathname
     previous.current = { pathname }
     const entryKey = `studyshelf-scroll:${key}:${pathname}${search}${hash}`
-    const readingKey = pathname.startsWith('/notes/') ? `studyshelf-reading:${pathname.slice('/notes/'.length)}` : pathname.startsWith('/developers/sql/') ? `studyshelf-reading:${pathname}` : null
+    const readingKey = pathname.startsWith('/notes/') ? `studyshelf-reading:${pathname.slice('/notes/'.length)}` : null
     const plan = chooseScrollTarget({
       initial,
       reload: performance.getEntriesByType('navigation')[0]?.type === 'reload',

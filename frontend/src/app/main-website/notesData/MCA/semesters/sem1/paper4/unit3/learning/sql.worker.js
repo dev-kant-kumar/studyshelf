@@ -1,5 +1,5 @@
 import { PGlite } from '@electric-sql/pglite'
-import setup from '../../../../../public/examples/sql-backend/setup.sql?raw'
+
 
 self.onmessage = async ({ data }) => {
   let db
@@ -7,7 +7,9 @@ self.onmessage = async ({ data }) => {
     db = await PGlite.create()
     const version = (await db.query('SHOW server_version')).rows[0].server_version
     self.postMessage({ type: 'ready', version })
-    await db.exec(setup)
+    const fixture = await fetch('/examples/sql-backend/setup.sql')
+    if (!fixture.ok) throw new Error('Sample database could not load')
+    await db.exec(await fixture.text())
     await db.exec("SET statement_timeout = '10s'")
     const results = await db.exec(data.code)
     self.postMessage({ type: 'result', version, results: results.map(result => ({

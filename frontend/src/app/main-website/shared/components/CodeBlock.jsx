@@ -13,7 +13,7 @@ export default function CodeBlock({ code, language = 'text', sqlVariants, fixedD
   const source = fixedDialect === 'postgresql' ? { code, language: 'postgresql', label: 'PostgreSQL' } : sql ? resolveSqlExample(code, sqlVariants, dialect) : { code, language, label: language.toLowerCase() === 'c' ? 'C' : language }
   const originalCode = source.code
   const editorLanguage = source.language
-  const documentKey = `${sql ? dialect : ''}\0${editorLanguage}\0${originalCode}`
+  const documentKey = `${sql ? (fixedDialect ?? dialect) : ''}\0${editorLanguage}\0${originalCode}`
   const host = useRef(null)
   const editor = useRef(null)
   const drafts = useRef(new Map())
