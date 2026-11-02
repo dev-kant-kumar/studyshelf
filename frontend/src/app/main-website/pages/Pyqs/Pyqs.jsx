@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { useParams, useSearchParams, Link } from 'react-router-dom'
 import {
   FileText,
@@ -15,6 +15,9 @@ import {
   ExternalLink,
   Layers,
   HelpCircle,
+  Eye,
+  X,
+  Maximize2,
 } from 'lucide-react'
 import CatalogueLayout from '../../layouts/CatalogueLayout'
 import Breadcrumbs from '../../shared/components/Breadcrumbs'
@@ -26,6 +29,206 @@ import { getCourse, courses } from '../../notesData'
 import { pyqPapers } from '../../notesData/pyqsData'
 import { site } from '@/config/site'
 import { panel, focus, muted, eyebrow, button, secondary } from '@/ui/classes'
+
+function parseMarkdownTable(text) {
+  if (!text || !text.includes('|')) return null
+  const lines = text.split('\n').map(l => l.trim()).filter(Boolean)
+  const tableLines = lines.filter(l => l.startsWith('|') && l.endsWith('|'))
+  if (tableLines.length < 2) return null
+
+  const tableStartIndex = lines.findIndex(l => l.startsWith('|') && l.endsWith('|'))
+  const tableEndIndex = lines.findLastIndex(l => l.startsWith('|') && l.endsWith('|'))
+
+  const beforeText = lines.slice(0, tableStartIndex).join('\n')
+  const afterText = lines.slice(tableEndIndex + 1).join('\n')
+
+  const headers = tableLines[0].split('|').slice(1, -1).map(c => c.trim())
+  const rows = tableLines.slice(2).map(line =>
+    line.split('|').slice(1, -1).map(c => c.trim())
+  )
+
+  return { beforeText, headers, rows, afterText }
+}
+
+function QuestionTable({ headers, rows }) {
+  if (!headers || !rows || rows.length === 0) return null
+  return (
+    <div className="my-3 overflow-x-auto rounded-lg border border-line bg-surface dark:border-night-line dark:bg-night-surface">
+      <table className="w-full min-w-[280px] border-collapse text-left text-xs">
+        <thead className="border-b border-line bg-soft/70 font-semibold text-ink dark:border-night-line dark:bg-night-soft/50 dark:text-night-ink">
+          <tr>
+            {headers.map((h, i) => (
+              <th key={i} scope="col" className="px-3 py-2 text-xs font-semibold">
+                {h}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody className="divide-y divide-line/60 dark:divide-night-line/60">
+          {rows.map((row, rIdx) => (
+            <tr key={rIdx} className="hover:bg-soft/40 dark:hover:bg-night-soft/20">
+              {row.map((cell, cIdx) => (
+                <td key={cIdx} className="px-3 py-2 font-mono text-xs text-subtle dark:text-night-subtle">
+                  {cell}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  )
+}
+
+function QuestionBody({ question }) {
+  if (question.table) {
+    return (
+      <div className="space-y-2">
+        <p className="whitespace-pre-line text-sm font-medium leading-relaxed text-ink dark:text-night-ink">
+          {question.text}
+        </p>
+        <QuestionTable headers={question.table.headers} rows={question.table.rows} />
+      </div>
+    )
+  }
+
+  const parsed = parseMarkdownTable(question.text)
+  if (parsed) {
+    return (
+      <div className="space-y-2">
+        {parsed.beforeText && (
+          <p className="whitespace-pre-line text-sm font-medium leading-relaxed text-ink dark:text-night-ink">
+            {parsed.beforeText}
+          </p>
+        )}
+        <QuestionTable headers={parsed.headers} rows={parsed.rows} />
+        {parsed.afterText && (
+          <p className="whitespace-pre-line text-sm font-medium leading-relaxed text-ink dark:text-night-ink">
+            {parsed.afterText}
+          </p>
+        )}
+      </div>
+    )
+  }
+
+  return (
+    <p className="whitespace-pre-line text-sm font-medium leading-relaxed text-ink dark:text-night-ink">
+      {question.text}
+    </p>
+  )
+}
+
+function PdfModalViewer({ pdf, onClose }) {
+  if (!pdf) return null
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-2 sm:p-4 backdrop-blur-sm"
+      role="dialog"
+      aria-modal="true"
+      aria-label={`PDF Viewer: ${pdf.title}`}
+    >
+      <div className="relative flex h-[92vh] w-full max-w-6xl flex-col overflow-hidden rounded-xl border border-line bg-surface shadow-2xl dark:border-night-line dark:bg-night-surface">
+        {/* Modal Top Bar */}
+        <div className="flex items-center justify-between border-b border-line bg-soft/80 px-4 py-3 dark:border-night-line dark:bg-night-soft/60">
+          <div className="flex min-w-0 items-center gap-2.5">
+            <span className="flex size-7 shrink-0 items-center justify-center rounded-lg bg-selected font-mono text-xs font-bold text-brand dark:bg-night-selected dark:text-night-brand">
+              PDF
+            </span>
+            <div className="min-w-0">
+              <h3 className="truncate text-sm font-bold text-ink dark:text-night-ink">
+                {pdf.title}
+              </h3>
+              <p className="truncate text-[11px] text-subtle dark:text-night-subtle">
+                {pdf.subtitle || 'Verified Original Exam Paper Archive'}
+              </p>
+            </div>
+          </div>
+
+          <div className="flex shrink-0 items-center gap-2">
+            <a
+              href={pdf.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 rounded-lg border border-line bg-surface px-2.5 py-1 text-xs font-medium text-subtle hover:text-ink dark:border-night-line dark:bg-night-surface dark:text-night-subtle dark:hover:text-night-ink"
+              title="Open in new window"
+            >
+              <ExternalLink size={13} aria-hidden="true" />
+              <span className="hidden sm:inline">New Tab</span>
+            </a>
+
+            <a
+              href={pdf.url}
+              download
+              className="inline-flex items-center gap-1.5 rounded-lg bg-brand px-3 py-1 text-xs font-semibold text-on-brand hover:opacity-90 dark:bg-night-brand dark:text-night-on-brand"
+            >
+              <Download size={13} aria-hidden="true" />
+              <span>Download</span>
+            </a>
+
+            <button
+              type="button"
+              onClick={onClose}
+              className="rounded-lg border border-line p-1 text-subtle hover:bg-soft hover:text-ink dark:border-night-line dark:text-night-subtle dark:hover:bg-night-soft dark:hover:text-night-ink"
+              aria-label="Close PDF Viewer"
+            >
+              <X size={18} aria-hidden="true" />
+            </button>
+          </div>
+        </div>
+
+        {/* Mobile notice */}
+        <div className="flex items-center justify-between border-b border-line bg-amber-50/70 px-4 py-1.5 text-[11px] text-amber-900 sm:hidden dark:border-night-line dark:bg-amber-950/30 dark:text-amber-200">
+          <span>Best viewed on desktop or in a separate tab.</span>
+          <a
+            href={pdf.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-semibold underline"
+          >
+            Open Fullscreen
+          </a>
+        </div>
+
+        {/* PDF Frame / Object */}
+        <div className="relative flex-1 bg-zinc-900">
+          <object
+            data={`${pdf.url}#toolbar=1&navpanes=0`}
+            type="application/pdf"
+            className="h-full w-full"
+          >
+            <div className="flex h-full flex-col items-center justify-center p-6 text-center text-white">
+              <FileText size={40} className="mb-3 text-white/60" />
+              <p className="text-sm font-semibold">
+                Unable to render embedded PDF preview directly on this browser.
+              </p>
+              <p className="mt-1 text-xs text-white/70">
+                You can download the PDF or open it in a new window.
+              </p>
+              <div className="mt-4 flex gap-3">
+                <a
+                  href={pdf.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="rounded-lg bg-white/20 px-4 py-2 text-xs font-semibold text-white hover:bg-white/30"
+                >
+                  Open in New Window
+                </a>
+                <a
+                  href={pdf.url}
+                  download
+                  className="rounded-lg bg-brand px-4 py-2 text-xs font-semibold text-on-brand hover:opacity-90 dark:bg-night-brand dark:text-night-on-brand"
+                >
+                  Download PDF
+                </a>
+              </div>
+            </div>
+          </object>
+        </div>
+      </div>
+    </div>
+  )
+}
 
 export default function Pyqs() {
   const { course: routeCourse } = useParams()
@@ -39,11 +242,23 @@ export default function Pyqs() {
   const selectedYear = searchParams.get('year') || 'all'
   const [searchQuery, setSearchQuery] = useState('')
   const [openFaq, setOpenFaq] = useState(null)
+  const [activePdf, setActivePdf] = useState(null)
+  const [paperViewMode, setPaperViewMode] = useState({}) // { [paperId]: 'questions' | 'pdf' }
   const [expandedPapers, setExpandedPapers] = useState(() => {
     // Expand the first paper by default
     const first = pyqPapers.find(p => p.courseId === activeCourseId)
     return first ? [first.id] : []
   })
+
+  // Keyboard shortcut: close active PDF modal on Escape
+  useEffect(() => {
+    if (!activePdf) return
+    const onKeyDown = e => {
+      if (e.key === 'Escape') setActivePdf(null)
+    }
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  }, [activePdf])
 
   // Available semesters for this course
   const courseSemesters = currentCourse?.semesters || []
@@ -430,6 +645,9 @@ export default function Pyqs() {
                           <span className="rounded-md bg-selected px-2.5 py-0.5 text-xs font-semibold text-brand dark:bg-night-selected dark:text-night-brand">
                             {paper.paperCode}
                           </span>
+                        </div>
+
+                        <div className="mt-2 flex flex-wrap items-center gap-2">
                           {paper.printedCode && (
                             <span className="rounded-md border border-line bg-surface px-2 py-0.5 text-xs text-subtle dark:border-night-line dark:bg-night-surface dark:text-night-subtle">
                               Printed: {paper.printedCode}
@@ -466,6 +684,24 @@ export default function Pyqs() {
 
                       {/* Header Actions */}
                       <div className="flex shrink-0 items-center gap-2 pt-1 sm:pt-0">
+                        {paper.pdfUrl && (
+                          <button
+                            type="button"
+                            onClick={() =>
+                              setActivePdf({
+                                url: paper.pdfUrl,
+                                title: `${paper.paperCode}: ${paper.paperTitle}`,
+                                subtitle: `${paper.semesterTitle} · Year ${paper.year} (${paper.session})`,
+                              })
+                            }
+                            className={`inline-flex items-center gap-1.5 rounded-lg border border-line bg-surface px-3 py-1.5 text-xs font-semibold text-brand transition-colors hover:bg-selected dark:border-night-line dark:bg-night-surface dark:text-night-brand dark:hover:bg-night-selected ${focus}`}
+                            title="View original exam paper PDF"
+                          >
+                            <Eye size={14} aria-hidden="true" />
+                            <span>View PDF</span>
+                          </button>
+                        )}
+
                         <Link
                           to={notesLink}
                           className={`inline-flex items-center gap-1.5 rounded-lg border border-line bg-surface px-3 py-1.5 text-xs font-medium text-subtle transition-colors hover:border-brand/40 hover:text-brand dark:border-night-line dark:bg-night-surface dark:text-night-subtle dark:hover:border-night-brand/40 dark:hover:text-night-brand ${focus}`}
@@ -499,27 +735,112 @@ export default function Pyqs() {
                     )}
                   </div>
 
-                  {/* Expanded Questions Content */}
+                  {/* Expanded Paper Content */}
                   {isExpanded && (
-                    <div className="divide-y divide-line/60 p-4 sm:p-6 dark:divide-night-line/60">
-                      <div className="mb-4 flex items-center justify-between text-xs font-medium text-subtle dark:text-night-subtle">
-                        <span>All Questions ({paper.questions.length})</span>
+                    <div className="p-4 sm:p-6">
+                      {/* View mode switcher */}
+                      <div className="mb-5 flex flex-wrap items-center justify-between gap-3 border-b border-line pb-4 dark:border-night-line">
+                        <div className="flex items-center gap-2">
+                          {paper.pdfUrl ? (
+                            <div className="inline-flex rounded-lg border border-line bg-soft/50 p-0.5 dark:border-night-line dark:bg-night-soft/30">
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  setPaperViewMode(prev => ({ ...prev, [paper.id]: 'questions' }))
+                                }
+                                className={`rounded-md px-3 py-1 text-xs font-semibold transition-colors ${
+                                  (paperViewMode[paper.id] || 'questions') === 'questions'
+                                    ? 'bg-surface text-ink shadow-sm dark:bg-night-surface dark:text-night-ink'
+                                    : 'text-subtle hover:text-ink dark:text-night-subtle dark:hover:text-night-ink'
+                                }`}
+                              >
+                                Questions ({paper.questions.length})
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  setPaperViewMode(prev => ({ ...prev, [paper.id]: 'pdf' }))
+                                }
+                                className={`inline-flex items-center gap-1 rounded-md px-3 py-1 text-xs font-semibold transition-colors ${
+                                  paperViewMode[paper.id] === 'pdf'
+                                    ? 'bg-surface text-brand shadow-sm dark:bg-night-surface dark:text-night-brand'
+                                    : 'text-subtle hover:text-ink dark:text-night-subtle dark:hover:text-night-ink'
+                                }`}
+                              >
+                                <Eye size={12} aria-hidden="true" />
+                                <span>Original Scanned PDF</span>
+                              </button>
+                            </div>
+                          ) : (
+                            <span className="text-xs font-semibold text-ink dark:text-night-ink">
+                              All Questions ({paper.questions.length})
+                            </span>
+                          )}
+                        </div>
+
                         {paper.pdfUrl ? (
-                          <a
-                            href={paper.pdfUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center gap-1 text-brand hover:underline dark:text-night-brand"
-                          >
-                            <Download size={13} aria-hidden="true" />
-                            <span>Download Original PDF</span>
-                          </a>
+                          <div className="flex items-center gap-3 text-xs">
+                            <button
+                              type="button"
+                              onClick={() =>
+                                setActivePdf({
+                                  url: paper.pdfUrl,
+                                  title: `${paper.paperCode}: ${paper.paperTitle}`,
+                                  subtitle: `${paper.semesterTitle} · Year ${paper.year} (${paper.session})`,
+                                })
+                              }
+                              className="inline-flex items-center gap-1 font-semibold text-brand hover:underline dark:text-night-brand"
+                            >
+                              <Maximize2 size={13} aria-hidden="true" />
+                              <span>Full Screen Viewer</span>
+                            </button>
+                            <span className="text-line dark:text-night-line">·</span>
+                            <a
+                              href={paper.pdfUrl}
+                              download
+                              className="inline-flex items-center gap-1 text-subtle hover:text-ink hover:underline dark:text-night-subtle dark:hover:text-night-ink"
+                            >
+                              <Download size={13} aria-hidden="true" />
+                              <span>Download PDF</span>
+                            </a>
+                          </div>
                         ) : (
-                          <span className="italic">Transcribed Question Archive</span>
+                          <span className="text-xs italic text-subtle dark:text-night-subtle">
+                            Transcribed Question Archive
+                          </span>
                         )}
                       </div>
 
-                      <div className="space-y-6 pt-2">
+                      {/* Content: Inline PDF or Questions List */}
+                      {paper.pdfUrl && paperViewMode[paper.id] === 'pdf' ? (
+                        <div className="space-y-3">
+                          <div className="flex items-center justify-between text-xs text-subtle dark:text-night-subtle">
+                            <span>Embedded PDF viewer. Scroll or zoom within the frame.</span>
+                            <a
+                              href={paper.pdfUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="font-medium text-brand hover:underline dark:text-night-brand"
+                            >
+                              Open in New Window
+                            </a>
+                          </div>
+                          <div className="h-[650px] w-full overflow-hidden rounded-xl border border-line bg-zinc-900 shadow-inner dark:border-night-line">
+                            <object
+                              data={`${paper.pdfUrl}#toolbar=1`}
+                              type="application/pdf"
+                              className="h-full w-full"
+                            >
+                              <iframe
+                                src={`${paper.pdfUrl}#toolbar=1`}
+                                title={paper.paperTitle}
+                                className="h-full w-full border-0"
+                              />
+                            </object>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="space-y-6 pt-2 divide-y divide-line/60 dark:divide-night-line/60">
                         {paper.questions.map((q, qIndex) => {
                           const showSectionHeader =
                             q.section &&
@@ -565,9 +886,7 @@ export default function Pyqs() {
                                       </span>
                                     )}
 
-                                    <p className="text-sm leading-relaxed text-ink dark:text-night-ink font-medium">
-                                      {q.text}
-                                    </p>
+                                    <QuestionBody question={q} />
                                   </div>
                                 </div>
                               </div>
@@ -578,7 +897,7 @@ export default function Pyqs() {
                                   {q.subQuestions.map((sub, idx) => (
                                     <div key={idx} className="text-xs leading-relaxed">
                                       <div className="flex items-start justify-between gap-3">
-                                        <p className="text-ink dark:text-night-ink">
+                                        <p className="text-ink dark:text-night-ink whitespace-pre-line">
                                           <strong className="mr-1.5 font-mono font-bold text-brand dark:text-night-brand">
                                             ({sub.part})
                                           </strong>
@@ -615,9 +934,10 @@ export default function Pyqs() {
                           )
                         })}
                       </div>
-                    </div>
-                  )}
-                </article>
+                    )}
+                  </div>
+                )}
+              </article>
               )
             })}
           </div>
@@ -686,6 +1006,14 @@ export default function Pyqs() {
           </Link>
         </div>
       </div>
+
+      {/* Modal PDF Viewer */}
+      {activePdf && (
+        <PdfModalViewer
+          pdf={activePdf}
+          onClose={() => setActivePdf(null)}
+        />
+      )}
     </CatalogueLayout>
   )
 }
